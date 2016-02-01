@@ -30,4 +30,4 @@ Inspired by the following articles:
 http://blog.javabien.net/2014/04/23/what-if-assertj-used-java-8/
 https://solidsoft.wordpress.com/2015/12/01/using-mockito-without-static-imports-with-java-8/
 
-Note that the advantage of using interface-it over just 
+I thought that using mockito-java8 would be a good idea, but mockito-java8 was not keeping up with the latest Mockito versions, so it seemed better to make a tool that allows you to use whatever version you want of Mockito, AssertJ or whatever static classes for which you may want to make mix-ins.
