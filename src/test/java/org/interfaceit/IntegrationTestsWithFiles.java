@@ -40,6 +40,9 @@ public class IntegrationTestsWithFiles {
 
 	@AfterClass
 	public static void tearDown() throws Exception {
+		for(File f: dir.listFiles()) {
+				f.delete();
+		}
 		dir.delete();
 	}
 
