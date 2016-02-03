@@ -30,4 +30,10 @@ public class ClassNameUtilsTest {
 				.isEqualTo("AbstractCharSequenceAssert<?, ? extends CharSequence>");
 	}
 	
+	// org.assertj.core.api.ThrowableAssert$ThrowingCallable
+	@Test
+	public void can_extract_nested_type_simple_name() {
+		Assertions.assertThat(ClassNameUtils.extractSimpleName("org.assertj.core.api.ThrowableAssert$ThrowingCallable"))
+				.isEqualTo("ThrowableAssert.ThrowingCallable");
+	}
 }

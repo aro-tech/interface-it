@@ -19,7 +19,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * @author arothkopf
+ * Unit tests for generating delegate methods
+ * @author aro_tech
  *
  */
 public class DelegateMethodGeneratorTest {
@@ -113,7 +114,19 @@ public class DelegateMethodGeneratorTest {
 
 		Assertions.assertThat(this.imports).contains("org.hamcrest.*");
 	}
+	
+	@Test
+	public void can_generate_catch_throwable_method_signature_with_import() {
+		Optional<Method> method = underTest.listStaticMethodsForClass(Assertions.class).stream()
+				.filter((Method m) -> "catchThrowable".equals(m.getName()) && m.getParameters().length == 1).findFirst();
 
+		Assert.assertTrue(method.isPresent());
+
+		Assertions.assertThat(underTest.makeMethodSignature(method.get(), this.imports).trim())
+				.startsWith("default Throwable catchThrowable(ThrowableAssert.ThrowingCallable ").endsWith(")");
+
+		Assertions.assertThat(this.imports).contains("org.assertj.core.api.*");
+	}
 	@Test
 	public void can_generate_entry_method_signature_with_import() {
 		Optional<Method> entryMethod = underTest.listStaticMethodsForClass(org.assertj.core.api.Assertions.class)

@@ -36,6 +36,10 @@ public class ClassNameUtils {
 	 * @return Name without package
 	 */
 	public static String extractSimpleName(String fullName) {
+		return doNameExtraction(fullName).replace('$', '.');
+	}
+
+	private static String doNameExtraction(String fullName) {
 		int ltIndex = fullName.indexOf('<');
 		if (ltIndex < 0) {
 			int lastDotIx = fullName.lastIndexOf('.');
