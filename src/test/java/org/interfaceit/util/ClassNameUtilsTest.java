@@ -22,5 +22,12 @@ public class ClassNameUtilsTest {
 		Assertions.assertThat(ClassNameUtils.extractSimpleName("org.hamcrest.Matcher<java.lang.Double>"))
 				.isEqualTo("Matcher<Double>");
 	}
-
+	
+	//org.assertj.core.api.AbstractCharSequenceAssert<?, ? extends java.lang.CharSequence>
+	@Test
+	public void can_extract_complex_generic_type_simple_name() {
+		Assertions.assertThat(ClassNameUtils.extractSimpleName("org.assertj.core.api.AbstractCharSequenceAssert<?, ? extends java.lang.CharSequence>"))
+				.isEqualTo("AbstractCharSequenceAssert<?, ? extends CharSequence>");
+	}
+	
 }

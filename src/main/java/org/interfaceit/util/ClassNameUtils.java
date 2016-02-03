@@ -44,7 +44,13 @@ public class ClassNameUtils {
 			}
 			return fullName;
 		}
-		return Arrays.stream(fullName.split("<")).map(s -> extractSimpleName(s)).collect(Collectors.joining("<"));
+		return Arrays.stream(fullName.split("<")).map(s -> extractSimpleNamesInGenerics(s))
+				.collect(Collectors.joining("<"));
+	}
+
+	private static String extractSimpleNamesInGenerics(String genericsContentWithClosingCaret) {
+		return Arrays.stream(genericsContentWithClosingCaret.split(" ")).map(s -> extractSimpleName(s))
+				.collect(Collectors.joining(" "));
 	}
 
 	/**

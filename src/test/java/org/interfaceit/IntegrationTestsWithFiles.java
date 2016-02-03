@@ -26,31 +26,35 @@ public class IntegrationTestsWithFiles {
 
 	private DelegateMethodGenerator underTest = new DelegateMethodGenerator();
 	// private Set<String> imports;
-	private static File dir;
+	private static File tmpDir;
+	private static File examplesDir;
+	
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@BeforeClass
 	public static void setUp() throws Exception {
-		dir = new File("./tmp");
-		dir.mkdirs();
+		tmpDir = new File("./tmp");
+		examplesDir = new File("./examples");
+		tmpDir.mkdirs();
 		// imports = new HashSet<>();
 	}
 
 	@AfterClass
 	public static void tearDown() throws Exception {
-		for(File f: dir.listFiles()) {
+		for(File f: tmpDir.listFiles()) {
 				f.delete();
 		}
-		dir.delete();
+		tmpDir.delete();
 	}
 
 	/**
+	 * Test Java file generation
 	 */
 	@Test
 	public void can_write_mockito_to_file() {
-		File resultFile = underTest.generateClassToFile(dir, "MockitoEnabled", Mockito.class, "org.interfaceit.test",
+		File resultFile = underTest.generateClassToFile(tmpDir, "MockitoEnabled", Mockito.class, "org.interfaceit.test",
 				5);
 
 		URL expectedURL = this.getClass().getResource("/MockitoEnabled.txt");
@@ -62,6 +66,22 @@ public class IntegrationTestsWithFiles {
 		Assertions.assertThat(resultLines).hasSameSizeAs(expectedLines).containsAll(expectedLines);
 	}
 
+	@Test
+	public void build_examples() {
+		final String packageName = "org.example";
+		File resultFile = underTest.generateClassToFile(examplesDir, "Mockito", org.mockito.Mockito.class, packageName,
+				4);
+		Assertions.assertThat(resultFile).exists().canRead();
+
+		resultFile = underTest.generateClassToFile(examplesDir, "AssertJ", org.assertj.core.api.Assertions.class, packageName,
+				4);
+		Assertions.assertThat(resultFile).exists().canRead();
+
+		resultFile = underTest.generateClassToFile(examplesDir, "Math", java.lang.Math.class, packageName,
+				4);
+		Assertions.assertThat(resultFile).exists().canRead();
+	}
+	
 	private static List<String> readTrimmedLines(Path path) {
 		try {
 			return Files.lines(path).filter(s -> s.trim().length() > 0).map(s -> s.trim()).collect(Collectors.toList());

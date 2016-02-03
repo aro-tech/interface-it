@@ -21,9 +21,16 @@ in unit tests.
 
 Anywhere that you use static imports, you might want to consider generating a mix-in interface instead.
 
+There are examples at: https://github.com/aro-tech/interface-it/examples
+
 Future directions:
 
-Generate mix-ins for singletons
+main class for command-line usage
+custom ANT task ?
+Maven plugin ?
+Eclipse plugin ?
+Generate mix-ins for singletons ?
+
 
 Acknowledgments: 
 Inspired by the following articles:

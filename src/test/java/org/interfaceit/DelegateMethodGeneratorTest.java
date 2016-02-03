@@ -5,11 +5,13 @@ package org.interfaceit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,9 +42,16 @@ public class DelegateMethodGeneratorTest {
 	 */
 	@Test
 	public void can_find_static_methods() {
-		List<Method> results = underTest.listStaticMethodsForClass(Thread.class);
+		List<Method> results = underTest.listStaticMethodsForClass(Assertions.class);//(Thread.class);
 		Assertions.assertThat(results).isNotEmpty();
-		// System.out.println(results);
+		for(Method cur: results) {
+			
+			if(cur.getName().equals("assertThat") && cur.getReturnType() == AbstractCharSequenceAssert.class) {
+				for(Parameter p: cur.getParameters()) {
+					System.out.println("type=" + p.getParameterizedType());									
+				}
+			}
+		}
 	}
 
 	@Test
@@ -104,8 +113,7 @@ public class DelegateMethodGeneratorTest {
 
 		Assertions.assertThat(this.imports).contains("org.hamcrest.*");
 	}
-	
-	
+
 	@Test
 	public void can_generate_entry_method_signature_with_import() {
 		Optional<Method> entryMethod = underTest.listStaticMethodsForClass(org.assertj.core.api.Assertions.class)
@@ -118,6 +126,31 @@ public class DelegateMethodGeneratorTest {
 				.isEqualToIgnoringWhitespace("default <K,V> MapEntry<K, V> entry(K arg0, V arg1)");
 
 		Assertions.assertThat(this.imports).contains("org.assertj.core.data.*");
+
+	}
+
+	@Test
+	public void can_generate_complex_asert_method_signature_with_import() {
+
+		/*
+		 * TODO: test for return type of: public static
+		 * AbstractCharSequenceAssert<?, ? extends CharSequence>
+		 * assertThat(CharSequence actual) { return
+		 * AssertionsForInterfaceTypes.assertThat(actual); }
+		 */
+
+		Optional<Method> assertMethod = underTest.listStaticMethodsForClass(org.assertj.core.api.Assertions.class)
+				.stream().filter((Method m) -> "assertThat".equals(m.getName()) && m.getParameters().length == 1
+						&& m.getParameters()[0].getParameterizedType().toString().contains("CharSeq")
+						)
+				.findFirst();
+
+		Assert.assertTrue(assertMethod.isPresent());
+
+		Assertions.assertThat(underTest.makeMethodSignature(assertMethod.get(), this.imports))
+				.isEqualToIgnoringWhitespace("default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0)");
+
+		Assertions.assertThat(this.imports).contains("org.assertj.core.api.*");
 
 	}
 
@@ -226,7 +259,7 @@ public class DelegateMethodGeneratorTest {
 
 		System.out.println(classText);
 
-		Assertions.assertThat(classText).startsWith("package org.interfaceit.results;" + System.lineSeparator())
+		Assertions.assertThat(classText).startsWith("package org.interfaceit.results;" + System.lineSeparator() + System.lineSeparator())
 				.doesNotContain("import java.lang.Class<").contains("/**").contains("* Delegate call to ")
 				.contains(
 						"* {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}")
