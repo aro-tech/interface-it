@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.assertj.core.api.AbstractCharSequenceAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,6 +19,7 @@ import org.mockito.Mockito;
 
 /**
  * Unit tests for generating delegate methods
+ * 
  * @author aro_tech
  *
  */
@@ -43,13 +43,13 @@ public class DelegateMethodGeneratorTest {
 	 */
 	@Test
 	public void can_find_static_methods() {
-		List<Method> results = underTest.listStaticMethodsForClass(Assertions.class);//(Thread.class);
+		List<Method> results = underTest.listStaticMethodsForClass(Assertions.class);// (Thread.class);
 		Assertions.assertThat(results).isNotEmpty();
-		for(Method cur: results) {
-			
-			if(cur.getName().equals("assertThat") && cur.getReturnType() == AbstractCharSequenceAssert.class) {
-				for(Parameter p: cur.getParameters()) {
-					System.out.println("type=" + p.getParameterizedType());									
+		for (Method cur : results) {
+
+			if (cur.getName().equals("assertThat")) {
+				for (Parameter p : cur.getParameters()) {
+					System.out.println("type=" + p.getType());
 				}
 			}
 		}
@@ -114,11 +114,12 @@ public class DelegateMethodGeneratorTest {
 
 		Assertions.assertThat(this.imports).contains("org.hamcrest.*");
 	}
-	
+
 	@Test
 	public void can_generate_catch_throwable_method_signature_with_import() {
 		Optional<Method> method = underTest.listStaticMethodsForClass(Assertions.class).stream()
-				.filter((Method m) -> "catchThrowable".equals(m.getName()) && m.getParameters().length == 1).findFirst();
+				.filter((Method m) -> "catchThrowable".equals(m.getName()) && m.getParameters().length == 1)
+				.findFirst();
 
 		Assert.assertTrue(method.isPresent());
 
@@ -127,6 +128,23 @@ public class DelegateMethodGeneratorTest {
 
 		Assertions.assertThat(this.imports).contains("org.assertj.core.api.*");
 	}
+
+	// <T extends AssertDelegateTarget> T assertThat(T assertion)
+	@Test
+	public void can_generate_generic_extends_adt_method_signature_with_import() {
+		Optional<Method> method = underTest.listStaticMethodsForClass(Assertions.class).stream()
+				.filter((Method m) -> "assertThat".equals(m.getName()) && m.getParameters().length == 1
+						&& m.getParameterTypes()[0].getSimpleName().equals("AssertDelegateTarget"))
+				.findFirst();
+
+		Assert.assertTrue(method.isPresent());
+
+		Assertions.assertThat(underTest.makeMethodSignature(method.get(), this.imports).trim())
+				.startsWith("default <T extends AssertDelegateTarget> T assertThat(T ").endsWith(")");
+
+		Assertions.assertThat(this.imports).contains("org.assertj.core.api.*");
+	}
+
 	@Test
 	public void can_generate_entry_method_signature_with_import() {
 		Optional<Method> entryMethod = underTest.listStaticMethodsForClass(org.assertj.core.api.Assertions.class)
@@ -154,14 +172,14 @@ public class DelegateMethodGeneratorTest {
 
 		Optional<Method> assertMethod = underTest.listStaticMethodsForClass(org.assertj.core.api.Assertions.class)
 				.stream().filter((Method m) -> "assertThat".equals(m.getName()) && m.getParameters().length == 1
-						&& m.getParameters()[0].getParameterizedType().toString().contains("CharSeq")
-						)
+						&& m.getParameters()[0].getParameterizedType().toString().contains("CharSeq"))
 				.findFirst();
 
 		Assert.assertTrue(assertMethod.isPresent());
 
 		Assertions.assertThat(underTest.makeMethodSignature(assertMethod.get(), this.imports))
-				.isEqualToIgnoringWhitespace("default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0)");
+				.isEqualToIgnoringWhitespace(
+						"default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0)");
 
 		Assertions.assertThat(this.imports).contains("org.assertj.core.api.*");
 
@@ -272,7 +290,8 @@ public class DelegateMethodGeneratorTest {
 
 		System.out.println(classText);
 
-		Assertions.assertThat(classText).startsWith("package org.interfaceit.results;" + System.lineSeparator() + System.lineSeparator())
+		Assertions.assertThat(classText)
+				.startsWith("package org.interfaceit.results;" + System.lineSeparator() + System.lineSeparator())
 				.doesNotContain("import java.lang.Class<").contains("/**").contains("* Delegate call to ")
 				.contains(
 						"* {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}")

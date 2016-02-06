@@ -7,7 +7,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 /**
- * @author arothkopf
+ * Focused tests for class name manipulation
+ * @author aro_tech
  *
  */
 public class ClassNameUtilsTest {

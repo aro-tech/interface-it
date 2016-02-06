@@ -4,9 +4,10 @@ Java-8 mix-in interface code generator
 The arrival of default interfaces in Java 8 opens the door to "mix-in" interfaces - a form of multiple inheritance.
 
 For example:
-
+```
 public class A implements MixinB, MixinC {
 }
+```
 
 In Java 8 it's possible that class A, despite having 0 implementation, is actually a useful class because MixinB and MixinC have
 default method implementations.
@@ -25,11 +26,17 @@ There are examples at: https://github.com/aro-tech/interface-it/examples
 
 Future directions:
 
-main class for command-line usage
-custom ANT task ?
-Maven plugin ?
-Eclipse plugin ?
-Generate mix-ins for singletons ?
+ * main class for command-line usage
+ 
+ * jar packaging
+ 
+ * custom ANT task ?
+ 
+ * Maven plugin ?
+ 
+ * Eclipse plugin ?
+ 
+ * Generate mix-ins for singletons ?
 
 
 Acknowledgments: 
