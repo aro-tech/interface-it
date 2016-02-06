@@ -72,7 +72,7 @@ public class DelegateMethodGeneratorTest {
 				"public static final Answer RETURNS_SMART_NULLS = Mockito.RETURNS_SMART_NULLS;");
 		// System.out.println(result);
 
-		Assertions.assertThat(imports).contains("org.mockito.stubbing.*", "org.mockito.*");
+		Assertions.assertThat(imports).contains("org.mockito.stubbing.Answer", "org.mockito.Mockito");
 
 	}
 
@@ -86,7 +86,7 @@ public class DelegateMethodGeneratorTest {
 		Assertions.assertThat(underTest.makeMethodSignature(when.get(), this.imports))
 				.startsWith("default <T> OngoingStubbing<T> when(T");
 
-		Assertions.assertThat(this.imports).contains("org.mockito.stubbing.*");
+		Assertions.assertThat(this.imports).contains("org.mockito.stubbing.OngoingStubbing");
 	}
 
 	@Test
@@ -99,7 +99,7 @@ public class DelegateMethodGeneratorTest {
 		Assertions.assertThat(underTest.makeMethodSignature(verifyMethod.get(), this.imports))
 				.startsWith("default <T> T verify(T").contains(", VerificationMode").endsWith(")");
 
-		Assertions.assertThat(this.imports).contains("org.mockito.verification.*");
+		Assertions.assertThat(this.imports).contains("org.mockito.verification.VerificationMode");
 	}
 
 	@Test
@@ -112,7 +112,7 @@ public class DelegateMethodGeneratorTest {
 		Assertions.assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), this.imports).trim())
 				.startsWith("default double doubleThat(Matcher<Double> ").endsWith(")");
 
-		Assertions.assertThat(this.imports).contains("org.hamcrest.*");
+		Assertions.assertThat(this.imports).contains("org.hamcrest.Matcher");
 	}
 
 	@Test
@@ -126,7 +126,7 @@ public class DelegateMethodGeneratorTest {
 		Assertions.assertThat(underTest.makeMethodSignature(method.get(), this.imports).trim())
 				.startsWith("default Throwable catchThrowable(ThrowableAssert.ThrowingCallable ").endsWith(")");
 
-		Assertions.assertThat(this.imports).contains("org.assertj.core.api.*");
+		Assertions.assertThat(this.imports).contains("org.assertj.core.api.ThrowableAssert.ThrowingCallable");
 	}
 
 	// <T extends AssertDelegateTarget> T assertThat(T assertion)
@@ -142,7 +142,7 @@ public class DelegateMethodGeneratorTest {
 		Assertions.assertThat(underTest.makeMethodSignature(method.get(), this.imports).trim())
 				.startsWith("default <T extends AssertDelegateTarget> T assertThat(T ").endsWith(")");
 
-		Assertions.assertThat(this.imports).contains("org.assertj.core.api.*");
+		Assertions.assertThat(this.imports).contains("org.assertj.core.api.AssertDelegateTarget");
 	}
 
 	@Test
@@ -156,7 +156,7 @@ public class DelegateMethodGeneratorTest {
 		Assertions.assertThat(underTest.makeMethodSignature(entryMethod.get(), this.imports))
 				.isEqualToIgnoringWhitespace("default <K,V> MapEntry<K, V> entry(K arg0, V arg1)");
 
-		Assertions.assertThat(this.imports).contains("org.assertj.core.data.*");
+		Assertions.assertThat(this.imports).contains("org.assertj.core.data.MapEntry");
 
 	}
 
@@ -181,7 +181,7 @@ public class DelegateMethodGeneratorTest {
 				.isEqualToIgnoringWhitespace(
 						"default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0)");
 
-		Assertions.assertThat(this.imports).contains("org.assertj.core.api.*");
+		Assertions.assertThat(this.imports).contains("org.assertj.core.api.AbstractCharSequenceAssert");
 
 	}
 
@@ -195,7 +195,7 @@ public class DelegateMethodGeneratorTest {
 		Assertions.assertThat(underTest.makeMethodSignature(tupleMethod.get(), this.imports))
 				.isEqualToIgnoringWhitespace("default Tuple tuple(Object... arg0)");
 
-		Assertions.assertThat(this.imports).contains("org.assertj.core.groups.*");
+		Assertions.assertThat(this.imports).contains("org.assertj.core.groups.Tuple");
 
 	}
 
@@ -248,7 +248,7 @@ public class DelegateMethodGeneratorTest {
 				.contains("return Mockito.verify(arg0, arg1);").endsWith("}" + System.lineSeparator());
 		// System.out.println(delegateMethod);
 
-		Assertions.assertThat(this.imports).contains("org.mockito.verification.*");
+		Assertions.assertThat(this.imports).contains("org.mockito.verification.VerificationMode");
 	}
 
 	@Test
@@ -266,7 +266,7 @@ public class DelegateMethodGeneratorTest {
 				.endsWith("}" + System.lineSeparator());
 		// System.out.println(delegateMethod);
 
-		Assertions.assertThat(this.imports).contains("org.mockito.stubbing.*");
+		Assertions.assertThat(this.imports).contains("org.mockito.stubbing.OngoingStubbing");
 	}
 
 	@Test
@@ -278,7 +278,7 @@ public class DelegateMethodGeneratorTest {
 		String signature = underTest.makeMethodSignature(Thread.class.getMethod("sleep", long.class), importNamesOut);
 
 		Assertions.assertThat(signature).contains(" throws InterruptedException");
-		Assertions.assertThat(importNamesOut).contains("java.lang.*");
+		Assertions.assertThat(importNamesOut).contains("java.lang.InterruptedException");
 	}
 
 	@Test

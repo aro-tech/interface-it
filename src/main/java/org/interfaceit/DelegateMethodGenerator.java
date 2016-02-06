@@ -145,7 +145,7 @@ public class DelegateMethodGenerator {
 					}
 					String typeName = bounds[i].getTypeName();
 					buf.append(ClassNameUtils.extractSimpleName(typeName));
-					importNamesOut.add(ClassNameUtils.makeImport(typeName));
+					importNamesOut.addAll(ClassNameUtils.makeImports(typeName));
 				}
 			}
 
@@ -186,7 +186,7 @@ public class DelegateMethodGenerator {
 	private static String extractShortNameAndUpdateImports(Set<String> importNamesOut, String fullTypeName) {
 		String shortTypeName = ClassNameUtils.extractSimpleName(fullTypeName);
 		if (shortTypeName.length() < fullTypeName.length()) {
-			importNamesOut.add(ClassNameUtils.makeImport(fullTypeName));
+			importNamesOut.addAll(ClassNameUtils.makeImports(fullTypeName));
 		}
 		return shortTypeName;
 	}
@@ -271,7 +271,7 @@ public class DelegateMethodGenerator {
 			generateConstant(field, delegateClass, importsUpdated, buf, indentationUnit);
 		});
 
-		importsUpdated.add(ClassNameUtils.makeImport(delegateClass.getTypeName()));
+		importsUpdated.addAll(ClassNameUtils.makeImports(delegateClass.getTypeName()));
 		return buf.toString();
 	}
 

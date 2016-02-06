@@ -4,6 +4,8 @@
 package org.interfaceit.util;
 
 import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -16,17 +18,71 @@ public class ClassNameUtils {
 	/**
 	 * 
 	 * @param fullName
-	 * @return package import (ex: java.lang.*)
+	 * @return set of classes to import (ex: java.util.Properties)
 	 */
-	public static String makeImport(String fullName) {
-		String[] split = fullName.split("<");
-		int lastDotIx = split[0].lastIndexOf('.');
-		if (lastDotIx >= 0) {
-			StringBuilder buf = new StringBuilder();
-			buf.append(fullName.substring(0, lastDotIx + 1)).append('*');
-			return buf.toString();
+	public static Set<String> makeImports(String fullName) {
+		Set<String> result = new TreeSet<String>();
+		String[] splitForParameterizedType = fullName.split("<");
+		if (splitForParameterizedType[0].lastIndexOf('.') >= 0) {
+			String extracted = splitForParameterizedType[0].trim();
+			cleanUpAndAddImport(result, extracted);
 		}
-		return fullName;
+
+		for (int i = 1; i < splitForParameterizedType.length; i++) {
+			int lastDotIx = splitForParameterizedType[i].lastIndexOf('.');
+			if (lastDotIx >= 0) {
+				String[] commaSeparated = splitForParameterizedType[i].split(",");
+				for (String cs : commaSeparated) {
+					String[] spaceSplit = cs.split(" ");
+					addOneImportIfPossible(result, spaceSplit);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * @param result
+	 * @param extracted
+	 */
+	private static void cleanUpAndAddImport(Set<String> result, String extracted) {
+		StringBuilder buf = new StringBuilder();
+		char[] chars = extracted.toCharArray();
+		for(char c: chars) {
+			if(Character.isAlphabetic(c) || Character.isDigit(c) || c == '.') {
+				buf.append(c);
+			} else if(c == '$') {
+				buf.append('.');
+			}
+		}
+		if(buf.length() > 0) {
+			result.add(buf.toString());			
+		}
+	}
+
+	private static void addOneImportIfPossible(Set<String> result, String[] spaceSplit) {
+		for(String cur: spaceSplit) {
+			if(containsPackageInfo(cur)) {
+				cleanUpAndAddImport(result, cur);						
+			}						
+		}
+	}
+
+	private static boolean containsPackageInfo(String cur) {
+		return cur.lastIndexOf('.') >= 0;
+	}
+
+	private static boolean needToRemoveSuffixNonAlphaNumericChars(int closeIx, int squareBraceIx) {
+		return closeIx >= 0 || squareBraceIx >= 0;
+	}
+
+	private static void removeExtraCharsAndAddImport(Set<String> result, String cur, int closeIx, int squareBraceIx) {
+		if(squareBraceIx >= 0) {
+			result.add(cur.substring(0, squareBraceIx).trim());
+		} else {
+			result.add(cur.substring(0, closeIx).trim());									
+		}
 	}
 
 	/**
