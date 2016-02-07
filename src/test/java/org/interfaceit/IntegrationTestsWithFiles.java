@@ -19,7 +19,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * @author arothkopf
+ * @author aro_tech
  *
  */
 public class IntegrationTestsWithFiles {
