@@ -60,36 +60,6 @@ public interface Mockito {
     // DELEGATE METHODS: 
 
     /**
-     * Delegate call to public static <T> void org.mockito.Mockito.reset(T...)
-     * {@link org.mockito.Mockito#reset(java.lang.Object[])}
-     */
-    default <T> void reset(T... arg0) {
-        Mockito.reset(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> T org.mockito.Mockito.verify(T)
-     * {@link org.mockito.Mockito#verify(java.lang.Object)}
-     */
-    default <T> T verify(T arg0) {
-        return Mockito.verify(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> T org.mockito.Mockito.verify(T,org.mockito.verification.VerificationMode)
-     * {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}
-     */
-    default <T> T verify(T arg0, VerificationMode arg1) {
-        return Mockito.verify(arg0, arg1);
-    }
-
-
-
-    /**
      * Delegate call to public static org.mockito.verification.VerificationAfterDelay org.mockito.Mockito.after(long)
      * {@link org.mockito.Mockito#after(long)}
      */
@@ -100,151 +70,221 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static org.mockito.verification.VerificationWithTimeout org.mockito.Mockito.timeout(long)
-     * {@link org.mockito.Mockito#timeout(long)}
+     * Delegate call to public static <T> T org.mockito.Matchers.any()
+     * {@link org.mockito.Matchers#any()}
      */
-    default VerificationWithTimeout timeout(long arg0) {
-        return Mockito.timeout(arg0);
+    default <T> T any() {
+        return Matchers.any();
     }
 
 
 
     /**
-     * Delegate call to public static <T> org.mockito.stubbing.OngoingStubbing<T> org.mockito.Mockito.when(T)
-     * {@link org.mockito.Mockito#when(java.lang.Object)}
+     * Delegate call to public static <T> T org.mockito.Matchers.any(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#any(java.lang.Class)}
      */
-    default <T> OngoingStubbing<T> when(T arg0) {
-        return Mockito.when(arg0);
+    default <T> T any(Class<T> arg0) {
+        return Matchers.any(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.mockito.verification.VerificationMode org.mockito.Mockito.times(int)
-     * {@link org.mockito.Mockito#times(int)}
+     * Delegate call to public static boolean org.mockito.Matchers.anyBoolean()
+     * {@link org.mockito.Matchers#anyBoolean()}
      */
-    default VerificationMode times(int arg0) {
-        return Mockito.times(arg0);
+    default boolean anyBoolean() {
+        return Matchers.anyBoolean();
     }
 
 
 
     /**
-     * Delegate call to public static <T> org.mockito.stubbing.DeprecatedOngoingStubbing<T> org.mockito.Mockito.stub(T)
-     * {@link org.mockito.Mockito#stub(java.lang.Object)}
+     * Delegate call to public static byte org.mockito.Matchers.anyByte()
+     * {@link org.mockito.Matchers#anyByte()}
      */
-    default <T> DeprecatedOngoingStubbing<T> stub(T arg0) {
-        return Mockito.stub(arg0);
+    default byte anyByte() {
+        return Matchers.anyByte();
     }
 
 
 
     /**
-     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doThrow(java.lang.Throwable)
-     * {@link org.mockito.Mockito#doThrow(java.lang.Throwable)}
+     * Delegate call to public static char org.mockito.Matchers.anyChar()
+     * {@link org.mockito.Matchers#anyChar()}
      */
-    default Stubber doThrow(Throwable arg0) {
-        return Mockito.doThrow(arg0);
+    default char anyChar() {
+        return Matchers.anyChar();
     }
 
 
 
     /**
-     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doThrow(java.lang.Class<? extends java.lang.Throwable>)
-     * {@link org.mockito.Mockito#doThrow(java.lang.Class)}
+     * Delegate call to public static java.util.Collection org.mockito.Matchers.anyCollection()
+     * {@link org.mockito.Matchers#anyCollection()}
      */
-    default Stubber doThrow(Class<? extends Throwable> arg0) {
-        return Mockito.doThrow(arg0);
+    default Collection anyCollection() {
+        return Matchers.anyCollection();
     }
 
 
 
     /**
-     * Delegate call to public static <T> org.mockito.stubbing.VoidMethodStubbable<T> org.mockito.Mockito.stubVoid(T)
-     * {@link org.mockito.Mockito#stubVoid(java.lang.Object)}
+     * Delegate call to public static <T> java.util.Collection<T> org.mockito.Matchers.anyCollectionOf(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#anyCollectionOf(java.lang.Class)}
      */
-    default <T> VoidMethodStubbable<T> stubVoid(T arg0) {
-        return Mockito.stubVoid(arg0);
+    default <T> Collection<T> anyCollectionOf(Class<T> arg0) {
+        return Matchers.anyCollectionOf(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.mockito.MockingDetails org.mockito.Mockito.mockingDetails(java.lang.Object)
-     * {@link org.mockito.Mockito#mockingDetails(java.lang.Object)}
+     * Delegate call to public static double org.mockito.Matchers.anyDouble()
+     * {@link org.mockito.Matchers#anyDouble()}
      */
-    default MockingDetails mockingDetails(Object arg0) {
-        return Mockito.mockingDetails(arg0);
+    default double anyDouble() {
+        return Matchers.anyDouble();
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>)
-     * {@link org.mockito.Mockito#mock(java.lang.Class)}
+     * Delegate call to public static float org.mockito.Matchers.anyFloat()
+     * {@link org.mockito.Matchers#anyFloat()}
      */
-    default <T> T mock(Class<T> arg0) {
-        return Mockito.mock(arg0);
+    default float anyFloat() {
+        return Matchers.anyFloat();
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>,java.lang.String)
-     * {@link org.mockito.Mockito#mock(java.lang.Class,java.lang.String)}
+     * Delegate call to public static int org.mockito.Matchers.anyInt()
+     * {@link org.mockito.Matchers#anyInt()}
      */
-    default <T> T mock(Class<T> arg0, String arg1) {
-        return Mockito.mock(arg0, arg1);
+    default int anyInt() {
+        return Matchers.anyInt();
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>,org.mockito.ReturnValues)
-     * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.ReturnValues)}
+     * Delegate call to public static java.util.List org.mockito.Matchers.anyList()
+     * {@link org.mockito.Matchers#anyList()}
      */
-    default <T> T mock(Class<T> arg0, ReturnValues arg1) {
-        return Mockito.mock(arg0, arg1);
+    default List anyList() {
+        return Matchers.anyList();
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>,org.mockito.MockSettings)
-     * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.MockSettings)}
+     * Delegate call to public static <T> java.util.List<T> org.mockito.Matchers.anyListOf(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#anyListOf(java.lang.Class)}
      */
-    default <T> T mock(Class<T> arg0, MockSettings arg1) {
-        return Mockito.mock(arg0, arg1);
+    default <T> List<T> anyListOf(Class<T> arg0) {
+        return Matchers.anyListOf(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>,org.mockito.stubbing.Answer)
-     * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.stubbing.Answer)}
+     * Delegate call to public static long org.mockito.Matchers.anyLong()
+     * {@link org.mockito.Matchers#anyLong()}
      */
-    default <T> T mock(Class<T> arg0, Answer arg1) {
-        return Mockito.mock(arg0, arg1);
+    default long anyLong() {
+        return Matchers.anyLong();
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Mockito.spy(java.lang.Class<T>)
-     * {@link org.mockito.Mockito#spy(java.lang.Class)}
+     * Delegate call to public static java.util.Map org.mockito.Matchers.anyMap()
+     * {@link org.mockito.Matchers#anyMap()}
      */
-    default <T> T spy(Class<T> arg0) {
-        return Mockito.spy(arg0);
+    default Map anyMap() {
+        return Matchers.anyMap();
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Mockito.spy(T)
-     * {@link org.mockito.Mockito#spy(java.lang.Object)}
+     * Delegate call to public static <K,V> java.util.Map<K, V> org.mockito.Matchers.anyMapOf(java.lang.Class<K>,java.lang.Class<V>)
+     * {@link org.mockito.Matchers#anyMapOf(java.lang.Class,java.lang.Class)}
      */
-    default <T> T spy(T arg0) {
-        return Mockito.spy(arg0);
+    default <K,V> Map<K, V> anyMapOf(Class<K> arg0, Class<V> arg1) {
+        return Matchers.anyMapOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.anyObject()
+     * {@link org.mockito.Matchers#anyObject()}
+     */
+    default <T> T anyObject() {
+        return Matchers.anyObject();
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.Set org.mockito.Matchers.anySet()
+     * {@link org.mockito.Matchers#anySet()}
+     */
+    default Set anySet() {
+        return Matchers.anySet();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> java.util.Set<T> org.mockito.Matchers.anySetOf(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#anySetOf(java.lang.Class)}
+     */
+    default <T> Set<T> anySetOf(Class<T> arg0) {
+        return Matchers.anySetOf(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static short org.mockito.Matchers.anyShort()
+     * {@link org.mockito.Matchers#anyShort()}
+     */
+    default short anyShort() {
+        return Matchers.anyShort();
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.mockito.Matchers.anyString()
+     * {@link org.mockito.Matchers#anyString()}
+     */
+    default String anyString() {
+        return Matchers.anyString();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.anyVararg()
+     * {@link org.mockito.Matchers#anyVararg()}
+     */
+    default <T> T anyVararg() {
+        return Matchers.anyVararg();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.argThat(org.hamcrest.Matcher<T>)
+     * {@link org.mockito.Matchers#argThat(org.hamcrest.Matcher)}
+     */
+    default <T> T argThat(Matcher<T> arg0) {
+        return Matchers.argThat(arg0);
     }
 
 
@@ -260,11 +300,11 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doCallRealMethod()
-     * {@link org.mockito.Mockito#doCallRealMethod()}
+     * Delegate call to public static org.mockito.verification.VerificationMode org.mockito.Mockito.atLeastOnce()
+     * {@link org.mockito.Mockito#atLeastOnce()}
      */
-    default Stubber doCallRealMethod() {
-        return Mockito.doCallRealMethod();
+    default VerificationMode atLeastOnce() {
+        return Mockito.atLeastOnce();
     }
 
 
@@ -280,71 +320,21 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doAnswer(org.mockito.stubbing.Answer)
-     * {@link org.mockito.Mockito#doAnswer(org.mockito.stubbing.Answer)}
+     * Delegate call to public static boolean org.mockito.Matchers.booleanThat(org.hamcrest.Matcher<java.lang.Boolean>)
+     * {@link org.mockito.Matchers#booleanThat(org.hamcrest.Matcher)}
      */
-    default Stubber doAnswer(Answer arg0) {
-        return Mockito.doAnswer(arg0);
+    default boolean booleanThat(Matcher<Boolean> arg0) {
+        return Matchers.booleanThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doNothing()
-     * {@link org.mockito.Mockito#doNothing()}
+     * Delegate call to public static byte org.mockito.Matchers.byteThat(org.hamcrest.Matcher<java.lang.Byte>)
+     * {@link org.mockito.Matchers#byteThat(org.hamcrest.Matcher)}
      */
-    default Stubber doNothing() {
-        return Mockito.doNothing();
-    }
-
-
-
-    /**
-     * Delegate call to public static org.mockito.InOrder org.mockito.Mockito.inOrder(java.lang.Object...)
-     * {@link org.mockito.Mockito#inOrder(java.lang.Object[])}
-     */
-    default InOrder inOrder(Object... arg0) {
-        return Mockito.inOrder(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.mockito.verification.VerificationMode org.mockito.Mockito.atLeastOnce()
-     * {@link org.mockito.Mockito#atLeastOnce()}
-     */
-    default VerificationMode atLeastOnce() {
-        return Mockito.atLeastOnce();
-    }
-
-
-
-    /**
-     * Delegate call to public static org.mockito.verification.VerificationMode org.mockito.Mockito.only()
-     * {@link org.mockito.Mockito#only()}
-     */
-    default VerificationMode only() {
-        return Mockito.only();
-    }
-
-
-
-    /**
-     * Delegate call to public static java.lang.Object[] org.mockito.Mockito.ignoreStubs(java.lang.Object...)
-     * {@link org.mockito.Mockito#ignoreStubs(java.lang.Object[])}
-     */
-    default Object[] ignoreStubs(Object... arg0) {
-        return Mockito.ignoreStubs(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.mockito.MockSettings org.mockito.Mockito.withSettings()
-     * {@link org.mockito.Mockito#withSettings()}
-     */
-    default MockSettings withSettings() {
-        return Mockito.withSettings();
+    default byte byteThat(Matcher<Byte> arg0) {
+        return Matchers.byteThat(arg0);
     }
 
 
@@ -360,51 +350,11 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doReturn(java.lang.Object)
-     * {@link org.mockito.Mockito#doReturn(java.lang.Object)}
+     * Delegate call to public static char org.mockito.Matchers.charThat(org.hamcrest.Matcher<java.lang.Character>)
+     * {@link org.mockito.Matchers#charThat(org.hamcrest.Matcher)}
      */
-    default Stubber doReturn(Object arg0) {
-        return Mockito.doReturn(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.mockito.verification.VerificationMode org.mockito.Mockito.never()
-     * {@link org.mockito.Mockito#never()}
-     */
-    default VerificationMode never() {
-        return Mockito.never();
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.mockito.Mockito.verifyZeroInteractions(java.lang.Object...)
-     * {@link org.mockito.Mockito#verifyZeroInteractions(java.lang.Object[])}
-     */
-    default void verifyZeroInteractions(Object... arg0) {
-        Mockito.verifyZeroInteractions(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.mockito.Mockito.validateMockitoUsage()
-     * {@link org.mockito.Mockito#validateMockitoUsage()}
-     */
-    default void validateMockitoUsage() {
-        Mockito.validateMockitoUsage();
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.mockito.Mockito.verifyNoMoreInteractions(java.lang.Object...)
-     * {@link org.mockito.Mockito#verifyNoMoreInteractions(java.lang.Object[])}
-     */
-    default void verifyNoMoreInteractions(Object... arg0) {
-        Mockito.verifyNoMoreInteractions(arg0);
+    default char charThat(Matcher<Character> arg0) {
+        return Matchers.charThat(arg0);
     }
 
 
@@ -420,6 +370,76 @@ public interface Mockito {
 
 
     /**
+     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doAnswer(org.mockito.stubbing.Answer)
+     * {@link org.mockito.Mockito#doAnswer(org.mockito.stubbing.Answer)}
+     */
+    default Stubber doAnswer(Answer arg0) {
+        return Mockito.doAnswer(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doCallRealMethod()
+     * {@link org.mockito.Mockito#doCallRealMethod()}
+     */
+    default Stubber doCallRealMethod() {
+        return Mockito.doCallRealMethod();
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doNothing()
+     * {@link org.mockito.Mockito#doNothing()}
+     */
+    default Stubber doNothing() {
+        return Mockito.doNothing();
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doReturn(java.lang.Object)
+     * {@link org.mockito.Mockito#doReturn(java.lang.Object)}
+     */
+    default Stubber doReturn(Object arg0) {
+        return Mockito.doReturn(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doThrow(java.lang.Class<? extends java.lang.Throwable>)
+     * {@link org.mockito.Mockito#doThrow(java.lang.Class)}
+     */
+    default Stubber doThrow(Class<? extends Throwable> arg0) {
+        return Mockito.doThrow(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.stubbing.Stubber org.mockito.Mockito.doThrow(java.lang.Throwable)
+     * {@link org.mockito.Mockito#doThrow(java.lang.Throwable)}
+     */
+    default Stubber doThrow(Throwable arg0) {
+        return Mockito.doThrow(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static double org.mockito.Matchers.doubleThat(org.hamcrest.Matcher<java.lang.Double>)
+     * {@link org.mockito.Matchers#doubleThat(org.hamcrest.Matcher)}
+     */
+    default double doubleThat(Matcher<Double> arg0) {
+        return Matchers.doubleThat(arg0);
+    }
+
+
+
+    /**
      * Delegate call to public static java.lang.String org.mockito.Matchers.endsWith(java.lang.String)
      * {@link org.mockito.Matchers#endsWith(java.lang.String)}
      */
@@ -430,40 +450,10 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static java.lang.String org.mockito.Matchers.matches(java.lang.String)
-     * {@link org.mockito.Matchers#matches(java.lang.String)}
+     * Delegate call to public static boolean org.mockito.Matchers.eq(boolean)
+     * {@link org.mockito.Matchers#eq(boolean)}
      */
-    default String matches(String arg0) {
-        return Matchers.matches(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.lang.String org.mockito.Matchers.startsWith(java.lang.String)
-     * {@link org.mockito.Matchers#startsWith(java.lang.String)}
-     */
-    default String startsWith(String arg0) {
-        return Matchers.startsWith(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static double org.mockito.Matchers.eq(double)
-     * {@link org.mockito.Matchers#eq(double)}
-     */
-    default double eq(double arg0) {
-        return Matchers.eq(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static char org.mockito.Matchers.eq(char)
-     * {@link org.mockito.Matchers#eq(char)}
-     */
-    default char eq(char arg0) {
+    default boolean eq(boolean arg0) {
         return Matchers.eq(arg0);
     }
 
@@ -480,40 +470,20 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static boolean org.mockito.Matchers.eq(boolean)
-     * {@link org.mockito.Matchers#eq(boolean)}
+     * Delegate call to public static char org.mockito.Matchers.eq(char)
+     * {@link org.mockito.Matchers#eq(char)}
      */
-    default boolean eq(boolean arg0) {
+    default char eq(char arg0) {
         return Matchers.eq(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Matchers.eq(T)
-     * {@link org.mockito.Matchers#eq(java.lang.Object)}
+     * Delegate call to public static double org.mockito.Matchers.eq(double)
+     * {@link org.mockito.Matchers#eq(double)}
      */
-    default <T> T eq(T arg0) {
-        return Matchers.eq(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static short org.mockito.Matchers.eq(short)
-     * {@link org.mockito.Matchers#eq(short)}
-     */
-    default short eq(short arg0) {
-        return Matchers.eq(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static long org.mockito.Matchers.eq(long)
-     * {@link org.mockito.Matchers#eq(long)}
-     */
-    default long eq(long arg0) {
+    default double eq(double arg0) {
         return Matchers.eq(arg0);
     }
 
@@ -540,31 +510,81 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Matchers.isNull(java.lang.Class<T>)
-     * {@link org.mockito.Matchers#isNull(java.lang.Class)}
+     * Delegate call to public static long org.mockito.Matchers.eq(long)
+     * {@link org.mockito.Matchers#eq(long)}
      */
-    default <T> T isNull(Class<T> arg0) {
-        return Matchers.isNull(arg0);
+    default long eq(long arg0) {
+        return Matchers.eq(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static java.lang.Object org.mockito.Matchers.isNull()
-     * {@link org.mockito.Matchers#isNull()}
+     * Delegate call to public static short org.mockito.Matchers.eq(short)
+     * {@link org.mockito.Matchers#eq(short)}
      */
-    default Object isNull() {
-        return Matchers.isNull();
+    default short eq(short arg0) {
+        return Matchers.eq(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static double org.mockito.Matchers.doubleThat(org.hamcrest.Matcher<java.lang.Double>)
-     * {@link org.mockito.Matchers#doubleThat(org.hamcrest.Matcher)}
+     * Delegate call to public static <T> T org.mockito.Matchers.eq(T)
+     * {@link org.mockito.Matchers#eq(java.lang.Object)}
      */
-    default double doubleThat(Matcher<Double> arg0) {
-        return Matchers.doubleThat(arg0);
+    default <T> T eq(T arg0) {
+        return Matchers.eq(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static float org.mockito.Matchers.floatThat(org.hamcrest.Matcher<java.lang.Float>)
+     * {@link org.mockito.Matchers#floatThat(org.hamcrest.Matcher)}
+     */
+    default float floatThat(Matcher<Float> arg0) {
+        return Matchers.floatThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.Object[] org.mockito.Mockito.ignoreStubs(java.lang.Object...)
+     * {@link org.mockito.Mockito#ignoreStubs(java.lang.Object[])}
+     */
+    default Object[] ignoreStubs(Object... arg0) {
+        return Mockito.ignoreStubs(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.InOrder org.mockito.Mockito.inOrder(java.lang.Object...)
+     * {@link org.mockito.Mockito#inOrder(java.lang.Object[])}
+     */
+    default InOrder inOrder(Object... arg0) {
+        return Mockito.inOrder(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static int org.mockito.Matchers.intThat(org.hamcrest.Matcher<java.lang.Integer>)
+     * {@link org.mockito.Matchers#intThat(org.hamcrest.Matcher)}
+     */
+    default int intThat(Matcher<Integer> arg0) {
+        return Matchers.intThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.isA(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#isA(java.lang.Class)}
+     */
+    default <T> T isA(Class<T> arg0) {
+        return Matchers.isA(arg0);
     }
 
 
@@ -590,81 +610,111 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static boolean org.mockito.Matchers.anyBoolean()
-     * {@link org.mockito.Matchers#anyBoolean()}
+     * Delegate call to public static java.lang.Object org.mockito.Matchers.isNull()
+     * {@link org.mockito.Matchers#isNull()}
      */
-    default boolean anyBoolean() {
-        return Matchers.anyBoolean();
+    default Object isNull() {
+        return Matchers.isNull();
     }
 
 
 
     /**
-     * Delegate call to public static <T> java.util.Collection<T> org.mockito.Matchers.anyCollectionOf(java.lang.Class<T>)
-     * {@link org.mockito.Matchers#anyCollectionOf(java.lang.Class)}
+     * Delegate call to public static <T> T org.mockito.Matchers.isNull(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#isNull(java.lang.Class)}
      */
-    default <T> Collection<T> anyCollectionOf(Class<T> arg0) {
-        return Matchers.anyCollectionOf(arg0);
+    default <T> T isNull(Class<T> arg0) {
+        return Matchers.isNull(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static java.util.Map org.mockito.Matchers.anyMap()
-     * {@link org.mockito.Matchers#anyMap()}
+     * Delegate call to public static long org.mockito.Matchers.longThat(org.hamcrest.Matcher<java.lang.Long>)
+     * {@link org.mockito.Matchers#longThat(org.hamcrest.Matcher)}
      */
-    default Map anyMap() {
-        return Matchers.anyMap();
+    default long longThat(Matcher<Long> arg0) {
+        return Matchers.longThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static java.lang.String org.mockito.Matchers.anyString()
-     * {@link org.mockito.Matchers#anyString()}
+     * Delegate call to public static java.lang.String org.mockito.Matchers.matches(java.lang.String)
+     * {@link org.mockito.Matchers#matches(java.lang.String)}
      */
-    default String anyString() {
-        return Matchers.anyString();
+    default String matches(String arg0) {
+        return Matchers.matches(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static java.util.Set org.mockito.Matchers.anySet()
-     * {@link org.mockito.Matchers#anySet()}
+     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>)
+     * {@link org.mockito.Mockito#mock(java.lang.Class)}
      */
-    default Set anySet() {
-        return Matchers.anySet();
+    default <T> T mock(Class<T> arg0) {
+        return Mockito.mock(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Matchers.anyObject()
-     * {@link org.mockito.Matchers#anyObject()}
+     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>,org.mockito.stubbing.Answer)
+     * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.stubbing.Answer)}
      */
-    default <T> T anyObject() {
-        return Matchers.anyObject();
+    default <T> T mock(Class<T> arg0, Answer arg1) {
+        return Mockito.mock(arg0, arg1);
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Matchers.refEq(T,java.lang.String...)
-     * {@link org.mockito.Matchers#refEq(java.lang.Object,java.lang.String[])}
+     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>,org.mockito.MockSettings)
+     * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.MockSettings)}
      */
-    default <T> T refEq(T arg0, String... arg1) {
-        return Matchers.refEq(arg0, arg1);
+    default <T> T mock(Class<T> arg0, MockSettings arg1) {
+        return Mockito.mock(arg0, arg1);
     }
 
 
 
     /**
-     * Delegate call to public static char org.mockito.Matchers.anyChar()
-     * {@link org.mockito.Matchers#anyChar()}
+     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>,org.mockito.ReturnValues)
+     * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.ReturnValues)}
      */
-    default char anyChar() {
-        return Matchers.anyChar();
+    default <T> T mock(Class<T> arg0, ReturnValues arg1) {
+        return Mockito.mock(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Mockito.mock(java.lang.Class<T>,java.lang.String)
+     * {@link org.mockito.Mockito#mock(java.lang.Class,java.lang.String)}
+     */
+    default <T> T mock(Class<T> arg0, String arg1) {
+        return Mockito.mock(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.MockingDetails org.mockito.Mockito.mockingDetails(java.lang.Object)
+     * {@link org.mockito.Mockito#mockingDetails(java.lang.Object)}
+     */
+    default MockingDetails mockingDetails(Object arg0) {
+        return Mockito.mockingDetails(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.verification.VerificationMode org.mockito.Mockito.never()
+     * {@link org.mockito.Mockito#never()}
+     */
+    default VerificationMode never() {
+        return Mockito.never();
     }
 
 
@@ -690,161 +740,31 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Matchers.argThat(org.hamcrest.Matcher<T>)
-     * {@link org.mockito.Matchers#argThat(org.hamcrest.Matcher)}
+     * Delegate call to public static org.mockito.verification.VerificationMode org.mockito.Mockito.only()
+     * {@link org.mockito.Mockito#only()}
      */
-    default <T> T argThat(Matcher<T> arg0) {
-        return Matchers.argThat(arg0);
+    default VerificationMode only() {
+        return Mockito.only();
     }
 
 
 
     /**
-     * Delegate call to public static <T> java.util.Set<T> org.mockito.Matchers.anySetOf(java.lang.Class<T>)
-     * {@link org.mockito.Matchers#anySetOf(java.lang.Class)}
+     * Delegate call to public static <T> T org.mockito.Matchers.refEq(T,java.lang.String...)
+     * {@link org.mockito.Matchers#refEq(java.lang.Object,java.lang.String[])}
      */
-    default <T> Set<T> anySetOf(Class<T> arg0) {
-        return Matchers.anySetOf(arg0);
+    default <T> T refEq(T arg0, String... arg1) {
+        return Matchers.refEq(arg0, arg1);
     }
 
 
 
     /**
-     * Delegate call to public static boolean org.mockito.Matchers.booleanThat(org.hamcrest.Matcher<java.lang.Boolean>)
-     * {@link org.mockito.Matchers#booleanThat(org.hamcrest.Matcher)}
+     * Delegate call to public static <T> void org.mockito.Mockito.reset(T...)
+     * {@link org.mockito.Mockito#reset(java.lang.Object[])}
      */
-    default boolean booleanThat(Matcher<Boolean> arg0) {
-        return Matchers.booleanThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static byte org.mockito.Matchers.anyByte()
-     * {@link org.mockito.Matchers#anyByte()}
-     */
-    default byte anyByte() {
-        return Matchers.anyByte();
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> T org.mockito.Matchers.anyVararg()
-     * {@link org.mockito.Matchers#anyVararg()}
-     */
-    default <T> T anyVararg() {
-        return Matchers.anyVararg();
-    }
-
-
-
-    /**
-     * Delegate call to public static double org.mockito.Matchers.anyDouble()
-     * {@link org.mockito.Matchers#anyDouble()}
-     */
-    default double anyDouble() {
-        return Matchers.anyDouble();
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> java.util.List<T> org.mockito.Matchers.anyListOf(java.lang.Class<T>)
-     * {@link org.mockito.Matchers#anyListOf(java.lang.Class)}
-     */
-    default <T> List<T> anyListOf(Class<T> arg0) {
-        return Matchers.anyListOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.util.Collection org.mockito.Matchers.anyCollection()
-     * {@link org.mockito.Matchers#anyCollection()}
-     */
-    default Collection anyCollection() {
-        return Matchers.anyCollection();
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> T org.mockito.Matchers.isA(java.lang.Class<T>)
-     * {@link org.mockito.Matchers#isA(java.lang.Class)}
-     */
-    default <T> T isA(Class<T> arg0) {
-        return Matchers.isA(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <K,V> java.util.Map<K, V> org.mockito.Matchers.anyMapOf(java.lang.Class<K>,java.lang.Class<V>)
-     * {@link org.mockito.Matchers#anyMapOf(java.lang.Class,java.lang.Class)}
-     */
-    default <K,V> Map<K, V> anyMapOf(Class<K> arg0, Class<V> arg1) {
-        return Matchers.anyMapOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static char org.mockito.Matchers.charThat(org.hamcrest.Matcher<java.lang.Character>)
-     * {@link org.mockito.Matchers#charThat(org.hamcrest.Matcher)}
-     */
-    default char charThat(Matcher<Character> arg0) {
-        return Matchers.charThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static byte org.mockito.Matchers.byteThat(org.hamcrest.Matcher<java.lang.Byte>)
-     * {@link org.mockito.Matchers#byteThat(org.hamcrest.Matcher)}
-     */
-    default byte byteThat(Matcher<Byte> arg0) {
-        return Matchers.byteThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static short org.mockito.Matchers.shortThat(org.hamcrest.Matcher<java.lang.Short>)
-     * {@link org.mockito.Matchers#shortThat(org.hamcrest.Matcher)}
-     */
-    default short shortThat(Matcher<Short> arg0) {
-        return Matchers.shortThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static long org.mockito.Matchers.longThat(org.hamcrest.Matcher<java.lang.Long>)
-     * {@link org.mockito.Matchers#longThat(org.hamcrest.Matcher)}
-     */
-    default long longThat(Matcher<Long> arg0) {
-        return Matchers.longThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static int org.mockito.Matchers.anyInt()
-     * {@link org.mockito.Matchers#anyInt()}
-     */
-    default int anyInt() {
-        return Matchers.anyInt();
-    }
-
-
-
-    /**
-     * Delegate call to public static java.util.List org.mockito.Matchers.anyList()
-     * {@link org.mockito.Matchers#anyList()}
-     */
-    default List anyList() {
-        return Matchers.anyList();
+    default <T> void reset(T... arg0) {
+        Mockito.reset(arg0);
     }
 
 
@@ -860,71 +780,151 @@ public interface Mockito {
 
 
     /**
-     * Delegate call to public static float org.mockito.Matchers.anyFloat()
-     * {@link org.mockito.Matchers#anyFloat()}
+     * Delegate call to public static short org.mockito.Matchers.shortThat(org.hamcrest.Matcher<java.lang.Short>)
+     * {@link org.mockito.Matchers#shortThat(org.hamcrest.Matcher)}
      */
-    default float anyFloat() {
-        return Matchers.anyFloat();
+    default short shortThat(Matcher<Short> arg0) {
+        return Matchers.shortThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static float org.mockito.Matchers.floatThat(org.hamcrest.Matcher<java.lang.Float>)
-     * {@link org.mockito.Matchers#floatThat(org.hamcrest.Matcher)}
+     * Delegate call to public static <T> T org.mockito.Mockito.spy(java.lang.Class<T>)
+     * {@link org.mockito.Mockito#spy(java.lang.Class)}
      */
-    default float floatThat(Matcher<Float> arg0) {
-        return Matchers.floatThat(arg0);
+    default <T> T spy(Class<T> arg0) {
+        return Mockito.spy(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static long org.mockito.Matchers.anyLong()
-     * {@link org.mockito.Matchers#anyLong()}
+     * Delegate call to public static <T> T org.mockito.Mockito.spy(T)
+     * {@link org.mockito.Mockito#spy(java.lang.Object)}
      */
-    default long anyLong() {
-        return Matchers.anyLong();
+    default <T> T spy(T arg0) {
+        return Mockito.spy(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Matchers.any(java.lang.Class<T>)
-     * {@link org.mockito.Matchers#any(java.lang.Class)}
+     * Delegate call to public static java.lang.String org.mockito.Matchers.startsWith(java.lang.String)
+     * {@link org.mockito.Matchers#startsWith(java.lang.String)}
      */
-    default <T> T any(Class<T> arg0) {
-        return Matchers.any(arg0);
+    default String startsWith(String arg0) {
+        return Matchers.startsWith(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.mockito.Matchers.any()
-     * {@link org.mockito.Matchers#any()}
+     * Delegate call to public static <T> org.mockito.stubbing.DeprecatedOngoingStubbing<T> org.mockito.Mockito.stub(T)
+     * {@link org.mockito.Mockito#stub(java.lang.Object)}
      */
-    default <T> T any() {
-        return Matchers.any();
+    default <T> DeprecatedOngoingStubbing<T> stub(T arg0) {
+        return Mockito.stub(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static short org.mockito.Matchers.anyShort()
-     * {@link org.mockito.Matchers#anyShort()}
+     * Delegate call to public static <T> org.mockito.stubbing.VoidMethodStubbable<T> org.mockito.Mockito.stubVoid(T)
+     * {@link org.mockito.Mockito#stubVoid(java.lang.Object)}
      */
-    default short anyShort() {
-        return Matchers.anyShort();
+    default <T> VoidMethodStubbable<T> stubVoid(T arg0) {
+        return Mockito.stubVoid(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static int org.mockito.Matchers.intThat(org.hamcrest.Matcher<java.lang.Integer>)
-     * {@link org.mockito.Matchers#intThat(org.hamcrest.Matcher)}
+     * Delegate call to public static org.mockito.verification.VerificationWithTimeout org.mockito.Mockito.timeout(long)
+     * {@link org.mockito.Mockito#timeout(long)}
      */
-    default int intThat(Matcher<Integer> arg0) {
-        return Matchers.intThat(arg0);
+    default VerificationWithTimeout timeout(long arg0) {
+        return Mockito.timeout(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.verification.VerificationMode org.mockito.Mockito.times(int)
+     * {@link org.mockito.Mockito#times(int)}
+     */
+    default VerificationMode times(int arg0) {
+        return Mockito.times(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.mockito.Mockito.validateMockitoUsage()
+     * {@link org.mockito.Mockito#validateMockitoUsage()}
+     */
+    default void validateMockitoUsage() {
+        Mockito.validateMockitoUsage();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Mockito.verify(T)
+     * {@link org.mockito.Mockito#verify(java.lang.Object)}
+     */
+    default <T> T verify(T arg0) {
+        return Mockito.verify(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Mockito.verify(T,org.mockito.verification.VerificationMode)
+     * {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}
+     */
+    default <T> T verify(T arg0, VerificationMode arg1) {
+        return Mockito.verify(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.mockito.Mockito.verifyNoMoreInteractions(java.lang.Object...)
+     * {@link org.mockito.Mockito#verifyNoMoreInteractions(java.lang.Object[])}
+     */
+    default void verifyNoMoreInteractions(Object... arg0) {
+        Mockito.verifyNoMoreInteractions(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.mockito.Mockito.verifyZeroInteractions(java.lang.Object...)
+     * {@link org.mockito.Mockito#verifyZeroInteractions(java.lang.Object[])}
+     */
+    default void verifyZeroInteractions(Object... arg0) {
+        Mockito.verifyZeroInteractions(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.mockito.stubbing.OngoingStubbing<T> org.mockito.Mockito.when(T)
+     * {@link org.mockito.Mockito#when(java.lang.Object)}
+     */
+    default <T> OngoingStubbing<T> when(T arg0) {
+        return Mockito.when(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.mockito.MockSettings org.mockito.Mockito.withSettings()
+     * {@link org.mockito.Mockito#withSettings()}
+     */
+    default MockSettings withSettings() {
+        return Mockito.withSettings();
     }
 
 

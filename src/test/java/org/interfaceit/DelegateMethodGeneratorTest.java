@@ -5,7 +5,6 @@ package org.interfaceit;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -45,14 +44,14 @@ public class DelegateMethodGeneratorTest {
 	public void can_find_static_methods() {
 		List<Method> results = underTest.listStaticMethodsForClass(Assertions.class);// (Thread.class);
 		Assertions.assertThat(results).isNotEmpty();
-		for (Method cur : results) {
-
-			if (cur.getName().equals("assertThat")) {
-				for (Parameter p : cur.getParameters()) {
-					System.out.println("type=" + p.getType());
-				}
-			}
-		}
+//		for (Method cur : results) {
+//
+//			if (cur.getName().equals("assertThat")) {
+//				for (Parameter p : cur.getParameters()) {
+//					System.out.println("type=" + p.getType());
+//				}
+//			}
+//		}
 	}
 
 	@Test
@@ -288,7 +287,7 @@ public class DelegateMethodGeneratorTest {
 		Class<Mockito> delegateClass = Mockito.class;
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, targetInterfaceName, delegateClass);
 
-		System.out.println(classText);
+		//System.out.println(classText);
 
 		Assertions.assertThat(classText)
 				.startsWith("package org.interfaceit.results;" + System.lineSeparator() + System.lineSeparator())
@@ -304,7 +303,7 @@ public class DelegateMethodGeneratorTest {
 	public void verify_indentation() {
 		final int indentationSpaces = 5;
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, "MyMath", Math.class, indentationSpaces);
-		System.out.println(classText);
+		//System.out.println(classText);
 
 		String[] lines = classText.split("\n");
 		int indentationLevel = 0;

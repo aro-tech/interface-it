@@ -73,18 +73,6 @@ public class ClassNameUtils {
 		return cur.lastIndexOf('.') >= 0;
 	}
 
-	private static boolean needToRemoveSuffixNonAlphaNumericChars(int closeIx, int squareBraceIx) {
-		return closeIx >= 0 || squareBraceIx >= 0;
-	}
-
-	private static void removeExtraCharsAndAddImport(Set<String> result, String cur, int closeIx, int squareBraceIx) {
-		if(squareBraceIx >= 0) {
-			result.add(cur.substring(0, squareBraceIx).trim());
-		} else {
-			result.add(cur.substring(0, closeIx).trim());									
-		}
-	}
-
 	/**
 	 * utility call to extract the simple class name
 	 * 

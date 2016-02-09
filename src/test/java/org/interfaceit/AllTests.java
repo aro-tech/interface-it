@@ -11,7 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
  *
  */
 @RunWith(Suite.class)
-@SuiteClasses({ DelegateMethodGeneratorTest.class, IntegrationTestsWithFiles.class, ClassNameUtilsTest.class })
+@SuiteClasses({ DelegateMethodGeneratorTest.class, IntegrationWithFilesTest.class, ClassNameUtilsTest.class })
 public class AllTests {
 
 }
