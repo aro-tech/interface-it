@@ -94,167 +94,186 @@ import org.assertj.core.groups.Tuple;
  */
 public interface AssertJ {
 
-
     // CONSTANTS: 
 
 
     // DELEGATE METHODS: 
 
     /**
-     * Delegate call to public static org.assertj.core.data.Offset<java.lang.Float> org.assertj.core.api.Assertions.offset(java.lang.Float)
-     * {@link org.assertj.core.api.Assertions#offset(java.lang.Float)}
+     * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.allOf(org.assertj.core.api.Condition<? super T>...)
+     * {@link org.assertj.core.api.Assertions#allOf(org.assertj.core.api.Condition[])}
      */
-    default Offset<Float> offset(Float arg0) {
-        return Assertions.offset(arg0);
+    default <T> Condition<T> allOf(Condition<? super T>... arg0) {
+        return Assertions.allOf(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.data.Offset<java.lang.Double> org.assertj.core.api.Assertions.offset(java.lang.Double)
-     * {@link org.assertj.core.api.Assertions#offset(java.lang.Double)}
+     * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.allOf(java.lang.Iterable<? extends org.assertj.core.api.Condition<? super T>>)
+     * {@link org.assertj.core.api.Assertions#allOf(java.lang.Iterable)}
      */
-    default Offset<Double> offset(Double arg0) {
-        return Assertions.offset(arg0);
+    default <T> Condition<T> allOf(Iterable<? extends Condition<? super T>> arg0) {
+        return Assertions.allOf(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.filter.InFilter org.assertj.core.api.Assertions.in(java.lang.Object...)
-     * {@link org.assertj.core.api.Assertions#in(java.lang.Object[])}
+     * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.anyOf(org.assertj.core.api.Condition<? super T>...)
+     * {@link org.assertj.core.api.Assertions#anyOf(org.assertj.core.api.Condition[])}
      */
-    default InFilter in(Object... arg0) {
-        return Assertions.in(arg0);
+    default <T> Condition<T> anyOf(Condition<? super T>... arg0) {
+        return Assertions.anyOf(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <K,V> org.assertj.core.data.MapEntry<K, V> org.assertj.core.api.Assertions.entry(K,V)
-     * {@link org.assertj.core.api.Assertions#entry(java.lang.Object,java.lang.Object)}
+     * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.anyOf(java.lang.Iterable<? extends org.assertj.core.api.Condition<? super T>>)
+     * {@link org.assertj.core.api.Assertions#anyOf(java.lang.Iterable)}
      */
-    default <K,V> MapEntry<K, V> entry(K arg0, V arg1) {
-        return Assertions.entry(arg0, arg1);
+    default <T> Condition<T> anyOf(Iterable<? extends Condition<? super T>> arg0) {
+        return Assertions.anyOf(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <E> org.assertj.core.api.filter.Filters<E> org.assertj.core.api.Assertions.filter(java.lang.Iterable<E>)
-     * {@link org.assertj.core.api.Assertions#filter(java.lang.Iterable)}
+     * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(org.assertj.core.api.AssertProvider<T>)
+     * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertProvider)}
      */
-    default <E> Filters<E> filter(Iterable<E> arg0) {
-        return Assertions.filter(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <E> org.assertj.core.api.filter.Filters<E> org.assertj.core.api.Assertions.filter(E[])
-     * {@link org.assertj.core.api.Assertions#filter(java.lang.Object[])}
-     */
-    default <E> Filters<E> filter(E[] arg0) {
-        return Assertions.filter(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.fail(java.lang.String,java.lang.Throwable)
-     * {@link org.assertj.core.api.Assertions#fail(java.lang.String,java.lang.Throwable)}
-     */
-    default void fail(String arg0, Throwable arg1) {
-        Assertions.fail(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.fail(java.lang.String)
-     * {@link org.assertj.core.api.Assertions#fail(java.lang.String)}
-     */
-    default void fail(String arg0) {
-        Assertions.fail(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractLocalDateTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.LocalDateTime)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.time.LocalDateTime)}
-     */
-    default AbstractLocalDateTimeAssert<?> assertThat(LocalDateTime arg0) {
+    default <T> T assertThat(AssertProvider<T> arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractOffsetDateTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.OffsetDateTime)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.time.OffsetDateTime)}
+     * Delegate call to public static org.assertj.core.api.AbstractBigDecimalAssert<?> org.assertj.core.api.Assertions.assertThat(java.math.BigDecimal)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.math.BigDecimal)}
      */
-    default AbstractOffsetDateTimeAssert<?> assertThat(OffsetDateTime arg0) {
+    default AbstractBigDecimalAssert<?> assertThat(BigDecimal arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractOffsetTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.OffsetTime)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.time.OffsetTime)}
+     * Delegate call to public static org.assertj.core.api.AbstractBooleanAssert<?> org.assertj.core.api.Assertions.assertThat(boolean)
+     * {@link org.assertj.core.api.Assertions#assertThat(boolean)}
      */
-    default AbstractOffsetTimeAssert<?> assertThat(OffsetTime arg0) {
+    default AbstractBooleanAssert<?> assertThat(boolean arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> org.assertj.core.api.AbstractObjectArrayAssert<?, T> org.assertj.core.api.Assertions.assertThat(T[])
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Object[])}
+     * Delegate call to public static org.assertj.core.api.AbstractBooleanAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Boolean)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Boolean)}
      */
-    default <T> AbstractObjectArrayAssert<?, T> assertThat(T[] arg0) {
+    default AbstractBooleanAssert<?> assertThat(Boolean arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractLocalTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.LocalTime)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.time.LocalTime)}
+     * Delegate call to public static org.assertj.core.api.AbstractBooleanArrayAssert<?> org.assertj.core.api.Assertions.assertThat(boolean[])
+     * {@link org.assertj.core.api.Assertions#assertThat(boolean[])}
      */
-    default AbstractLocalTimeAssert<?> assertThat(LocalTime arg0) {
+    default AbstractBooleanArrayAssert<?> assertThat(boolean[] arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractLocalDateAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.LocalDate)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.time.LocalDate)}
+     * Delegate call to public static org.assertj.core.api.AbstractByteAssert<?> org.assertj.core.api.Assertions.assertThat(byte)
+     * {@link org.assertj.core.api.Assertions#assertThat(byte)}
      */
-    default AbstractLocalDateAssert<?> assertThat(LocalDate arg0) {
+    default AbstractByteAssert<?> assertThat(byte arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortArrayAssert<?> org.assertj.core.api.Assertions.assertThat(short[])
-     * {@link org.assertj.core.api.Assertions#assertThat(short[])}
+     * Delegate call to public static org.assertj.core.api.AbstractByteAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Byte)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Byte)}
      */
-    default AbstractShortArrayAssert<?> assertThat(short[] arg0) {
+    default AbstractByteAssert<?> assertThat(Byte arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractCharSequenceAssert<?, java.lang.String> org.assertj.core.api.Assertions.assertThat(java.lang.String)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.String)}
+     * Delegate call to public static org.assertj.core.api.AbstractByteArrayAssert<?> org.assertj.core.api.Assertions.assertThat(byte[])
+     * {@link org.assertj.core.api.Assertions#assertThat(byte[])}
      */
-    default AbstractCharSequenceAssert<?, String> assertThat(String arg0) {
+    default AbstractByteArrayAssert<?> assertThat(byte[] arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractCharacterAssert<?> org.assertj.core.api.Assertions.assertThat(char)
+     * {@link org.assertj.core.api.Assertions#assertThat(char)}
+     */
+    default AbstractCharacterAssert<?> assertThat(char arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractCharArrayAssert<?> org.assertj.core.api.Assertions.assertThat(char[])
+     * {@link org.assertj.core.api.Assertions#assertThat(char[])}
+     */
+    default AbstractCharArrayAssert<?> assertThat(char[] arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractCharacterAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Character)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Character)}
+     */
+    default AbstractCharacterAssert<?> assertThat(Character arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractCharSequenceAssert<?, ? extends java.lang.CharSequence> org.assertj.core.api.Assertions.assertThat(java.lang.CharSequence)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.CharSequence)}
+     */
+    default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractClassAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Class<?>)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Class)}
+     */
+    default AbstractClassAssert<?> assertThat(Class<?> arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.api.CompletableFutureAssert<T> org.assertj.core.api.Assertions.assertThat(java.util.concurrent.CompletableFuture<T>)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.util.concurrent.CompletableFuture)}
+     */
+    default <T> CompletableFutureAssert<T> assertThat(CompletableFuture<T> arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -271,60 +290,110 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Short)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Short)}
+     * Delegate call to public static org.assertj.core.api.AbstractDoubleAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Double)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Double)}
      */
-    default AbstractShortAssert<?> assertThat(Short arg0) {
+    default AbstractDoubleAssert<?> assertThat(Double arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(short)
-     * {@link org.assertj.core.api.Assertions#assertThat(short)}
+     * Delegate call to public static org.assertj.core.api.AbstractDoubleAssert<?> org.assertj.core.api.Assertions.assertThat(double)
+     * {@link org.assertj.core.api.Assertions#assertThat(double)}
      */
-    default AbstractShortAssert<?> assertThat(short arg0) {
+    default AbstractDoubleAssert<?> assertThat(double arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractZonedDateTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.ZonedDateTime)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.time.ZonedDateTime)}
+     * Delegate call to public static org.assertj.core.api.AbstractDoubleArrayAssert<?> org.assertj.core.api.Assertions.assertThat(double[])
+     * {@link org.assertj.core.api.Assertions#assertThat(double[])}
      */
-    default AbstractZonedDateTimeAssert<?> assertThat(ZonedDateTime arg0) {
+    default AbstractDoubleArrayAssert<?> assertThat(double[] arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractPathAssert<?> org.assertj.core.api.Assertions.assertThat(java.nio.file.Path)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.nio.file.Path)}
+     * Delegate call to public static org.assertj.core.api.AbstractFileAssert<?> org.assertj.core.api.Assertions.assertThat(java.io.File)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.io.File)}
      */
-    default AbstractPathAssert<?> assertThat(Path arg0) {
+    default AbstractFileAssert<?> assertThat(File arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(org.assertj.core.api.AssertProvider<T>)
-     * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertProvider)}
+     * Delegate call to public static org.assertj.core.api.AbstractFloatAssert<?> org.assertj.core.api.Assertions.assertThat(float)
+     * {@link org.assertj.core.api.Assertions#assertThat(float)}
      */
-    default <T> T assertThat(AssertProvider<T> arg0) {
+    default AbstractFloatAssert<?> assertThat(float arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractCharSequenceAssert<?, ? extends java.lang.CharSequence> org.assertj.core.api.Assertions.assertThat(java.lang.CharSequence)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.CharSequence)}
+     * Delegate call to public static org.assertj.core.api.AbstractFloatAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Float)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Float)}
      */
-    default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0) {
+    default AbstractFloatAssert<?> assertThat(Float arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractFloatArrayAssert<?> org.assertj.core.api.Assertions.assertThat(float[])
+     * {@link org.assertj.core.api.Assertions#assertThat(float[])}
+     */
+    default AbstractFloatArrayAssert<?> assertThat(float[] arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractInputStreamAssert<?, ? extends java.io.InputStream> org.assertj.core.api.Assertions.assertThat(java.io.InputStream)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.io.InputStream)}
+     */
+    default AbstractInputStreamAssert<?, ? extends InputStream> assertThat(InputStream arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractIntegerAssert<?> org.assertj.core.api.Assertions.assertThat(int)
+     * {@link org.assertj.core.api.Assertions#assertThat(int)}
+     */
+    default AbstractIntegerAssert<?> assertThat(int arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractIntArrayAssert<?> org.assertj.core.api.Assertions.assertThat(int[])
+     * {@link org.assertj.core.api.Assertions#assertThat(int[])}
+     */
+    default AbstractIntArrayAssert<?> assertThat(int[] arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractIntegerAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Integer)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Integer)}
+     */
+    default AbstractIntegerAssert<?> assertThat(Integer arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -361,290 +430,30 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractThrowableAssert<?, ? extends java.lang.Throwable> org.assertj.core.api.Assertions.assertThat(java.lang.Throwable)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Throwable)}
+     * Delegate call to public static org.assertj.core.api.AbstractLocalDateAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.LocalDate)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.time.LocalDate)}
      */
-    default AbstractThrowableAssert<?, ? extends Throwable> assertThat(Throwable arg0) {
+    default AbstractLocalDateAssert<?> assertThat(LocalDate arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> org.assertj.core.api.AbstractListAssert<?, ? extends java.util.List<? extends T>, T> org.assertj.core.api.Assertions.assertThat(java.util.stream.Stream<? extends T>)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.util.stream.Stream)}
+     * Delegate call to public static org.assertj.core.api.AbstractLocalDateTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.LocalDateTime)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.time.LocalDateTime)}
      */
-    default <T> AbstractListAssert<?, ? extends List<? extends T>, T> assertThat(Stream<? extends T> arg0) {
+    default AbstractLocalDateTimeAssert<?> assertThat(LocalDateTime arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> org.assertj.core.api.CompletableFutureAssert<T> org.assertj.core.api.Assertions.assertThat(java.util.concurrent.CompletableFuture<T>)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.util.concurrent.CompletableFuture)}
+     * Delegate call to public static org.assertj.core.api.AbstractLocalTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.LocalTime)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.time.LocalTime)}
      */
-    default <T> CompletableFutureAssert<T> assertThat(CompletableFuture<T> arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(T)
-     * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertDelegateTarget)}
-     */
-    default <T extends AssertDelegateTarget> T assertThat(T arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.api.AbstractComparableAssert<?, T> org.assertj.core.api.Assertions.assertThat(T)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Comparable)}
-     */
-    default <T extends Comparable<? super T>> AbstractComparableAssert<?, T> assertThat(T arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <K,V> org.assertj.core.api.MapAssert<K, V> org.assertj.core.api.Assertions.assertThat(java.util.Map<K, V>)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.util.Map)}
-     */
-    default <K,V> MapAssert<K, V> assertThat(Map<K, V> arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractBigDecimalAssert<?> org.assertj.core.api.Assertions.assertThat(java.math.BigDecimal)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.math.BigDecimal)}
-     */
-    default AbstractBigDecimalAssert<?> assertThat(BigDecimal arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractUriAssert<?> org.assertj.core.api.Assertions.assertThat(java.net.URI)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.net.URI)}
-     */
-    default AbstractUriAssert<?> assertThat(URI arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractUrlAssert<?> org.assertj.core.api.Assertions.assertThat(java.net.URL)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.net.URL)}
-     */
-    default AbstractUrlAssert<?> assertThat(URL arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractBooleanAssert<?> org.assertj.core.api.Assertions.assertThat(boolean)
-     * {@link org.assertj.core.api.Assertions#assertThat(boolean)}
-     */
-    default AbstractBooleanAssert<?> assertThat(boolean arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractClassAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Class<?>)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Class)}
-     */
-    default AbstractClassAssert<?> assertThat(Class<?> arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.OptionalIntAssert org.assertj.core.api.Assertions.assertThat(java.util.OptionalInt)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.util.OptionalInt)}
-     */
-    default OptionalIntAssert assertThat(OptionalInt arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractDoubleAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Double)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Double)}
-     */
-    default AbstractDoubleAssert<?> assertThat(Double arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractDoubleAssert<?> org.assertj.core.api.Assertions.assertThat(double)
-     * {@link org.assertj.core.api.Assertions#assertThat(double)}
-     */
-    default AbstractDoubleAssert<?> assertThat(double arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.OptionalLongAssert org.assertj.core.api.Assertions.assertThat(java.util.OptionalLong)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.util.OptionalLong)}
-     */
-    default OptionalLongAssert assertThat(OptionalLong arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractCharArrayAssert<?> org.assertj.core.api.Assertions.assertThat(char[])
-     * {@link org.assertj.core.api.Assertions#assertThat(char[])}
-     */
-    default AbstractCharArrayAssert<?> assertThat(char[] arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractCharacterAssert<?> org.assertj.core.api.Assertions.assertThat(char)
-     * {@link org.assertj.core.api.Assertions#assertThat(char)}
-     */
-    default AbstractCharacterAssert<?> assertThat(char arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractByteAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Byte)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Byte)}
-     */
-    default AbstractByteAssert<?> assertThat(Byte arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractByteArrayAssert<?> org.assertj.core.api.Assertions.assertThat(byte[])
-     * {@link org.assertj.core.api.Assertions#assertThat(byte[])}
-     */
-    default AbstractByteArrayAssert<?> assertThat(byte[] arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractBooleanAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Boolean)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Boolean)}
-     */
-    default AbstractBooleanAssert<?> assertThat(Boolean arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractBooleanArrayAssert<?> org.assertj.core.api.Assertions.assertThat(boolean[])
-     * {@link org.assertj.core.api.Assertions#assertThat(boolean[])}
-     */
-    default AbstractBooleanArrayAssert<?> assertThat(boolean[] arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractCharacterAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Character)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Character)}
-     */
-    default AbstractCharacterAssert<?> assertThat(Character arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractByteAssert<?> org.assertj.core.api.Assertions.assertThat(byte)
-     * {@link org.assertj.core.api.Assertions#assertThat(byte)}
-     */
-    default AbstractByteAssert<?> assertThat(byte arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractIntegerAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Integer)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Integer)}
-     */
-    default AbstractIntegerAssert<?> assertThat(Integer arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractIntArrayAssert<?> org.assertj.core.api.Assertions.assertThat(int[])
-     * {@link org.assertj.core.api.Assertions#assertThat(int[])}
-     */
-    default AbstractIntArrayAssert<?> assertThat(int[] arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractIntegerAssert<?> org.assertj.core.api.Assertions.assertThat(int)
-     * {@link org.assertj.core.api.Assertions#assertThat(int)}
-     */
-    default AbstractIntegerAssert<?> assertThat(int arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractFloatArrayAssert<?> org.assertj.core.api.Assertions.assertThat(float[])
-     * {@link org.assertj.core.api.Assertions#assertThat(float[])}
-     */
-    default AbstractFloatArrayAssert<?> assertThat(float[] arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.api.AbstractObjectAssert<?, T> org.assertj.core.api.Assertions.assertThat(T)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Object)}
-     */
-    default <T> AbstractObjectAssert<?, T> assertThat(T arg0) {
-        return Assertions.assertThat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractLongArrayAssert<?> org.assertj.core.api.Assertions.assertThat(long[])
-     * {@link org.assertj.core.api.Assertions#assertThat(long[])}
-     */
-    default AbstractLongArrayAssert<?> assertThat(long[] arg0) {
+    default AbstractLocalTimeAssert<?> assertThat(LocalTime arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -671,20 +480,40 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractFileAssert<?> org.assertj.core.api.Assertions.assertThat(java.io.File)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.io.File)}
+     * Delegate call to public static org.assertj.core.api.AbstractLongArrayAssert<?> org.assertj.core.api.Assertions.assertThat(long[])
+     * {@link org.assertj.core.api.Assertions#assertThat(long[])}
      */
-    default AbstractFileAssert<?> assertThat(File arg0) {
+    default AbstractLongArrayAssert<?> assertThat(long[] arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractDoubleArrayAssert<?> org.assertj.core.api.Assertions.assertThat(double[])
-     * {@link org.assertj.core.api.Assertions#assertThat(double[])}
+     * Delegate call to public static <K,V> org.assertj.core.api.MapAssert<K, V> org.assertj.core.api.Assertions.assertThat(java.util.Map<K, V>)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.util.Map)}
      */
-    default AbstractDoubleArrayAssert<?> assertThat(double[] arg0) {
+    default <K,V> MapAssert<K, V> assertThat(Map<K, V> arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractOffsetDateTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.OffsetDateTime)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.time.OffsetDateTime)}
+     */
+    default AbstractOffsetDateTimeAssert<?> assertThat(OffsetDateTime arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractOffsetTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.OffsetTime)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.time.OffsetTime)}
+     */
+    default AbstractOffsetTimeAssert<?> assertThat(OffsetTime arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -711,31 +540,191 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractInputStreamAssert<?, ? extends java.io.InputStream> org.assertj.core.api.Assertions.assertThat(java.io.InputStream)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.io.InputStream)}
+     * Delegate call to public static org.assertj.core.api.OptionalIntAssert org.assertj.core.api.Assertions.assertThat(java.util.OptionalInt)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.util.OptionalInt)}
      */
-    default AbstractInputStreamAssert<?, ? extends InputStream> assertThat(InputStream arg0) {
+    default OptionalIntAssert assertThat(OptionalInt arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractFloatAssert<?> org.assertj.core.api.Assertions.assertThat(float)
-     * {@link org.assertj.core.api.Assertions#assertThat(float)}
+     * Delegate call to public static org.assertj.core.api.OptionalLongAssert org.assertj.core.api.Assertions.assertThat(java.util.OptionalLong)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.util.OptionalLong)}
      */
-    default AbstractFloatAssert<?> assertThat(float arg0) {
+    default OptionalLongAssert assertThat(OptionalLong arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractFloatAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Float)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Float)}
+     * Delegate call to public static org.assertj.core.api.AbstractPathAssert<?> org.assertj.core.api.Assertions.assertThat(java.nio.file.Path)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.nio.file.Path)}
      */
-    default AbstractFloatAssert<?> assertThat(Float arg0) {
+    default AbstractPathAssert<?> assertThat(Path arg0) {
         return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Short)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Short)}
+     */
+    default AbstractShortAssert<?> assertThat(Short arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(short)
+     * {@link org.assertj.core.api.Assertions#assertThat(short)}
+     */
+    default AbstractShortAssert<?> assertThat(short arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractShortArrayAssert<?> org.assertj.core.api.Assertions.assertThat(short[])
+     * {@link org.assertj.core.api.Assertions#assertThat(short[])}
+     */
+    default AbstractShortArrayAssert<?> assertThat(short[] arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.api.AbstractListAssert<?, ? extends java.util.List<? extends T>, T> org.assertj.core.api.Assertions.assertThat(java.util.stream.Stream<? extends T>)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.util.stream.Stream)}
+     */
+    default <T> AbstractListAssert<?, ? extends List<? extends T>, T> assertThat(Stream<? extends T> arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractCharSequenceAssert<?, java.lang.String> org.assertj.core.api.Assertions.assertThat(java.lang.String)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.String)}
+     */
+    default AbstractCharSequenceAssert<?, String> assertThat(String arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(T)
+     * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertDelegateTarget)}
+     */
+    default <T extends AssertDelegateTarget> T assertThat(T arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.api.AbstractComparableAssert<?, T> org.assertj.core.api.Assertions.assertThat(T)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Comparable)}
+     */
+    default <T extends Comparable<? super T>> AbstractComparableAssert<?, T> assertThat(T arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.api.AbstractObjectAssert<?, T> org.assertj.core.api.Assertions.assertThat(T)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Object)}
+     */
+    default <T> AbstractObjectAssert<?, T> assertThat(T arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.api.AbstractObjectArrayAssert<?, T> org.assertj.core.api.Assertions.assertThat(T[])
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Object[])}
+     */
+    default <T> AbstractObjectArrayAssert<?, T> assertThat(T[] arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractThrowableAssert<?, ? extends java.lang.Throwable> org.assertj.core.api.Assertions.assertThat(java.lang.Throwable)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Throwable)}
+     */
+    default AbstractThrowableAssert<?, ? extends Throwable> assertThat(Throwable arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractUriAssert<?> org.assertj.core.api.Assertions.assertThat(java.net.URI)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.net.URI)}
+     */
+    default AbstractUriAssert<?> assertThat(URI arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractUrlAssert<?> org.assertj.core.api.Assertions.assertThat(java.net.URL)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.net.URL)}
+     */
+    default AbstractUrlAssert<?> assertThat(URL arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractZonedDateTimeAssert<?> org.assertj.core.api.Assertions.assertThat(java.time.ZonedDateTime)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.time.ZonedDateTime)}
+     */
+    default AbstractZonedDateTimeAssert<?> assertThat(ZonedDateTime arg0) {
+        return Assertions.assertThat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.api.ThrowableTypeAssert<T> org.assertj.core.api.Assertions.assertThatExceptionOfType(java.lang.Class<? extends T>)
+     * {@link org.assertj.core.api.Assertions#assertThatExceptionOfType(java.lang.Class)}
+     */
+    default <T extends Throwable> ThrowableTypeAssert<T> assertThatExceptionOfType(Class<? extends T> arg0) {
+        return Assertions.assertThatExceptionOfType(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.AbstractThrowableAssert<?, ? extends java.lang.Throwable> org.assertj.core.api.Assertions.assertThatThrownBy(org.assertj.core.api.ThrowableAssert$ThrowingCallable)
+     * {@link org.assertj.core.api.Assertions#assertThatThrownBy(org.assertj.core.api.ThrowableAssert$ThrowingCallable)}
+     */
+    default AbstractThrowableAssert<?, ? extends Throwable> assertThatThrownBy(ThrowableAssert.ThrowingCallable arg0) {
+        return Assertions.assertThatThrownBy(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.data.Index org.assertj.core.api.Assertions.atIndex(int)
+     * {@link org.assertj.core.api.Assertions#atIndex(int)}
+     */
+    default Index atIndex(int arg0) {
+        return Assertions.atIndex(arg0);
     }
 
 
@@ -746,6 +735,356 @@ public interface AssertJ {
      */
     default Throwable catchThrowable(ThrowableAssert.ThrowingCallable arg0) {
         return Assertions.catchThrowable(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.io.File)
+     * {@link org.assertj.core.api.Assertions#contentOf(java.io.File)}
+     */
+    default String contentOf(File arg0) {
+        return Assertions.contentOf(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.net.URL)
+     * {@link org.assertj.core.api.Assertions#contentOf(java.net.URL)}
+     */
+    default String contentOf(URL arg0) {
+        return Assertions.contentOf(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.io.File,java.nio.charset.Charset)
+     * {@link org.assertj.core.api.Assertions#contentOf(java.io.File,java.nio.charset.Charset)}
+     */
+    default String contentOf(File arg0, Charset arg1) {
+        return Assertions.contentOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.io.File,java.lang.String)
+     * {@link org.assertj.core.api.Assertions#contentOf(java.io.File,java.lang.String)}
+     */
+    default String contentOf(File arg0, String arg1) {
+        return Assertions.contentOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.net.URL,java.nio.charset.Charset)
+     * {@link org.assertj.core.api.Assertions#contentOf(java.net.URL,java.nio.charset.Charset)}
+     */
+    default String contentOf(URL arg0, Charset arg1) {
+        return Assertions.contentOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.net.URL,java.lang.String)
+     * {@link org.assertj.core.api.Assertions#contentOf(java.net.URL,java.lang.String)}
+     */
+    default String contentOf(URL arg0, String arg1) {
+        return Assertions.contentOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.condition.DoesNotHave<T> org.assertj.core.api.Assertions.doesNotHave(org.assertj.core.api.Condition<? super T>)
+     * {@link org.assertj.core.api.Assertions#doesNotHave(org.assertj.core.api.Condition)}
+     */
+    default <T> DoesNotHave<T> doesNotHave(Condition<? super T> arg0) {
+        return Assertions.doesNotHave(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <K,V> org.assertj.core.data.MapEntry<K, V> org.assertj.core.api.Assertions.entry(K,V)
+     * {@link org.assertj.core.api.Assertions#entry(java.lang.Object,java.lang.Object)}
+     */
+    default <K,V> MapEntry<K, V> entry(K arg0, V arg1) {
+        return Assertions.entry(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.groups.Properties<java.lang.Object> org.assertj.core.api.Assertions.extractProperty(java.lang.String)
+     * {@link org.assertj.core.api.Assertions#extractProperty(java.lang.String)}
+     */
+    default Properties<Object> extractProperty(String arg0) {
+        return Assertions.extractProperty(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.groups.Properties<T> org.assertj.core.api.Assertions.extractProperty(java.lang.String,java.lang.Class<T>)
+     * {@link org.assertj.core.api.Assertions#extractProperty(java.lang.String,java.lang.Class)}
+     */
+    default <T> Properties<T> extractProperty(String arg0, Class<T> arg1) {
+        return Assertions.extractProperty(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.fail(java.lang.String)
+     * {@link org.assertj.core.api.Assertions#fail(java.lang.String)}
+     */
+    default void fail(String arg0) {
+        Assertions.fail(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.fail(java.lang.String,java.lang.Throwable)
+     * {@link org.assertj.core.api.Assertions#fail(java.lang.String,java.lang.Throwable)}
+     */
+    default void fail(String arg0, Throwable arg1) {
+        Assertions.fail(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown(java.lang.Class<? extends java.lang.Throwable>)
+     * {@link org.assertj.core.api.Assertions#failBecauseExceptionWasNotThrown(java.lang.Class)}
+     */
+    default void failBecauseExceptionWasNotThrown(Class<? extends Throwable> arg0) {
+        Assertions.failBecauseExceptionWasNotThrown(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <E> org.assertj.core.api.filter.Filters<E> org.assertj.core.api.Assertions.filter(E[])
+     * {@link org.assertj.core.api.Assertions#filter(java.lang.Object[])}
+     */
+    default <E> Filters<E> filter(E[] arg0) {
+        return Assertions.filter(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static <E> org.assertj.core.api.filter.Filters<E> org.assertj.core.api.Assertions.filter(java.lang.Iterable<E>)
+     * {@link org.assertj.core.api.Assertions#filter(java.lang.Iterable)}
+     */
+    default <E> Filters<E> filter(Iterable<E> arg0) {
+        return Assertions.filter(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.filter.InFilter org.assertj.core.api.Assertions.in(java.lang.Object...)
+     * {@link org.assertj.core.api.Assertions#in(java.lang.Object[])}
+     */
+    default InFilter in(Object... arg0) {
+        return Assertions.in(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.io.File)
+     * {@link org.assertj.core.api.Assertions#linesOf(java.io.File)}
+     */
+    default List<String> linesOf(File arg0) {
+        return Assertions.linesOf(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.net.URL)
+     * {@link org.assertj.core.api.Assertions#linesOf(java.net.URL)}
+     */
+    default List<String> linesOf(URL arg0) {
+        return Assertions.linesOf(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.io.File,java.nio.charset.Charset)
+     * {@link org.assertj.core.api.Assertions#linesOf(java.io.File,java.nio.charset.Charset)}
+     */
+    default List<String> linesOf(File arg0, Charset arg1) {
+        return Assertions.linesOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.io.File,java.lang.String)
+     * {@link org.assertj.core.api.Assertions#linesOf(java.io.File,java.lang.String)}
+     */
+    default List<String> linesOf(File arg0, String arg1) {
+        return Assertions.linesOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.net.URL,java.nio.charset.Charset)
+     * {@link org.assertj.core.api.Assertions#linesOf(java.net.URL,java.nio.charset.Charset)}
+     */
+    default List<String> linesOf(URL arg0, Charset arg1) {
+        return Assertions.linesOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.net.URL,java.lang.String)
+     * {@link org.assertj.core.api.Assertions#linesOf(java.net.URL,java.lang.String)}
+     */
+    default List<String> linesOf(URL arg0, String arg1) {
+        return Assertions.linesOf(arg0, arg1);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> org.assertj.core.condition.Not<T> org.assertj.core.api.Assertions.not(org.assertj.core.api.Condition<? super T>)
+     * {@link org.assertj.core.api.Assertions#not(org.assertj.core.api.Condition)}
+     */
+    default <T> Not<T> not(Condition<? super T> arg0) {
+        return Assertions.not(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.filter.NotFilter org.assertj.core.api.Assertions.not(java.lang.Object)
+     * {@link org.assertj.core.api.Assertions#not(java.lang.Object)}
+     */
+    default NotFilter not(Object arg0) {
+        return Assertions.not(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.api.filter.NotInFilter org.assertj.core.api.Assertions.notIn(java.lang.Object...)
+     * {@link org.assertj.core.api.Assertions#notIn(java.lang.Object[])}
+     */
+    default NotInFilter notIn(Object... arg0) {
+        return Assertions.notIn(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.data.Offset<java.lang.Double> org.assertj.core.api.Assertions.offset(java.lang.Double)
+     * {@link org.assertj.core.api.Assertions#offset(java.lang.Double)}
+     */
+    default Offset<Double> offset(Double arg0) {
+        return Assertions.offset(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.data.Offset<java.lang.Float> org.assertj.core.api.Assertions.offset(java.lang.Float)
+     * {@link org.assertj.core.api.Assertions#offset(java.lang.Float)}
+     */
+    default Offset<Float> offset(Float arg0) {
+        return Assertions.offset(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.registerCustomDateFormat(java.text.DateFormat)
+     * {@link org.assertj.core.api.Assertions#registerCustomDateFormat(java.text.DateFormat)}
+     */
+    default void registerCustomDateFormat(DateFormat arg0) {
+        Assertions.registerCustomDateFormat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.registerCustomDateFormat(java.lang.String)
+     * {@link org.assertj.core.api.Assertions#registerCustomDateFormat(java.lang.String)}
+     */
+    default void registerCustomDateFormat(String arg0) {
+        Assertions.registerCustomDateFormat(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.setAllowComparingPrivateFields(boolean)
+     * {@link org.assertj.core.api.Assertions#setAllowComparingPrivateFields(boolean)}
+     */
+    default void setAllowComparingPrivateFields(boolean arg0) {
+        Assertions.setAllowComparingPrivateFields(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.setAllowExtractingPrivateFields(boolean)
+     * {@link org.assertj.core.api.Assertions#setAllowExtractingPrivateFields(boolean)}
+     */
+    default void setAllowExtractingPrivateFields(boolean arg0) {
+        Assertions.setAllowExtractingPrivateFields(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.setLenientDateParsing(boolean)
+     * {@link org.assertj.core.api.Assertions#setLenientDateParsing(boolean)}
+     */
+    default void setLenientDateParsing(boolean arg0) {
+        Assertions.setLenientDateParsing(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.setMaxLengthForSingleLineDescription(int)
+     * {@link org.assertj.core.api.Assertions#setMaxLengthForSingleLineDescription(int)}
+     */
+    default void setMaxLengthForSingleLineDescription(int arg0) {
+        Assertions.setMaxLengthForSingleLineDescription(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.setRemoveAssertJRelatedElementsFromStackTrace(boolean)
+     * {@link org.assertj.core.api.Assertions#setRemoveAssertJRelatedElementsFromStackTrace(boolean)}
+     */
+    default void setRemoveAssertJRelatedElementsFromStackTrace(boolean arg0) {
+        Assertions.setRemoveAssertJRelatedElementsFromStackTrace(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static void org.assertj.core.api.Assertions.shouldHaveThrown(java.lang.Class<? extends java.lang.Throwable>)
+     * {@link org.assertj.core.api.Assertions#shouldHaveThrown(java.lang.Class)}
+     */
+    default void shouldHaveThrown(Class<? extends Throwable> arg0) {
+        Assertions.shouldHaveThrown(arg0);
     }
 
 
@@ -771,41 +1110,11 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.setLenientDateParsing(boolean)
-     * {@link org.assertj.core.api.Assertions#setLenientDateParsing(boolean)}
+     * Delegate call to public static org.assertj.core.data.Offset<java.lang.Double> org.assertj.core.api.Assertions.withPrecision(java.lang.Double)
+     * {@link org.assertj.core.api.Assertions#withPrecision(java.lang.Double)}
      */
-    default void setLenientDateParsing(boolean arg0) {
-        Assertions.setLenientDateParsing(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.registerCustomDateFormat(java.lang.String)
-     * {@link org.assertj.core.api.Assertions#registerCustomDateFormat(java.lang.String)}
-     */
-    default void registerCustomDateFormat(String arg0) {
-        Assertions.registerCustomDateFormat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.registerCustomDateFormat(java.text.DateFormat)
-     * {@link org.assertj.core.api.Assertions#registerCustomDateFormat(java.text.DateFormat)}
-     */
-    default void registerCustomDateFormat(DateFormat arg0) {
-        Assertions.registerCustomDateFormat(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.data.Index org.assertj.core.api.Assertions.atIndex(int)
-     * {@link org.assertj.core.api.Assertions#atIndex(int)}
-     */
-    default Index atIndex(int arg0) {
-        return Assertions.atIndex(arg0);
+    default Offset<Double> withPrecision(Double arg0) {
+        return Assertions.withPrecision(arg0);
     }
 
 
@@ -821,60 +1130,10 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.data.Offset<java.lang.Double> org.assertj.core.api.Assertions.withPrecision(java.lang.Double)
-     * {@link org.assertj.core.api.Assertions#withPrecision(java.lang.Double)}
+     * Delegate call to public static org.assertj.core.data.Offset<java.math.BigDecimal> org.assertj.core.api.Assertions.within(java.math.BigDecimal)
+     * {@link org.assertj.core.api.Assertions#within(java.math.BigDecimal)}
      */
-    default Offset<Double> withPrecision(Double arg0) {
-        return Assertions.withPrecision(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.allOf(java.lang.Iterable<? extends org.assertj.core.api.Condition<? super T>>)
-     * {@link org.assertj.core.api.Assertions#allOf(java.lang.Iterable)}
-     */
-    default <T> Condition<T> allOf(Iterable<? extends Condition<? super T>> arg0) {
-        return Assertions.allOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.allOf(org.assertj.core.api.Condition<? super T>...)
-     * {@link org.assertj.core.api.Assertions#allOf(org.assertj.core.api.Condition[])}
-     */
-    default <T> Condition<T> allOf(Condition<? super T>... arg0) {
-        return Assertions.allOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.anyOf(org.assertj.core.api.Condition<? super T>...)
-     * {@link org.assertj.core.api.Assertions#anyOf(org.assertj.core.api.Condition[])}
-     */
-    default <T> Condition<T> anyOf(Condition<? super T>... arg0) {
-        return Assertions.anyOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.anyOf(java.lang.Iterable<? extends org.assertj.core.api.Condition<? super T>>)
-     * {@link org.assertj.core.api.Assertions#anyOf(java.lang.Iterable)}
-     */
-    default <T> Condition<T> anyOf(Iterable<? extends Condition<? super T>> arg0) {
-        return Assertions.anyOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.data.Offset<java.lang.Integer> org.assertj.core.api.Assertions.within(java.lang.Integer)
-     * {@link org.assertj.core.api.Assertions#within(java.lang.Integer)}
-     */
-    default Offset<Integer> within(Integer arg0) {
+    default Offset<BigDecimal> within(BigDecimal arg0) {
         return Assertions.within(arg0);
     }
 
@@ -885,16 +1144,6 @@ public interface AssertJ {
      * {@link org.assertj.core.api.Assertions#within(java.lang.Byte)}
      */
     default Offset<Byte> within(Byte arg0) {
-        return Assertions.within(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.data.Offset<java.math.BigDecimal> org.assertj.core.api.Assertions.within(java.math.BigDecimal)
-     * {@link org.assertj.core.api.Assertions#within(java.math.BigDecimal)}
-     */
-    default Offset<BigDecimal> within(BigDecimal arg0) {
         return Assertions.within(arg0);
     }
 
@@ -915,6 +1164,16 @@ public interface AssertJ {
      * {@link org.assertj.core.api.Assertions#within(java.lang.Float)}
      */
     default Offset<Float> within(Float arg0) {
+        return Assertions.within(arg0);
+    }
+
+
+
+    /**
+     * Delegate call to public static org.assertj.core.data.Offset<java.lang.Integer> org.assertj.core.api.Assertions.within(java.lang.Integer)
+     * {@link org.assertj.core.api.Assertions#within(java.lang.Integer)}
+     */
+    default Offset<Integer> within(Integer arg0) {
         return Assertions.within(arg0);
     }
 
@@ -951,16 +1210,6 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.data.Percentage org.assertj.core.api.Assertions.withinPercentage(java.lang.Long)
-     * {@link org.assertj.core.api.Assertions#withinPercentage(java.lang.Long)}
-     */
-    default Percentage withinPercentage(Long arg0) {
-        return Assertions.withinPercentage(arg0);
-    }
-
-
-
-    /**
      * Delegate call to public static org.assertj.core.data.Percentage org.assertj.core.api.Assertions.withinPercentage(java.lang.Integer)
      * {@link org.assertj.core.api.Assertions#withinPercentage(java.lang.Integer)}
      */
@@ -971,261 +1220,11 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.filter.NotInFilter org.assertj.core.api.Assertions.notIn(java.lang.Object...)
-     * {@link org.assertj.core.api.Assertions#notIn(java.lang.Object[])}
+     * Delegate call to public static org.assertj.core.data.Percentage org.assertj.core.api.Assertions.withinPercentage(java.lang.Long)
+     * {@link org.assertj.core.api.Assertions#withinPercentage(java.lang.Long)}
      */
-    default NotInFilter notIn(Object... arg0) {
-        return Assertions.notIn(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.net.URL,java.lang.String)
-     * {@link org.assertj.core.api.Assertions#contentOf(java.net.URL,java.lang.String)}
-     */
-    default String contentOf(URL arg0, String arg1) {
-        return Assertions.contentOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.net.URL,java.nio.charset.Charset)
-     * {@link org.assertj.core.api.Assertions#contentOf(java.net.URL,java.nio.charset.Charset)}
-     */
-    default String contentOf(URL arg0, Charset arg1) {
-        return Assertions.contentOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.net.URL)
-     * {@link org.assertj.core.api.Assertions#contentOf(java.net.URL)}
-     */
-    default String contentOf(URL arg0) {
-        return Assertions.contentOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.io.File,java.nio.charset.Charset)
-     * {@link org.assertj.core.api.Assertions#contentOf(java.io.File,java.nio.charset.Charset)}
-     */
-    default String contentOf(File arg0, Charset arg1) {
-        return Assertions.contentOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.io.File,java.lang.String)
-     * {@link org.assertj.core.api.Assertions#contentOf(java.io.File,java.lang.String)}
-     */
-    default String contentOf(File arg0, String arg1) {
-        return Assertions.contentOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.lang.String org.assertj.core.api.Assertions.contentOf(java.io.File)
-     * {@link org.assertj.core.api.Assertions#contentOf(java.io.File)}
-     */
-    default String contentOf(File arg0) {
-        return Assertions.contentOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.condition.DoesNotHave<T> org.assertj.core.api.Assertions.doesNotHave(org.assertj.core.api.Condition<? super T>)
-     * {@link org.assertj.core.api.Assertions#doesNotHave(org.assertj.core.api.Condition)}
-     */
-    default <T> DoesNotHave<T> doesNotHave(Condition<? super T> arg0) {
-        return Assertions.doesNotHave(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.io.File)
-     * {@link org.assertj.core.api.Assertions#linesOf(java.io.File)}
-     */
-    default List<String> linesOf(File arg0) {
-        return Assertions.linesOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.net.URL,java.lang.String)
-     * {@link org.assertj.core.api.Assertions#linesOf(java.net.URL,java.lang.String)}
-     */
-    default List<String> linesOf(URL arg0, String arg1) {
-        return Assertions.linesOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.io.File,java.nio.charset.Charset)
-     * {@link org.assertj.core.api.Assertions#linesOf(java.io.File,java.nio.charset.Charset)}
-     */
-    default List<String> linesOf(File arg0, Charset arg1) {
-        return Assertions.linesOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.io.File,java.lang.String)
-     * {@link org.assertj.core.api.Assertions#linesOf(java.io.File,java.lang.String)}
-     */
-    default List<String> linesOf(File arg0, String arg1) {
-        return Assertions.linesOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.net.URL)
-     * {@link org.assertj.core.api.Assertions#linesOf(java.net.URL)}
-     */
-    default List<String> linesOf(URL arg0) {
-        return Assertions.linesOf(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static java.util.List<java.lang.String> org.assertj.core.api.Assertions.linesOf(java.net.URL,java.nio.charset.Charset)
-     * {@link org.assertj.core.api.Assertions#linesOf(java.net.URL,java.nio.charset.Charset)}
-     */
-    default List<String> linesOf(URL arg0, Charset arg1) {
-        return Assertions.linesOf(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.filter.NotFilter org.assertj.core.api.Assertions.not(java.lang.Object)
-     * {@link org.assertj.core.api.Assertions#not(java.lang.Object)}
-     */
-    default NotFilter not(Object arg0) {
-        return Assertions.not(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.condition.Not<T> org.assertj.core.api.Assertions.not(org.assertj.core.api.Condition<? super T>)
-     * {@link org.assertj.core.api.Assertions#not(org.assertj.core.api.Condition)}
-     */
-    default <T> Not<T> not(Condition<? super T> arg0) {
-        return Assertions.not(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.shouldHaveThrown(java.lang.Class<? extends java.lang.Throwable>)
-     * {@link org.assertj.core.api.Assertions#shouldHaveThrown(java.lang.Class)}
-     */
-    default void shouldHaveThrown(Class<? extends Throwable> arg0) {
-        Assertions.shouldHaveThrown(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.groups.Properties<T> org.assertj.core.api.Assertions.extractProperty(java.lang.String,java.lang.Class<T>)
-     * {@link org.assertj.core.api.Assertions#extractProperty(java.lang.String,java.lang.Class)}
-     */
-    default <T> Properties<T> extractProperty(String arg0, Class<T> arg1) {
-        return Assertions.extractProperty(arg0, arg1);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.groups.Properties<java.lang.Object> org.assertj.core.api.Assertions.extractProperty(java.lang.String)
-     * {@link org.assertj.core.api.Assertions#extractProperty(java.lang.String)}
-     */
-    default Properties<Object> extractProperty(String arg0) {
-        return Assertions.extractProperty(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown(java.lang.Class<? extends java.lang.Throwable>)
-     * {@link org.assertj.core.api.Assertions#failBecauseExceptionWasNotThrown(java.lang.Class)}
-     */
-    default void failBecauseExceptionWasNotThrown(Class<? extends Throwable> arg0) {
-        Assertions.failBecauseExceptionWasNotThrown(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static org.assertj.core.api.AbstractThrowableAssert<?, ? extends java.lang.Throwable> org.assertj.core.api.Assertions.assertThatThrownBy(org.assertj.core.api.ThrowableAssert$ThrowingCallable)
-     * {@link org.assertj.core.api.Assertions#assertThatThrownBy(org.assertj.core.api.ThrowableAssert$ThrowingCallable)}
-     */
-    default AbstractThrowableAssert<?, ? extends Throwable> assertThatThrownBy(ThrowableAssert.ThrowingCallable arg0) {
-        return Assertions.assertThatThrownBy(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.setAllowExtractingPrivateFields(boolean)
-     * {@link org.assertj.core.api.Assertions#setAllowExtractingPrivateFields(boolean)}
-     */
-    default void setAllowExtractingPrivateFields(boolean arg0) {
-        Assertions.setAllowExtractingPrivateFields(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.setAllowComparingPrivateFields(boolean)
-     * {@link org.assertj.core.api.Assertions#setAllowComparingPrivateFields(boolean)}
-     */
-    default void setAllowComparingPrivateFields(boolean arg0) {
-        Assertions.setAllowComparingPrivateFields(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static <T> org.assertj.core.api.ThrowableTypeAssert<T> org.assertj.core.api.Assertions.assertThatExceptionOfType(java.lang.Class<? extends T>)
-     * {@link org.assertj.core.api.Assertions#assertThatExceptionOfType(java.lang.Class)}
-     */
-    default <T extends Throwable> ThrowableTypeAssert<T> assertThatExceptionOfType(Class<? extends T> arg0) {
-        return Assertions.assertThatExceptionOfType(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.setRemoveAssertJRelatedElementsFromStackTrace(boolean)
-     * {@link org.assertj.core.api.Assertions#setRemoveAssertJRelatedElementsFromStackTrace(boolean)}
-     */
-    default void setRemoveAssertJRelatedElementsFromStackTrace(boolean arg0) {
-        Assertions.setRemoveAssertJRelatedElementsFromStackTrace(arg0);
-    }
-
-
-
-    /**
-     * Delegate call to public static void org.assertj.core.api.Assertions.setMaxLengthForSingleLineDescription(int)
-     * {@link org.assertj.core.api.Assertions#setMaxLengthForSingleLineDescription(int)}
-     */
-    default void setMaxLengthForSingleLineDescription(int arg0) {
-        Assertions.setMaxLengthForSingleLineDescription(arg0);
+    default Percentage withinPercentage(Long arg0) {
+        return Assertions.withinPercentage(arg0);
     }
 
 

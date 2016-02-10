@@ -25,8 +25,7 @@ public class ClassNameUtilsTest implements AssertJ {
 				.isEqualTo("Matcher<Double>");
 	}
 
-	// org.assertj.core.api.AbstractCharSequenceAssert<?, ? extends
-	// java.lang.CharSequence>
+
 	@Test
 	public void can_extract_complex_generic_type_simple_name() {
 		assertThat(ClassNameUtils.extractSimpleName(
@@ -34,7 +33,6 @@ public class ClassNameUtilsTest implements AssertJ {
 						.isEqualTo("AbstractCharSequenceAssert<?, ? extends CharSequence>");
 	}
 
-	// org.assertj.core.api.ThrowableAssert$ThrowingCallable
 	@Test
 	public void can_extract_nested_type_simple_name() {
 		assertThat(ClassNameUtils.extractSimpleName("org.assertj.core.api.ThrowableAssert$ThrowingCallable"))
@@ -50,4 +48,5 @@ public class ClassNameUtilsTest implements AssertJ {
 				.contains("java.util.List").contains("com.whatsit.FoobleyWoo").hasSize(2);
 
 	}
+	
 }

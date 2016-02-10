@@ -77,7 +77,7 @@ public class IntegrationWithFilesTest {
 		final String packageName = "org.example";
 		File resultFile;
 		try {
-			resultFile = underTest.generateClassToFile(examplesDir, "Mockito", org.mockito.Mockito.class, packageName,
+			resultFile = underTest.generateClassToFile(examplesDir, "MockitoDelegate", org.mockito.Mockito.class, packageName,
 					4);
 			Assertions.assertThat(resultFile).exists().canRead();
 
@@ -87,6 +87,11 @@ public class IntegrationWithFilesTest {
 
 			resultFile = underTest.generateClassToFile(examplesDir, "Math", java.lang.Math.class, packageName, 4);
 			Assertions.assertThat(resultFile).exists().canRead();
+			
+			// org.junit.Assert
+			resultFile = underTest.generateClassToFile(examplesDir, "Assert", java.lang.Math.class, packageName, 4);
+			Assertions.assertThat(resultFile).exists().canRead();
+			
 			//System.out.println(resultFile.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();

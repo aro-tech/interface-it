@@ -60,20 +60,27 @@ public class DelegateMethodGenerator {
 
 	/**
 	 * Generate code for 1 static method delegation
-	 * 
 	 * @param method
+	 * @param targetInterfaceName
+	 *            The name of the wrapper interface, to avoid class name
+	 *            conflicts
 	 * @param importsOut
 	 *            The method potentially adds values to this set if imports are
 	 *            required
+	 * 
 	 * @return the code for the method delegation
 	 */
-	public String makeDelegateMethod(Method method, Set<String> importsOut) {
-		return this.makeDelegateMethod(method, importsOut, this.makeIndentationUnit(DEFAULT_INDENTATION_SPACES));
+	public String makeDelegateMethod(Method method, String targetInterfaceName, Set<String> importsOut) {
+		return this.makeDelegateMethod(targetInterfaceName, method, importsOut,
+				this.makeIndentationUnit(DEFAULT_INDENTATION_SPACES));
 	}
 
 	/**
 	 * Generate code for 1 static method delegation
 	 * 
+	 * @param targetInterfaceName
+	 *            The name of the wrapper interface, to avoid class name
+	 *            conflicts
 	 * @param method
 	 * @param importsOut
 	 *            The method potentially adds values to this set if imports are
@@ -81,7 +88,8 @@ public class DelegateMethodGenerator {
 	 * @param indentationUnit
 	 * @return the code for the method delegation
 	 */
-	public String makeDelegateMethod(Method method, Set<String> importsOut, String indentationUnit) {
+	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
+			String indentationUnit) {
 		StringBuilder buf = new StringBuilder();
 		StringBuilder paramsForJavadocLink = new StringBuilder();
 		for (Type cur : method.getParameterTypes()) {
@@ -96,7 +104,8 @@ public class DelegateMethodGenerator {
 				.append("(").append(paramsForJavadocLink.toString()).append(")}").append(NEWLINE)
 				.append(indentationUnit).append(" */").append(NEWLINE).append(indentationUnit)
 				.append(this.makeMethodSignature(method, importsOut)).append(" {").append(NEWLINE)
-				.append(indentationUnit).append(indentationUnit).append(this.makeDelegateCall(method)).append(NEWLINE)
+				.append(indentationUnit).append(indentationUnit)
+				.append(this.makeDelegateCall(method, targetInterfaceName)).append(NEWLINE)
 				.append(indentationUnit).append("}").append(NEWLINE);
 
 		return buf.toString();
@@ -203,14 +212,18 @@ public class DelegateMethodGenerator {
 	 * Generate the line of code calling the static method
 	 * 
 	 * @param method
+	 * @param targetInterfaceName
+	 *            The name of the wrapper interface, to avoid class name
+	 *            conflicts
 	 * @return
 	 */
-	public String makeDelegateCall(Method method) {
+	public String makeDelegateCall(Method method, String targetInterfaceName) {
 		StringBuilder buf = new StringBuilder();
 		if (!"void".equals(method.getReturnType().getTypeName())) {
 			buf.append("return ");
 		}
-		buf.append(method.getDeclaringClass().getSimpleName()).append(".").append(method.getName()).append("(");
+		buf.append(getDelegateClassName(method, targetInterfaceName)).append(".").append(method.getName())
+				.append("(");
 		int parameterCount = method.getParameterCount();
 		for (int i = 0; i < parameterCount; i++) {
 			if (i > 0) {
@@ -220,6 +233,15 @@ public class DelegateMethodGenerator {
 		}
 		buf.append(");");
 		return buf.toString();
+	}
+
+	private String getDelegateClassName(Method method, String targetInterfaceName) {
+		Class<?> declaringClass = method.getDeclaringClass();
+		String delegateClassName = declaringClass.getSimpleName();
+		if (delegateClassName.equals(targetInterfaceName)) {
+			delegateClassName = declaringClass.getCanonicalName();
+		}
+		return delegateClassName;
 	}
 
 	/**
@@ -305,6 +327,7 @@ public class DelegateMethodGenerator {
 	 * @param targetPackageName
 	 * @param targetInterfaceName
 	 * @param delegateClass
+	 * @param
 	 * @return Generated code
 	 */
 	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
@@ -312,7 +335,8 @@ public class DelegateMethodGenerator {
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
 		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, indentationSpaces);
-		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, indentationSpaces);
+		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, indentationSpaces,
+				targetInterfaceName);
 		appendPackage(targetPackageName, result);
 		appendSortedImports(result, imports);
 		appendInterfaceBody(targetInterfaceName, delegateClass, indentationSpaces, result, constants, methods);
@@ -360,10 +384,11 @@ public class DelegateMethodGenerator {
 	 * 
 	 * @param delegateClass
 	 * @param importsUpdated
+	 * @param targetInterfaceName 
 	 * @return code
 	 */
-	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated) {
-		return this.generateMethodsForClassUpdatingImports(delegateClass, importsUpdated, DEFAULT_INDENTATION_SPACES);
+	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated, String targetInterfaceName) {
+		return this.generateMethodsForClassUpdatingImports(delegateClass, importsUpdated, DEFAULT_INDENTATION_SPACES, targetInterfaceName);
 	}
 
 	/**
@@ -372,16 +397,18 @@ public class DelegateMethodGenerator {
 	 * @param delegateClass
 	 * @param importsUpdated
 	 * @param indentationSpaces
+	 * @param targetInterfaceName
 	 * @return code
 	 */
 	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
-			int indentationSpaces) {
+			int indentationSpaces, String targetInterfaceName) {
 		StringBuilder buf = new StringBuilder();
 		String indentationUnit = makeIndentationUnit(indentationSpaces);
 
 		for (Method cur : this.listStaticMethodsForClass(delegateClass)) {
-			buf.append(NEWLINE).append(this.makeDelegateMethod(cur, importsUpdated, indentationUnit)).append(NEWLINE)
-					.append(NEWLINE);
+			buf.append(NEWLINE)
+					.append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated, indentationUnit))
+					.append(NEWLINE).append(NEWLINE);
 		}
 		return buf.toString();
 	}
