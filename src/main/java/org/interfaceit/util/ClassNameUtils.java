@@ -49,23 +49,23 @@ public class ClassNameUtils {
 	private static void cleanUpAndAddImport(Set<String> result, String extracted) {
 		StringBuilder buf = new StringBuilder();
 		char[] chars = extracted.toCharArray();
-		for(char c: chars) {
-			if(Character.isAlphabetic(c) || Character.isDigit(c) || c == '.') {
+		for (char c : chars) {
+			if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '.') {
 				buf.append(c);
-			} else if(c == '$') {
+			} else if (c == '$') {
 				buf.append('.');
 			}
 		}
-		if(buf.length() > 0) {
-			result.add(buf.toString());			
+		if (buf.length() > 0) {
+			result.add(buf.toString());
 		}
 	}
 
 	private static void addOneImportIfPossible(Set<String> result, String[] spaceSplit) {
-		for(String cur: spaceSplit) {
-			if(containsPackageInfo(cur)) {
-				cleanUpAndAddImport(result, cur);						
-			}						
+		for (String cur : spaceSplit) {
+			if (containsPackageInfo(cur)) {
+				cleanUpAndAddImport(result, cur);
+			}
 		}
 	}
 
@@ -113,6 +113,20 @@ public class ClassNameUtils {
 			return shortTypeName.substring(0, braceIndex) + "...";
 		}
 		return shortTypeName;
+	}
+
+	/**
+	 * Get the method's class name, shortened if there's no conflict with the target interface name
+	 * @param declaringClass
+	 * @param targetInterfaceName
+	 * @return the name
+	 */
+	public static String getDelegateClassNameWithoutPackageIfNoConflict(Class<?> declaringClass, String targetInterfaceName) {
+		String delegateClassName = declaringClass.getSimpleName();
+		if (delegateClassName.equals(targetInterfaceName)) {
+			delegateClassName = declaringClass.getCanonicalName();
+		}
+		return delegateClassName;
 	}
 
 }

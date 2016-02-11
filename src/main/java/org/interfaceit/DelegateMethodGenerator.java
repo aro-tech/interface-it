@@ -60,6 +60,7 @@ public class DelegateMethodGenerator {
 
 	/**
 	 * Generate code for 1 static method delegation
+	 * 
 	 * @param method
 	 * @param targetInterfaceName
 	 *            The name of the wrapper interface, to avoid class name
@@ -105,7 +106,7 @@ public class DelegateMethodGenerator {
 				.append(indentationUnit).append(" */").append(NEWLINE).append(indentationUnit)
 				.append(this.makeMethodSignature(method, importsOut)).append(" {").append(NEWLINE)
 				.append(indentationUnit).append(indentationUnit)
-				.append(this.makeDelegateCall(method, targetInterfaceName)).append(NEWLINE)
+				.append(this.makeDelegateCall(method, targetInterfaceName, importsOut)).append(NEWLINE)
 				.append(indentationUnit).append("}").append(NEWLINE);
 
 		return buf.toString();
@@ -215,15 +216,22 @@ public class DelegateMethodGenerator {
 	 * @param targetInterfaceName
 	 *            The name of the wrapper interface, to avoid class name
 	 *            conflicts
+	 * @param importsOut
+	 *            For receiving imports needed
 	 * @return
 	 */
-	public String makeDelegateCall(Method method, String targetInterfaceName) {
+	public String makeDelegateCall(Method method, String targetInterfaceName, Set<String> importsOut) {
 		StringBuilder buf = new StringBuilder();
 		if (!"void".equals(method.getReturnType().getTypeName())) {
 			buf.append("return ");
 		}
-		buf.append(getDelegateClassName(method, targetInterfaceName)).append(".").append(method.getName())
-				.append("(");
+		Class<?> declaringClass = method.getDeclaringClass();
+		String delegateClassName = ClassNameUtils
+				.getDelegateClassNameWithoutPackageIfNoConflict(declaringClass, targetInterfaceName);
+		if (needToImport(delegateClassName)) {
+			importsOut.add(declaringClass.getCanonicalName());
+		}
+		buf.append(delegateClassName).append(".").append(method.getName()).append("(");
 		int parameterCount = method.getParameterCount();
 		for (int i = 0; i < parameterCount; i++) {
 			if (i > 0) {
@@ -235,13 +243,12 @@ public class DelegateMethodGenerator {
 		return buf.toString();
 	}
 
-	private String getDelegateClassName(Method method, String targetInterfaceName) {
-		Class<?> declaringClass = method.getDeclaringClass();
-		String delegateClassName = declaringClass.getSimpleName();
-		if (delegateClassName.equals(targetInterfaceName)) {
-			delegateClassName = declaringClass.getCanonicalName();
-		}
-		return delegateClassName;
+	/**
+	 * @param delegateClassName
+	 * @return
+	 */
+	private boolean needToImport(String delegateClassName) {
+		return delegateClassName.indexOf('.') < 0;
 	}
 
 	/**
@@ -254,17 +261,28 @@ public class DelegateMethodGenerator {
 		return Arrays.stream(clazz.getFields()).filter(f -> {
 			int modifiers = f.getModifiers();
 			return Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers);
-		}).collect(Collectors.toList());
+		}).sorted((f1, f2) -> f1.getName().compareTo(f2.getName())).collect(Collectors.toList());
 	}
 
-	private void generateConstant(Field field, Class<?> fieldClass, Set<String> imports, StringBuilder buf,
-			String indentationUnit) {
+	/**
+	 * Generate code for one constant
+	 * 
+	 * @param field
+	 * @param fieldClass
+	 * @param imports
+	 * @param buf
+	 * @param targetInterfaceName
+	 * @param indentationUnit
+	 */
+	protected void generateConstant(Field field, Class<?> fieldClass, Set<String> imports, StringBuilder buf,
+			String targetInterfaceName, String indentationUnit) {
 		String type = extractShortNameAndUpdateImports(imports, field.getType().getTypeName());
 		buf.append(NEWLINE).append(indentationUnit).append("/** ").append("{@link ").append(fieldClass.getTypeName())
 				.append('#').append(field.getName()).append("} */").append(NEWLINE);
 		buf.append(indentationUnit).append("public static final ").append(type).append(' ').append(field.getName())
-				.append(" = ").append(fieldClass.getSimpleName()).append('.').append(field.getName()).append(";")
-				.append(NEWLINE);
+				.append(" = ")
+				.append(ClassNameUtils.getDelegateClassNameWithoutPackageIfNoConflict(fieldClass, targetInterfaceName))
+				.append('.').append(field.getName()).append(";").append(NEWLINE);
 	}
 
 	/**
@@ -275,10 +293,14 @@ public class DelegateMethodGenerator {
 	 * @param importsUpdated
 	 *            As a side effect, the imports needed for these constants are
 	 *            added to the set
+	 * @param targetInterfaceName
+	 *            TODO
 	 * @return
 	 */
-	protected String generateConstantsForClassUpdatingImports(Class<?> clazz, Set<String> importsUpdated) {
-		return this.generateConstantsForClassUpdatingImports(clazz, importsUpdated, DEFAULT_INDENTATION_SPACES);
+	protected String generateConstantsForClassUpdatingImports(Class<?> clazz, Set<String> importsUpdated,
+			String targetInterfaceName) {
+		return this.generateConstantsForClassUpdatingImports(clazz, importsUpdated, DEFAULT_INDENTATION_SPACES,
+				targetInterfaceName);
 	}
 
 	/**
@@ -290,15 +312,17 @@ public class DelegateMethodGenerator {
 	 *            As a side effect, the imports needed for these constants are
 	 *            added to the set
 	 * @param indentationSpaces
+	 * @param targetInterfaceName
+	 *            TODO
 	 * @return
 	 */
 	protected String generateConstantsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
-			int indentationSpaces) {
+			int indentationSpaces, String targetInterfaceName) {
 		String indentationUnit = makeIndentationUnit(indentationSpaces);
 
 		StringBuilder buf = new StringBuilder();
 		this.listConstantsForClass(delegateClass).stream().forEach(field -> {
-			generateConstant(field, delegateClass, importsUpdated, buf, indentationUnit);
+			generateConstant(field, delegateClass, importsUpdated, buf, targetInterfaceName, indentationUnit);
 		});
 
 		importsUpdated.addAll(ClassNameUtils.makeImports(delegateClass.getTypeName()));
@@ -334,7 +358,8 @@ public class DelegateMethodGenerator {
 			Class<?> delegateClass, int indentationSpaces) {
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
-		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, indentationSpaces);
+		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, indentationSpaces,
+				targetInterfaceName);
 		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, indentationSpaces,
 				targetInterfaceName);
 		appendPackage(targetPackageName, result);
@@ -384,11 +409,13 @@ public class DelegateMethodGenerator {
 	 * 
 	 * @param delegateClass
 	 * @param importsUpdated
-	 * @param targetInterfaceName 
+	 * @param targetInterfaceName
 	 * @return code
 	 */
-	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated, String targetInterfaceName) {
-		return this.generateMethodsForClassUpdatingImports(delegateClass, importsUpdated, DEFAULT_INDENTATION_SPACES, targetInterfaceName);
+	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
+			String targetInterfaceName) {
+		return this.generateMethodsForClassUpdatingImports(delegateClass, importsUpdated, DEFAULT_INDENTATION_SPACES,
+				targetInterfaceName);
 	}
 
 	/**

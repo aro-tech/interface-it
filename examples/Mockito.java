@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set; 
 import org.hamcrest.Matcher; 
 import org.mockito.InOrder; 
+import org.mockito.Matchers; 
 import org.mockito.MockSettings; 
 import org.mockito.MockingDetails; 
 import org.mockito.Mockito; 
@@ -41,20 +42,20 @@ public interface Mockito {
 
     // CONSTANTS: 
 
-    /** {@link org.mockito.Mockito#RETURNS_DEFAULTS} */
-    public static final Answer RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;
-
-    /** {@link org.mockito.Mockito#RETURNS_SMART_NULLS} */
-    public static final Answer RETURNS_SMART_NULLS = Mockito.RETURNS_SMART_NULLS;
-
-    /** {@link org.mockito.Mockito#RETURNS_MOCKS} */
-    public static final Answer RETURNS_MOCKS = Mockito.RETURNS_MOCKS;
+    /** {@link org.mockito.Mockito#CALLS_REAL_METHODS} */
+    public static final Answer CALLS_REAL_METHODS = org.mockito.Mockito.CALLS_REAL_METHODS;
 
     /** {@link org.mockito.Mockito#RETURNS_DEEP_STUBS} */
-    public static final Answer RETURNS_DEEP_STUBS = Mockito.RETURNS_DEEP_STUBS;
+    public static final Answer RETURNS_DEEP_STUBS = org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
-    /** {@link org.mockito.Mockito#CALLS_REAL_METHODS} */
-    public static final Answer CALLS_REAL_METHODS = Mockito.CALLS_REAL_METHODS;
+    /** {@link org.mockito.Mockito#RETURNS_DEFAULTS} */
+    public static final Answer RETURNS_DEFAULTS = org.mockito.Mockito.RETURNS_DEFAULTS;
+
+    /** {@link org.mockito.Mockito#RETURNS_MOCKS} */
+    public static final Answer RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;
+
+    /** {@link org.mockito.Mockito#RETURNS_SMART_NULLS} */
+    public static final Answer RETURNS_SMART_NULLS = org.mockito.Mockito.RETURNS_SMART_NULLS;
 
 
     // DELEGATE METHODS: 
@@ -64,7 +65,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#after(long)}
      */
     default VerificationAfterDelay after(long arg0) {
-        return Mockito.after(arg0);
+        return org.mockito.Mockito.after(arg0);
     }
 
 
@@ -294,7 +295,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#atLeast(int)}
      */
     default VerificationMode atLeast(int arg0) {
-        return Mockito.atLeast(arg0);
+        return org.mockito.Mockito.atLeast(arg0);
     }
 
 
@@ -304,7 +305,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#atLeastOnce()}
      */
     default VerificationMode atLeastOnce() {
-        return Mockito.atLeastOnce();
+        return org.mockito.Mockito.atLeastOnce();
     }
 
 
@@ -314,7 +315,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#atMost(int)}
      */
     default VerificationMode atMost(int arg0) {
-        return Mockito.atMost(arg0);
+        return org.mockito.Mockito.atMost(arg0);
     }
 
 
@@ -344,7 +345,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#calls(int)}
      */
     default VerificationMode calls(int arg0) {
-        return Mockito.calls(arg0);
+        return org.mockito.Mockito.calls(arg0);
     }
 
 
@@ -374,7 +375,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#doAnswer(org.mockito.stubbing.Answer)}
      */
     default Stubber doAnswer(Answer arg0) {
-        return Mockito.doAnswer(arg0);
+        return org.mockito.Mockito.doAnswer(arg0);
     }
 
 
@@ -384,7 +385,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#doCallRealMethod()}
      */
     default Stubber doCallRealMethod() {
-        return Mockito.doCallRealMethod();
+        return org.mockito.Mockito.doCallRealMethod();
     }
 
 
@@ -394,7 +395,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#doNothing()}
      */
     default Stubber doNothing() {
-        return Mockito.doNothing();
+        return org.mockito.Mockito.doNothing();
     }
 
 
@@ -404,7 +405,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#doReturn(java.lang.Object)}
      */
     default Stubber doReturn(Object arg0) {
-        return Mockito.doReturn(arg0);
+        return org.mockito.Mockito.doReturn(arg0);
     }
 
 
@@ -414,7 +415,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#doThrow(java.lang.Class)}
      */
     default Stubber doThrow(Class<? extends Throwable> arg0) {
-        return Mockito.doThrow(arg0);
+        return org.mockito.Mockito.doThrow(arg0);
     }
 
 
@@ -424,7 +425,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#doThrow(java.lang.Throwable)}
      */
     default Stubber doThrow(Throwable arg0) {
-        return Mockito.doThrow(arg0);
+        return org.mockito.Mockito.doThrow(arg0);
     }
 
 
@@ -554,7 +555,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#ignoreStubs(java.lang.Object[])}
      */
     default Object[] ignoreStubs(Object... arg0) {
-        return Mockito.ignoreStubs(arg0);
+        return org.mockito.Mockito.ignoreStubs(arg0);
     }
 
 
@@ -564,7 +565,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#inOrder(java.lang.Object[])}
      */
     default InOrder inOrder(Object... arg0) {
-        return Mockito.inOrder(arg0);
+        return org.mockito.Mockito.inOrder(arg0);
     }
 
 
@@ -654,7 +655,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#mock(java.lang.Class)}
      */
     default <T> T mock(Class<T> arg0) {
-        return Mockito.mock(arg0);
+        return org.mockito.Mockito.mock(arg0);
     }
 
 
@@ -664,7 +665,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.stubbing.Answer)}
      */
     default <T> T mock(Class<T> arg0, Answer arg1) {
-        return Mockito.mock(arg0, arg1);
+        return org.mockito.Mockito.mock(arg0, arg1);
     }
 
 
@@ -674,7 +675,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.MockSettings)}
      */
     default <T> T mock(Class<T> arg0, MockSettings arg1) {
-        return Mockito.mock(arg0, arg1);
+        return org.mockito.Mockito.mock(arg0, arg1);
     }
 
 
@@ -684,7 +685,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#mock(java.lang.Class,org.mockito.ReturnValues)}
      */
     default <T> T mock(Class<T> arg0, ReturnValues arg1) {
-        return Mockito.mock(arg0, arg1);
+        return org.mockito.Mockito.mock(arg0, arg1);
     }
 
 
@@ -694,7 +695,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#mock(java.lang.Class,java.lang.String)}
      */
     default <T> T mock(Class<T> arg0, String arg1) {
-        return Mockito.mock(arg0, arg1);
+        return org.mockito.Mockito.mock(arg0, arg1);
     }
 
 
@@ -704,7 +705,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#mockingDetails(java.lang.Object)}
      */
     default MockingDetails mockingDetails(Object arg0) {
-        return Mockito.mockingDetails(arg0);
+        return org.mockito.Mockito.mockingDetails(arg0);
     }
 
 
@@ -714,7 +715,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#never()}
      */
     default VerificationMode never() {
-        return Mockito.never();
+        return org.mockito.Mockito.never();
     }
 
 
@@ -744,7 +745,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#only()}
      */
     default VerificationMode only() {
-        return Mockito.only();
+        return org.mockito.Mockito.only();
     }
 
 
@@ -764,7 +765,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#reset(java.lang.Object[])}
      */
     default <T> void reset(T... arg0) {
-        Mockito.reset(arg0);
+        org.mockito.Mockito.reset(arg0);
     }
 
 
@@ -794,7 +795,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#spy(java.lang.Class)}
      */
     default <T> T spy(Class<T> arg0) {
-        return Mockito.spy(arg0);
+        return org.mockito.Mockito.spy(arg0);
     }
 
 
@@ -804,7 +805,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#spy(java.lang.Object)}
      */
     default <T> T spy(T arg0) {
-        return Mockito.spy(arg0);
+        return org.mockito.Mockito.spy(arg0);
     }
 
 
@@ -824,7 +825,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#stub(java.lang.Object)}
      */
     default <T> DeprecatedOngoingStubbing<T> stub(T arg0) {
-        return Mockito.stub(arg0);
+        return org.mockito.Mockito.stub(arg0);
     }
 
 
@@ -834,7 +835,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#stubVoid(java.lang.Object)}
      */
     default <T> VoidMethodStubbable<T> stubVoid(T arg0) {
-        return Mockito.stubVoid(arg0);
+        return org.mockito.Mockito.stubVoid(arg0);
     }
 
 
@@ -844,7 +845,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#timeout(long)}
      */
     default VerificationWithTimeout timeout(long arg0) {
-        return Mockito.timeout(arg0);
+        return org.mockito.Mockito.timeout(arg0);
     }
 
 
@@ -854,7 +855,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#times(int)}
      */
     default VerificationMode times(int arg0) {
-        return Mockito.times(arg0);
+        return org.mockito.Mockito.times(arg0);
     }
 
 
@@ -864,7 +865,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#validateMockitoUsage()}
      */
     default void validateMockitoUsage() {
-        Mockito.validateMockitoUsage();
+        org.mockito.Mockito.validateMockitoUsage();
     }
 
 
@@ -874,7 +875,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#verify(java.lang.Object)}
      */
     default <T> T verify(T arg0) {
-        return Mockito.verify(arg0);
+        return org.mockito.Mockito.verify(arg0);
     }
 
 
@@ -884,7 +885,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}
      */
     default <T> T verify(T arg0, VerificationMode arg1) {
-        return Mockito.verify(arg0, arg1);
+        return org.mockito.Mockito.verify(arg0, arg1);
     }
 
 
@@ -894,7 +895,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#verifyNoMoreInteractions(java.lang.Object[])}
      */
     default void verifyNoMoreInteractions(Object... arg0) {
-        Mockito.verifyNoMoreInteractions(arg0);
+        org.mockito.Mockito.verifyNoMoreInteractions(arg0);
     }
 
 
@@ -904,7 +905,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#verifyZeroInteractions(java.lang.Object[])}
      */
     default void verifyZeroInteractions(Object... arg0) {
-        Mockito.verifyZeroInteractions(arg0);
+        org.mockito.Mockito.verifyZeroInteractions(arg0);
     }
 
 
@@ -914,7 +915,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#when(java.lang.Object)}
      */
     default <T> OngoingStubbing<T> when(T arg0) {
-        return Mockito.when(arg0);
+        return org.mockito.Mockito.when(arg0);
     }
 
 
@@ -924,7 +925,7 @@ public interface Mockito {
      * {@link org.mockito.Mockito#withSettings()}
      */
     default MockSettings withSettings() {
-        return Mockito.withSettings();
+        return org.mockito.Mockito.withSettings();
     }
 
 

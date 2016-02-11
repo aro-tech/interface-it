@@ -13,11 +13,10 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.interfaceit.util.mixin.AssertJ;
-import org.interfaceit.util.mixin.MockitoDelegate;
+import org.interfaceit.util.mixin.Mockito;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
  * Unit tests for generating delegate methods
@@ -25,7 +24,7 @@ import org.mockito.Mockito;
  * @author aro_tech
  *
  */
-public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
+public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 	private static final String TARGET_PACKAGE = "org.interfaceit.results";
 	private DelegateMethodGenerator underTest = new DelegateMethodGenerator();
 	private Set<String> imports;
@@ -67,7 +66,8 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 	@Test
 	public void can_generate_constants_code() {
 		Set<String> imports = new HashSet<>();
-		String result = underTest.generateConstantsForClassUpdatingImports(org.mockito.Mockito.class, imports);
+		String result = underTest.generateConstantsForClassUpdatingImports(org.mockito.Mockito.class, imports,
+				"MyMockito");
 		assertThat(result).contains("{@link org.mockito.Mockito#RETURNS_DEFAULTS}",
 				"public static final Answer RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;",
 				"{@link org.mockito.Mockito#RETURNS_SMART_NULLS}",
@@ -207,7 +207,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 
 		Assert.assertTrue(verifyMethod.isPresent());
 
-		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "MyMockito"))
+		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "MyMockito", imports))
 				.isEqualToIgnoringWhitespace("return Mockito.verify(arg0, arg1);");
 	}
 
@@ -218,7 +218,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 
 		Assert.assertTrue(whenMethod.isPresent());
 
-		assertThat(underTest.makeDelegateCall(whenMethod.get(), "MyMockito"))
+		assertThat(underTest.makeDelegateCall(whenMethod.get(), "MyMockito", imports))
 				.isEqualToIgnoringWhitespace("return Mockito.when(arg0);");
 	}
 
@@ -229,7 +229,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 
 		Assert.assertTrue(resetMethod.isPresent());
 
-		assertThat(underTest.makeDelegateCall(resetMethod.get(), "MyMockito"))
+		assertThat(underTest.makeDelegateCall(resetMethod.get(), "MyMockito", imports))
 				.isEqualToIgnoringWhitespace("Mockito.reset(arg0);");
 	}
 
@@ -253,6 +253,26 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 	}
 
 	@Test
+	public void can_generate_anydouble_method_delegation_with_import() {
+		Optional<Method> method = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
+				.filter((Method m) -> "anyDouble".equals(m.getName())).findFirst();
+
+		Assert.assertTrue(method.isPresent());
+
+		String delegateMethod = underTest.makeDelegateMethod(method.get(), "Mockito", this.imports);
+		assertThat(delegateMethod).contains("/**")
+				.contains("* Delegate call to " + method.get().toGenericString())
+				.contains(
+						"* {@link org.mockito.Matchers#anyDouble()}")
+				.contains("*/").contains("default double anyDouble() {")
+				.contains("return Matchers.anyDouble();").endsWith("}" + System.lineSeparator());
+		// System.out.println(delegateMethod);
+
+		assertThat(this.imports).contains("org.mockito.Matchers");
+	}
+	
+	
+	@Test
 	public void can_generate_when_method_delegation_with_import() {
 		Optional<Method> whenMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "when".equals(m.getName()) && m.getParameters().length == 1).findFirst();
@@ -262,8 +282,8 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 		String delegateMethod = underTest.makeDelegateMethod(whenMethod.get(), "MyMockito", this.imports);
 		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + whenMethod.get().toGenericString())
 				.contains("{@link org.mockito.Mockito#when(java.lang.Object)}").contains("*/")
-				.contains("default <T> OngoingStubbing<T> when(T arg0) {")
-				.contains("return Mockito.when(arg0);").endsWith("}" + System.lineSeparator());
+				.contains("default <T> OngoingStubbing<T> when(T arg0) {").contains("return Mockito.when(arg0);")
+				.endsWith("}" + System.lineSeparator());
 		// System.out.println(delegateMethod);
 
 		assertThat(this.imports).contains("org.mockito.stubbing.OngoingStubbing");
@@ -284,8 +304,8 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 	@Test
 	public void can_generate_whole_interface() {
 
-		String targetInterfaceName = "MockitoDelegate";
-		Class<Mockito> delegateClass = Mockito.class;
+		String targetInterfaceName = "Mockito";
+		Class<org.mockito.Mockito> delegateClass = org.mockito.Mockito.class;
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, targetInterfaceName, delegateClass);
 
 		// System.out.println(classText);
@@ -296,7 +316,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 				.contains(
 						"* {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}")
 				.contains("*/").contains("default <T> T verify(T arg0, VerificationMode arg1) {")
-				.contains("return Mockito.verify(arg0, arg1);");
+				.contains("return org.mockito.Mockito.verify(arg0, arg1);");
 
 	}
 
@@ -341,29 +361,37 @@ public class DelegateMethodGeneratorTest implements AssertJ, MockitoDelegate {
 			}
 		}
 	}
-	
+
 	@Test
 	public void delegation_code_compiles_and_runs() {
 		// eating own dog food:
 		Writer mock = mock(java.io.Writer.class);
 		assertThat(mock).isNotNull();
 	}
-	
+
 	@Test
-	public void should_use_package_name_if_delegate_class_name_equals_target_class_name() {
+	public void should_use_package_name_in_delegate_call_if_delegate_class_name_equals_target_class_name() {
 		Optional<Method> verifyMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "verify".equals(m.getName()) && m.getParameters().length == 2).findFirst();
 
 		Assert.assertTrue(verifyMethod.isPresent());
 
-		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "Mockito"))
+		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "Mockito", imports))
 				.isEqualToIgnoringWhitespace("return org.mockito.Mockito.verify(arg0, arg1);");
 
 	}
 
-	// TODO: TDD case where conflict between delegate class name and wrapper
-	// ...class name (e.g.: Mockito) - must use full package name instead of
-	// ...simple name in method code
+	@Test
+	public void should_use_package_name_in_constant_def_if_delegate_class_name_equals_target_class_name()
+			throws NoSuchFieldException, SecurityException {
+		Field field = org.mockito.Mockito.class.getDeclaredField("RETURNS_MOCKS");
+		StringBuilder buf = new StringBuilder();
+		underTest.generateConstant(field, org.mockito.Mockito.class, imports, buf, "Mockito", "");
+		assertThat(buf.toString())
+				.contains("public static final Answer RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;");
+
+	}
+
 	// TODO: mapping argument names
 	// TODO: generate whole interface file with imports
 	// TODO: handle singleton calls?
