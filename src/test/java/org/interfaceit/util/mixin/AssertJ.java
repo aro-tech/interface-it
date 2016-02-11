@@ -1,90 +1,104 @@
 package org.interfaceit.util.mixin;
 
-import java.io.File;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.net.URI;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.text.DateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.OffsetTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.OptionalInt;
-import java.util.OptionalLong;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Stream;
-
-import org.assertj.core.api.AbstractBigDecimalAssert;
-import org.assertj.core.api.AbstractBooleanArrayAssert;
-import org.assertj.core.api.AbstractBooleanAssert;
-import org.assertj.core.api.AbstractByteArrayAssert;
-import org.assertj.core.api.AbstractByteAssert;
-import org.assertj.core.api.AbstractCharArrayAssert;
-import org.assertj.core.api.AbstractCharSequenceAssert;
-import org.assertj.core.api.AbstractCharacterAssert;
-import org.assertj.core.api.AbstractClassAssert;
-import org.assertj.core.api.AbstractComparableAssert;
-import org.assertj.core.api.AbstractDateAssert;
-import org.assertj.core.api.AbstractDoubleArrayAssert;
-import org.assertj.core.api.AbstractDoubleAssert;
-import org.assertj.core.api.AbstractFileAssert;
-import org.assertj.core.api.AbstractFloatArrayAssert;
-import org.assertj.core.api.AbstractFloatAssert;
-import org.assertj.core.api.AbstractInputStreamAssert;
-import org.assertj.core.api.AbstractIntArrayAssert;
-import org.assertj.core.api.AbstractIntegerAssert;
-import org.assertj.core.api.AbstractIterableAssert;
-import org.assertj.core.api.AbstractListAssert;
-import org.assertj.core.api.AbstractLocalDateAssert;
-import org.assertj.core.api.AbstractLocalDateTimeAssert;
-import org.assertj.core.api.AbstractLocalTimeAssert;
-import org.assertj.core.api.AbstractLongArrayAssert;
-import org.assertj.core.api.AbstractLongAssert;
-import org.assertj.core.api.AbstractObjectArrayAssert;
-import org.assertj.core.api.AbstractObjectAssert;
-import org.assertj.core.api.AbstractOffsetDateTimeAssert;
-import org.assertj.core.api.AbstractOffsetTimeAssert;
-import org.assertj.core.api.AbstractPathAssert;
-import org.assertj.core.api.AbstractShortArrayAssert;
-import org.assertj.core.api.AbstractShortAssert;
-import org.assertj.core.api.AbstractThrowableAssert;
-import org.assertj.core.api.AbstractUriAssert;
-import org.assertj.core.api.AbstractUrlAssert;
-import org.assertj.core.api.AbstractZonedDateTimeAssert;
-import org.assertj.core.api.AssertDelegateTarget;
-import org.assertj.core.api.AssertProvider;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.CompletableFutureAssert;
-import org.assertj.core.api.Condition;
-import org.assertj.core.api.MapAssert;
-import org.assertj.core.api.OptionalAssert;
-import org.assertj.core.api.OptionalDoubleAssert;
-import org.assertj.core.api.OptionalIntAssert;
-import org.assertj.core.api.OptionalLongAssert;
-import org.assertj.core.api.ThrowableAssert;
-import org.assertj.core.api.ThrowableTypeAssert;
-import org.assertj.core.api.filter.Filters;
-import org.assertj.core.api.filter.InFilter;
-import org.assertj.core.api.filter.NotFilter;
-import org.assertj.core.api.filter.NotInFilter;
-import org.assertj.core.condition.DoesNotHave;
-import org.assertj.core.condition.Not;
-import org.assertj.core.data.Index;
-import org.assertj.core.data.MapEntry;
-import org.assertj.core.data.Offset;
-import org.assertj.core.data.Percentage;
-import org.assertj.core.groups.Properties;
+import java.io.File; 
+import java.io.InputStream; 
+import java.lang.Boolean; 
+import java.lang.Byte; 
+import java.lang.CharSequence; 
+import java.lang.Character; 
+import java.lang.Class; 
+import java.lang.Comparable; 
+import java.lang.Double; 
+import java.lang.Float; 
+import java.lang.Integer; 
+import java.lang.Iterable; 
+import java.lang.Long; 
+import java.lang.Object; 
+import java.lang.Short; 
+import java.lang.String; 
+import java.lang.Throwable; 
+import java.math.BigDecimal; 
+import java.net.URI; 
+import java.net.URL; 
+import java.nio.charset.Charset; 
+import java.nio.file.Path; 
+import java.text.DateFormat; 
+import java.time.LocalDate; 
+import java.time.LocalDateTime; 
+import java.time.LocalTime; 
+import java.time.OffsetDateTime; 
+import java.time.OffsetTime; 
+import java.time.ZonedDateTime; 
+import java.util.Date; 
+import java.util.Iterator; 
+import java.util.List; 
+import java.util.Map; 
+import java.util.Optional; 
+import java.util.OptionalDouble; 
+import java.util.OptionalInt; 
+import java.util.OptionalLong; 
+import java.util.concurrent.CompletableFuture; 
+import java.util.stream.Stream; 
+import org.assertj.core.api.AbstractBigDecimalAssert; 
+import org.assertj.core.api.AbstractBooleanArrayAssert; 
+import org.assertj.core.api.AbstractBooleanAssert; 
+import org.assertj.core.api.AbstractByteArrayAssert; 
+import org.assertj.core.api.AbstractByteAssert; 
+import org.assertj.core.api.AbstractCharArrayAssert; 
+import org.assertj.core.api.AbstractCharSequenceAssert; 
+import org.assertj.core.api.AbstractCharacterAssert; 
+import org.assertj.core.api.AbstractClassAssert; 
+import org.assertj.core.api.AbstractComparableAssert; 
+import org.assertj.core.api.AbstractDateAssert; 
+import org.assertj.core.api.AbstractDoubleArrayAssert; 
+import org.assertj.core.api.AbstractDoubleAssert; 
+import org.assertj.core.api.AbstractFileAssert; 
+import org.assertj.core.api.AbstractFloatArrayAssert; 
+import org.assertj.core.api.AbstractFloatAssert; 
+import org.assertj.core.api.AbstractInputStreamAssert; 
+import org.assertj.core.api.AbstractIntArrayAssert; 
+import org.assertj.core.api.AbstractIntegerAssert; 
+import org.assertj.core.api.AbstractIterableAssert; 
+import org.assertj.core.api.AbstractListAssert; 
+import org.assertj.core.api.AbstractLocalDateAssert; 
+import org.assertj.core.api.AbstractLocalDateTimeAssert; 
+import org.assertj.core.api.AbstractLocalTimeAssert; 
+import org.assertj.core.api.AbstractLongArrayAssert; 
+import org.assertj.core.api.AbstractLongAssert; 
+import org.assertj.core.api.AbstractObjectArrayAssert; 
+import org.assertj.core.api.AbstractObjectAssert; 
+import org.assertj.core.api.AbstractOffsetDateTimeAssert; 
+import org.assertj.core.api.AbstractOffsetTimeAssert; 
+import org.assertj.core.api.AbstractPathAssert; 
+import org.assertj.core.api.AbstractShortArrayAssert; 
+import org.assertj.core.api.AbstractShortAssert; 
+import org.assertj.core.api.AbstractThrowableAssert; 
+import org.assertj.core.api.AbstractUriAssert; 
+import org.assertj.core.api.AbstractUrlAssert; 
+import org.assertj.core.api.AbstractZonedDateTimeAssert; 
+import org.assertj.core.api.AssertDelegateTarget; 
+import org.assertj.core.api.AssertProvider; 
+import org.assertj.core.api.Assertions; 
+import org.assertj.core.api.CompletableFutureAssert; 
+import org.assertj.core.api.Condition; 
+import org.assertj.core.api.MapAssert; 
+import org.assertj.core.api.OptionalAssert; 
+import org.assertj.core.api.OptionalDoubleAssert; 
+import org.assertj.core.api.OptionalIntAssert; 
+import org.assertj.core.api.OptionalLongAssert; 
+import org.assertj.core.api.ThrowableAssert; 
+import org.assertj.core.api.ThrowableTypeAssert; 
+import org.assertj.core.api.filter.Filters; 
+import org.assertj.core.api.filter.InFilter; 
+import org.assertj.core.api.filter.NotFilter; 
+import org.assertj.core.api.filter.NotInFilter; 
+import org.assertj.core.condition.DoesNotHave; 
+import org.assertj.core.condition.Not; 
+import org.assertj.core.data.Index; 
+import org.assertj.core.data.MapEntry; 
+import org.assertj.core.data.Offset; 
+import org.assertj.core.data.Percentage; 
+import org.assertj.core.groups.Properties; 
 import org.assertj.core.groups.Tuple; 
 
 /** 
@@ -93,6 +107,7 @@ import org.assertj.core.groups.Tuple;
  * {@link org.assertj.core.api.Assertions}
  */
 public interface AssertJ {
+
 
     // CONSTANTS: 
 
@@ -460,20 +475,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractLongAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Long)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Long)}
+     * Delegate call to public static org.assertj.core.api.AbstractLongAssert<?> org.assertj.core.api.Assertions.assertThat(long)
+     * {@link org.assertj.core.api.Assertions#assertThat(long)}
      */
-    default AbstractLongAssert<?> assertThat(Long arg0) {
+    default AbstractLongAssert<?> assertThat(long arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractLongAssert<?> org.assertj.core.api.Assertions.assertThat(long)
-     * {@link org.assertj.core.api.Assertions#assertThat(long)}
+     * Delegate call to public static org.assertj.core.api.AbstractLongAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Long)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Long)}
      */
-    default AbstractLongAssert<?> assertThat(long arg0) {
+    default AbstractLongAssert<?> assertThat(Long arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -570,20 +585,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Short)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Short)}
+     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(short)
+     * {@link org.assertj.core.api.Assertions#assertThat(short)}
      */
-    default AbstractShortAssert<?> assertThat(Short arg0) {
+    default AbstractShortAssert<?> assertThat(short arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(short)
-     * {@link org.assertj.core.api.Assertions#assertThat(short)}
+     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Short)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Short)}
      */
-    default AbstractShortAssert<?> assertThat(short arg0) {
+    default AbstractShortAssert<?> assertThat(Short arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -620,20 +635,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(T)
-     * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertDelegateTarget)}
+     * Delegate call to public static <T> org.assertj.core.api.AbstractComparableAssert<?, T> org.assertj.core.api.Assertions.assertThat(T)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Comparable)}
      */
-    default <T extends AssertDelegateTarget> T assertThat(T arg0) {
+    default <T extends Comparable<? super T>> AbstractComparableAssert<?, T> assertThat(T arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> org.assertj.core.api.AbstractComparableAssert<?, T> org.assertj.core.api.Assertions.assertThat(T)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Comparable)}
+     * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(T)
+     * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertDelegateTarget)}
      */
-    default <T extends Comparable<? super T>> AbstractComparableAssert<?, T> assertThat(T arg0) {
+    default <T extends AssertDelegateTarget> T assertThat(T arg0) {
         return Assertions.assertThat(arg0);
     }
 

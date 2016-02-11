@@ -128,7 +128,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		assertThat(underTest.makeMethodSignature(method.get(), this.imports).trim())
 				.startsWith("default Throwable catchThrowable(ThrowableAssert.ThrowingCallable ").endsWith(")");
 
-		assertThat(this.imports).contains("org.assertj.core.api.ThrowableAssert.ThrowingCallable");
+		assertThat(this.imports).contains("org.assertj.core.api.ThrowableAssert");
 	}
 
 	// <T extends AssertDelegateTarget> T assertThat(T assertion)
@@ -260,18 +260,15 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Assert.assertTrue(method.isPresent());
 
 		String delegateMethod = underTest.makeDelegateMethod(method.get(), "Mockito", this.imports);
-		assertThat(delegateMethod).contains("/**")
-				.contains("* Delegate call to " + method.get().toGenericString())
-				.contains(
-						"* {@link org.mockito.Matchers#anyDouble()}")
-				.contains("*/").contains("default double anyDouble() {")
-				.contains("return Matchers.anyDouble();").endsWith("}" + System.lineSeparator());
+		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + method.get().toGenericString())
+				.contains("* {@link org.mockito.Matchers#anyDouble()}").contains("*/")
+				.contains("default double anyDouble() {").contains("return Matchers.anyDouble();")
+				.endsWith("}" + System.lineSeparator());
 		// System.out.println(delegateMethod);
 
 		assertThat(this.imports).contains("org.mockito.Matchers");
 	}
-	
-	
+
 	@Test
 	public void can_generate_when_method_delegation_with_import() {
 		Optional<Method> whenMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
@@ -312,7 +309,8 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		assertThat(classText)
 				.startsWith("package org.interfaceit.results;" + System.lineSeparator() + System.lineSeparator())
-				.doesNotContain("import java.lang.Class<").contains("/**").contains("* Delegate call to ")
+				.doesNotContain("import org.mockito.Mockito").doesNotContain("import java.lang.Class<").contains("/**")
+				.contains("* Delegate call to ")
 				.contains(
 						"* {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}")
 				.contains("*/").contains("default <T> T verify(T arg0, VerificationMode arg1) {")

@@ -1,4 +1,4 @@
-package org.example;
+package org.interfaceit.util.mixin;
 
 import java.lang.Math; 
 

@@ -42,22 +42,20 @@ public class ClassNameUtils {
 		return result;
 	}
 
-	/**
-	 * @param result
-	 * @param extracted
-	 */
-	private static void cleanUpAndAddImport(Set<String> result, String extracted) {
+
+	private static void cleanUpAndAddImport(Set<String> imports, String extracted) {
 		StringBuilder buf = new StringBuilder();
 		char[] chars = extracted.toCharArray();
 		for (char c : chars) {
 			if (Character.isAlphabetic(c) || Character.isDigit(c) || c == '.') {
 				buf.append(c);
 			} else if (c == '$') {
-				buf.append('.');
+				imports.add(buf.toString());
+				return;
 			}
 		}
 		if (buf.length() > 0) {
-			result.add(buf.toString());
+			imports.add(buf.toString());
 		}
 	}
 

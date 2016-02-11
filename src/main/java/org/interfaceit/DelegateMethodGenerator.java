@@ -363,7 +363,7 @@ public class DelegateMethodGenerator {
 		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, indentationSpaces,
 				targetInterfaceName);
 		appendPackage(targetPackageName, result);
-		appendSortedImports(result, imports);
+		appendSortedImports(result, imports, targetInterfaceName);
 		appendInterfaceBody(targetInterfaceName, delegateClass, indentationSpaces, result, constants, methods);
 		return result.toString();
 	}
@@ -396,12 +396,18 @@ public class DelegateMethodGenerator {
 		}
 	}
 
-	private void appendSortedImports(StringBuilder buf, Set<String> importsUpdated) {
+	private void appendSortedImports(StringBuilder buf, Set<String> importsUpdated, String targetInterfaceName) {
 		String[] sortedImports = importsUpdated.toArray(new String[importsUpdated.size()]);
 		Arrays.sort(sortedImports);
 		for (String cur : sortedImports) {
-			buf.append("import ").append(cur).append("; ").append(NEWLINE);
+			if(hasNoConflict(targetInterfaceName, cur)) {
+				buf.append("import ").append(cur).append("; ").append(NEWLINE);				
+			}
 		}
+	}
+
+	private boolean hasNoConflict(String targetInterfaceName, String cur) {
+		return !cur.endsWith("." + targetInterfaceName);
 	}
 
 	/**

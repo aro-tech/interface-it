@@ -1,6 +1,5 @@
-package org.example;
+package org.interfaceit.util.mixin;
 
-import java.lang.Math; 
 
 /** 
  * Wrapper of static elements in java.lang.Math

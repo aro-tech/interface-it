@@ -1,4 +1,4 @@
-package org.example;
+package org.interfaceit.util.mixin;
 
 import java.io.File; 
 import java.io.InputStream; 
@@ -86,7 +86,7 @@ import org.assertj.core.api.OptionalAssert;
 import org.assertj.core.api.OptionalDoubleAssert; 
 import org.assertj.core.api.OptionalIntAssert; 
 import org.assertj.core.api.OptionalLongAssert; 
-import org.assertj.core.api.ThrowableAssert.ThrowingCallable; 
+import org.assertj.core.api.ThrowableAssert; 
 import org.assertj.core.api.ThrowableTypeAssert; 
 import org.assertj.core.api.filter.Filters; 
 import org.assertj.core.api.filter.InFilter; 
@@ -205,20 +205,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractByteAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Byte)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Byte)}
+     * Delegate call to public static org.assertj.core.api.AbstractByteAssert<?> org.assertj.core.api.Assertions.assertThat(byte)
+     * {@link org.assertj.core.api.Assertions#assertThat(byte)}
      */
-    default AbstractByteAssert<?> assertThat(Byte arg0) {
+    default AbstractByteAssert<?> assertThat(byte arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractByteAssert<?> org.assertj.core.api.Assertions.assertThat(byte)
-     * {@link org.assertj.core.api.Assertions#assertThat(byte)}
+     * Delegate call to public static org.assertj.core.api.AbstractByteAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Byte)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Byte)}
      */
-    default AbstractByteAssert<?> assertThat(byte arg0) {
+    default AbstractByteAssert<?> assertThat(Byte arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -345,20 +345,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractFloatAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Float)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Float)}
+     * Delegate call to public static org.assertj.core.api.AbstractFloatAssert<?> org.assertj.core.api.Assertions.assertThat(float)
+     * {@link org.assertj.core.api.Assertions#assertThat(float)}
      */
-    default AbstractFloatAssert<?> assertThat(Float arg0) {
+    default AbstractFloatAssert<?> assertThat(float arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractFloatAssert<?> org.assertj.core.api.Assertions.assertThat(float)
-     * {@link org.assertj.core.api.Assertions#assertThat(float)}
+     * Delegate call to public static org.assertj.core.api.AbstractFloatAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Float)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Float)}
      */
-    default AbstractFloatAssert<?> assertThat(float arg0) {
+    default AbstractFloatAssert<?> assertThat(Float arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -585,20 +585,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Short)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Short)}
+     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(short)
+     * {@link org.assertj.core.api.Assertions#assertThat(short)}
      */
-    default AbstractShortAssert<?> assertThat(Short arg0) {
+    default AbstractShortAssert<?> assertThat(short arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(short)
-     * {@link org.assertj.core.api.Assertions#assertThat(short)}
+     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Short)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Short)}
      */
-    default AbstractShortAssert<?> assertThat(short arg0) {
+    default AbstractShortAssert<?> assertThat(Short arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -635,20 +635,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(T)
-     * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertDelegateTarget)}
+     * Delegate call to public static <T> org.assertj.core.api.AbstractComparableAssert<?, T> org.assertj.core.api.Assertions.assertThat(T)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Comparable)}
      */
-    default <T extends AssertDelegateTarget> T assertThat(T arg0) {
+    default <T extends Comparable<? super T>> AbstractComparableAssert<?, T> assertThat(T arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static <T> org.assertj.core.api.AbstractComparableAssert<?, T> org.assertj.core.api.Assertions.assertThat(T)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Comparable)}
+     * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(T)
+     * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertDelegateTarget)}
      */
-    default <T extends Comparable<? super T>> AbstractComparableAssert<?, T> assertThat(T arg0) {
+    default <T extends AssertDelegateTarget> T assertThat(T arg0) {
         return Assertions.assertThat(arg0);
     }
 

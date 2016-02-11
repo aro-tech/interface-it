@@ -1,4 +1,4 @@
-package org.example;
+package org.interfaceit.util.mixin;
 
 import java.lang.Boolean; 
 import java.lang.Byte; 
@@ -21,7 +21,6 @@ import org.mockito.InOrder;
 import org.mockito.Matchers; 
 import org.mockito.MockSettings; 
 import org.mockito.MockingDetails; 
-import org.mockito.Mockito; 
 import org.mockito.ReturnValues; 
 import org.mockito.stubbing.Answer; 
 import org.mockito.stubbing.DeprecatedOngoingStubbing; 

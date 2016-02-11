@@ -74,7 +74,7 @@ public class IntegrationWithFilesTest {
 	 */
 	@Test
 	public void build_examples() throws IOException {
-		final String packageName = "org.example";
+		final String packageName = "org.interfaceit.util.mixin";
 		File resultFile;
 		try {
 			resultFile = underTest.generateClassToFile(examplesDir, "Mockito", org.mockito.Mockito.class, packageName,
