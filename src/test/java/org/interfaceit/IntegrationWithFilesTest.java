@@ -89,7 +89,7 @@ public class IntegrationWithFilesTest {
 			Assertions.assertThat(resultFile).exists().canRead();
 			
 			// org.junit.Assert
-			resultFile = underTest.generateClassToFile(examplesDir, "Assert", java.lang.Math.class, packageName, 4);
+			resultFile = underTest.generateClassToFile(examplesDir, "Assert", org.junit.Assert.class, packageName, 4);
 			Assertions.assertThat(resultFile).exists().canRead();
 			
 			//System.out.println(resultFile.getAbsolutePath());
