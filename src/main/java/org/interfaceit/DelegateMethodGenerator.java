@@ -54,6 +54,9 @@ public class DelegateMethodGenerator {
 											.toLowerCase());
 				}
 			}
+			if(val == 0) {
+				val = m1.toGenericString().compareTo(m2.toGenericString());
+			}
 			return val;
 		}).collect(Collectors.toList());
 	}
