@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
+import org.interfaceit.ui.commandline.CommandLineMain;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -52,7 +53,8 @@ public class IntegrationWithFilesTest {
 
 	/**
 	 * Test Java file generation
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Test
 	public void can_write_mockito_to_file() throws IOException {
@@ -70,7 +72,8 @@ public class IntegrationWithFilesTest {
 
 	/**
 	 * Overwrites auto-generated examples stored in Git
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	@Test
 	public void build_examples() throws IOException {
@@ -85,14 +88,17 @@ public class IntegrationWithFilesTest {
 					packageName, 4);
 			Assertions.assertThat(resultFile).exists().canRead();
 
-			resultFile = underTest.generateClassToFile(examplesDir, "Math", java.lang.Math.class, packageName, 4);
+			String[] args = { "-d", examplesDir.getAbsolutePath(), "-n", "Math", "-c", "java.lang.Math", "-p",
+					packageName };
+			CommandLineMain.main(args);
+			resultFile = new File(examplesDir.getAbsolutePath() + "/Math.java");//underTest.generateClassToFile(examplesDir, "Math", java.lang.Math.class, packageName);
 			Assertions.assertThat(resultFile).exists().canRead();
-			
+
 			// org.junit.Assert
 			resultFile = underTest.generateClassToFile(examplesDir, "Assert", org.junit.Assert.class, packageName, 4);
 			Assertions.assertThat(resultFile).exists().canRead();
-			
-			//System.out.println(resultFile.getAbsolutePath());
+
+			// System.out.println(resultFile.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw e;

@@ -226,8 +226,8 @@ public class DelegateMethodGenerator {
 			buf.append("return ");
 		}
 		Class<?> declaringClass = method.getDeclaringClass();
-		String delegateClassName = ClassNameUtils
-				.getDelegateClassNameWithoutPackageIfNoConflict(declaringClass, targetInterfaceName);
+		String delegateClassName = ClassNameUtils.getDelegateClassNameWithoutPackageIfNoConflict(declaringClass,
+				targetInterfaceName);
 		if (needToImport(delegateClassName)) {
 			importsOut.add(declaringClass.getCanonicalName());
 		}
@@ -400,8 +400,8 @@ public class DelegateMethodGenerator {
 		String[] sortedImports = importsUpdated.toArray(new String[importsUpdated.size()]);
 		Arrays.sort(sortedImports);
 		for (String cur : sortedImports) {
-			if(hasNoConflict(targetInterfaceName, cur)) {
-				buf.append("import ").append(cur).append("; ").append(NEWLINE);				
+			if (hasNoConflict(targetInterfaceName, cur)) {
+				buf.append("import ").append(cur).append("; ").append(NEWLINE);
 			}
 		}
 	}
@@ -466,9 +466,8 @@ public class DelegateMethodGenerator {
 	 */
 	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
 			String targetPackageName, int indentationSpaces) throws IOException {
-		String content = this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
-				indentationSpaces);
-		return writeFile(dir, content, interfaceNameToFileName(targetInterfaceName));
+		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
+				indentationSpaces), interfaceNameToFileName(targetInterfaceName));
 	}
 
 	private String interfaceNameToFileName(String targetInterfaceName) {
@@ -481,6 +480,29 @@ public class DelegateMethodGenerator {
 			w.write(content);
 		}
 		return fileToWrite;
+	}
+
+	/**
+	 * Generate and write to file a delegate wrapping mix-in interface Uses
+	 * default indentation
+	 * 
+	 * @param dir
+	 *            The directory where the file will be saved
+	 * @param targetInterfaceName
+	 *            the name of the Jave interface (which is also the file name,
+	 *            without the ".java" suffix
+	 * @param delegateClass
+	 *            The class whose static methods will be called by the mix-in
+	 *            interface
+	 * @param targetPackageName
+	 *            package name for the mix-in interface
+	 * @return The .java file which was written
+	 * @throws IOException
+	 */
+	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
+			String targetPackageName) throws IOException {
+		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass),
+				interfaceNameToFileName(targetInterfaceName));
 	}
 
 }

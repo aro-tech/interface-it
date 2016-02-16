@@ -305,20 +305,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractDoubleAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Double)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Double)}
+     * Delegate call to public static org.assertj.core.api.AbstractDoubleAssert<?> org.assertj.core.api.Assertions.assertThat(double)
+     * {@link org.assertj.core.api.Assertions#assertThat(double)}
      */
-    default AbstractDoubleAssert<?> assertThat(Double arg0) {
+    default AbstractDoubleAssert<?> assertThat(double arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractDoubleAssert<?> org.assertj.core.api.Assertions.assertThat(double)
-     * {@link org.assertj.core.api.Assertions#assertThat(double)}
+     * Delegate call to public static org.assertj.core.api.AbstractDoubleAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Double)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Double)}
      */
-    default AbstractDoubleAssert<?> assertThat(double arg0) {
+    default AbstractDoubleAssert<?> assertThat(Double arg0) {
         return Assertions.assertThat(arg0);
     }
 
@@ -585,20 +585,20 @@ public interface AssertJ {
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(short)
-     * {@link org.assertj.core.api.Assertions#assertThat(short)}
+     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Short)
+     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Short)}
      */
-    default AbstractShortAssert<?> assertThat(short arg0) {
+    default AbstractShortAssert<?> assertThat(Short arg0) {
         return Assertions.assertThat(arg0);
     }
 
 
 
     /**
-     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(java.lang.Short)
-     * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Short)}
+     * Delegate call to public static org.assertj.core.api.AbstractShortAssert<?> org.assertj.core.api.Assertions.assertThat(short)
+     * {@link org.assertj.core.api.Assertions#assertThat(short)}
      */
-    default AbstractShortAssert<?> assertThat(Short arg0) {
+    default AbstractShortAssert<?> assertThat(short arg0) {
         return Assertions.assertThat(arg0);
     }
 
