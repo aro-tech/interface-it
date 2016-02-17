@@ -26,7 +26,7 @@ import org.interfaceit.util.ClassNameUtils;
  * @author aro_tech
  *
  */
-public class DelegateMethodGenerator {
+public class DelegateMethodGenerator implements ClassCodeGenerator {
 
 	private static final int DEFAULT_INDENTATION_SPACES = 4;
 	private static final String NEWLINE = System.lineSeparator();
@@ -449,24 +449,10 @@ public class DelegateMethodGenerator {
 		return buf.toString();
 	}
 
-	/**
-	 * Generate and write to file a delegate wrapping mix-in interface
-	 * 
-	 * @param dir
-	 *            The directory where the file will be saved
-	 * @param targetInterfaceName
-	 *            the name of the Jave interface (which is also the file name,
-	 *            without the ".java" suffix
-	 * @param delegateClass
-	 *            The class whose static methods will be called by the mix-in
-	 *            interface
-	 * @param targetPackageName
-	 *            package name for the mix-in interface
-	 * @param indentationSpaces
-	 *            Formatting for the generated Java code
-	 * @return The .java file which was written
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see org.interfaceit.ClassCodeGenerator#generateClassToFile(java.io.File, java.lang.String, java.lang.Class, java.lang.String, int)
 	 */
+	@Override
 	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
 			String targetPackageName, int indentationSpaces) throws IOException {
 		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
@@ -485,23 +471,10 @@ public class DelegateMethodGenerator {
 		return fileToWrite;
 	}
 
-	/**
-	 * Generate and write to file a delegate wrapping mix-in interface Uses
-	 * default indentation
-	 * 
-	 * @param dir
-	 *            The directory where the file will be saved
-	 * @param targetInterfaceName
-	 *            the name of the Jave interface (which is also the file name,
-	 *            without the ".java" suffix
-	 * @param delegateClass
-	 *            The class whose static methods will be called by the mix-in
-	 *            interface
-	 * @param targetPackageName
-	 *            package name for the mix-in interface
-	 * @return The .java file which was written
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see org.interfaceit.ClassCodeGenerator#generateClassToFile(java.io.File, java.lang.String, java.lang.Class, java.lang.String)
 	 */
+	@Override
 	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
 			String targetPackageName) throws IOException {
 		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass),

@@ -27,7 +27,7 @@ import org.mockito.Mockito;
  */
 public class IntegrationWithFilesTest {
 
-	private DelegateMethodGenerator underTest = new DelegateMethodGenerator();
+	private ClassCodeGenerator underTest = new DelegateMethodGenerator();
 	// private Set<String> imports;
 	private static File tmpDir;
 	private static File examplesDir;

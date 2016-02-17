@@ -96,6 +96,11 @@ public class ArgumentParserTest implements AssertJ {
 		assertThat(underTest.getDelegateClass()).isEqualTo(java.util.Collections.class);
 	}
 
+	@Test
+	public void can_generate_help_message() {
+		assertThat(ArgumentParser.getHelpText()).contains("-p ").contains("-c ").contains("-n ").contains("-d ");
+	}
+
 	/**
 	 * Test method for
 	 * {@link org.interfaceit.ui.commandline.ArgumentParser#getDelegateClass()}.
@@ -129,7 +134,7 @@ public class ArgumentParserTest implements AssertJ {
 	 */
 	@Test
 	public void can_get_directory_path() throws IOException {
-		assertThat(makeArgumentParser("","-d","relative/path","").getWriteDirectoryPath().getAbsolutePath())
+		assertThat(makeArgumentParser("", "-d", "relative/path", "").getWriteDirectoryPath().getAbsolutePath())
 				.isEqualTo(new File("relative/path").getAbsolutePath());
 	}
 }
