@@ -4,7 +4,6 @@
 package org.interfaceit.ui.commandline;
 
 import java.io.File;
-import java.math.BigDecimal;
 
 /**
  * Class for parsing command-line arguments for interface-it
@@ -15,8 +14,6 @@ import java.math.BigDecimal;
 public class ArgumentParser {
 	private final String[] args;
 
-	// String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p",
-	// "com.example" };
 	static enum Flag {
 		VERSION("v", "Write version number."), TARGET_INTERFACE_NAME("n",
 				"Name of the target interface (ex: \"MyMixin\")"), WRITE_DIRECTORY("d",

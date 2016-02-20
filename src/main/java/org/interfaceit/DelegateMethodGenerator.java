@@ -46,8 +46,8 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 			}
 			if (val == 0) {
 				for (int i = 0; val == 0 && i < parameterCountM1; i++) {
-					val = (ClassNameUtils.extractSimpleName(m1.getParameters()[i].getParameterizedType().getTypeName())
-							.toLowerCase())
+					val = ClassNameUtils.extractSimpleName(m1.getParameters()[i].getParameterizedType().getTypeName())
+							.toLowerCase()
 									.compareTo(ClassNameUtils
 											.extractSimpleName(
 													m2.getParameters()[i].getParameterizedType().getTypeName())
