@@ -25,10 +25,8 @@ Anywhere that you use static imports, you might want to consider generating a mi
 There are examples at: https://github.com/aro-tech/interface-it/examples
 
 Future directions:
-
- * main class for command-line usage
  
- * jar packaging
+ * preserve argument names if source code, javadoc or other info is available
  
  * custom ANT task ?
  
