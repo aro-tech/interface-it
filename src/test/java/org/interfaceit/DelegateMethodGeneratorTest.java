@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
+import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.util.mixin.AssertJ;
 import org.interfaceit.util.mixin.Mockito;
 import org.junit.Assert;
@@ -28,6 +29,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 	private static final String TARGET_PACKAGE = "org.interfaceit.results";
 	private DelegateMethodGenerator underTest = new DelegateMethodGenerator();
 	private Set<String> imports;
+	private ArgumentNameSource argumentNameSource = mock(ArgumentNameSource.class);
 
 	/**
 	 * @throws java.lang.Exception
@@ -387,6 +389,24 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		underTest.generateConstant(field, org.mockito.Mockito.class, imports, buf, "Mockito", "");
 		assertThat(buf.toString())
 				.contains("public static final Answer RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;");
+
+	}
+
+	@Test
+	public void can_use_argument_names_in_signature_and_delegation() {
+		Optional<Method> verifyMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
+				.filter((Method m) -> "verify".equals(m.getName()) && m.getParameters().length == 2).findFirst();
+
+		Assert.assertTrue(verifyMethod.isPresent());
+
+		when(this.argumentNameSource.getArgumentNameFor(verifyMethod.get(), 0)).thenReturn("mock");
+		when(this.argumentNameSource.getArgumentNameFor(verifyMethod.get(), 1)).thenReturn("mode");
+
+		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, argumentNameSource))
+				.isEqualToIgnoringWhitespace("default <T> T verify(T mock, VerificationMode mode)");
+
+		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "Mockito", imports, argumentNameSource))
+				.isEqualToIgnoringWhitespace("return org.mockito.Mockito.verify(mock, mode);");
 
 	}
 

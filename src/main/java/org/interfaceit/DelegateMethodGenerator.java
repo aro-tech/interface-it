@@ -12,12 +12,14 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.util.ClassNameUtils;
 
 /**
@@ -48,13 +50,12 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 				for (int i = 0; val == 0 && i < parameterCountM1; i++) {
 					val = ClassNameUtils.extractSimpleName(m1.getParameters()[i].getParameterizedType().getTypeName())
 							.toLowerCase()
-									.compareTo(ClassNameUtils
-											.extractSimpleName(
-													m2.getParameters()[i].getParameterizedType().getTypeName())
-											.toLowerCase());
+							.compareTo(ClassNameUtils
+									.extractSimpleName(m2.getParameters()[i].getParameterizedType().getTypeName())
+									.toLowerCase());
 				}
 			}
-			if(val == 0) {
+			if (val == 0) {
 				val = m1.toGenericString().compareTo(m2.toGenericString());
 			}
 			return val;
@@ -122,17 +123,34 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param importNamesOut
 	 *            collects any java imports required for the arguments and/or
 	 *            return type
+	 * @param argumentNameSource
+	 *            For naming arguments
 	 * @return The signature
 	 */
-	protected String makeMethodSignature(Method method, Set<String> importNamesOut) {
+	protected String makeMethodSignature(Method method, Set<String> importNamesOut,
+			ArgumentNameSource argumentNameSource) {
 		StringBuilder buf = new StringBuilder();
 		buf.append("default ").append(makeGenericMarkerAndUpdateImports(method, importNamesOut));
 		buf.append(extractShortNameAndUpdateImports(importNamesOut, method.getGenericReturnType().getTypeName()));
 		buf.append(' ').append(method.getName()).append('(');
-		appendMethodArgumentsInSignature(method, importNamesOut, buf);
+		appendMethodArgumentsInSignature(method, importNamesOut, buf, argumentNameSource);
 		buf.append(')');
 		addThrowsClauseToSignatureUpdatingImports(method, importNamesOut, buf);
 		return buf.toString();
+	}
+
+	/**
+	 * Generate the non-static signature of the method
+	 * 
+	 * @param method
+	 * @param importNamesOut
+	 *            collects any java imports required for the arguments and/or
+	 *            return type
+	 * @return The signature
+	 */
+	protected String makeMethodSignature(Method method, Set<String> imports) {
+		return this.makeMethodSignature(method, imports, new ArgumentNameSource() {
+		});
 	}
 
 	private void addThrowsClauseToSignatureUpdatingImports(Method method, Set<String> importNamesOut,
@@ -185,7 +203,8 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		return buf.toString();
 	}
 
-	private void appendMethodArgumentsInSignature(Method method, Set<String> importNamesOut, StringBuilder buf) {
+	private void appendMethodArgumentsInSignature(Method method, Set<String> importNamesOut, StringBuilder buf,
+			ArgumentNameSource argumentNameSource) {
 		Type[] types = method.getGenericParameterTypes();
 		for (int i = 0; i < types.length; i++) {
 			if (i > 0) {
@@ -196,7 +215,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 			if (isVarargsParameter(method, types, i)) {
 				shortTypeName = ClassNameUtils.convertToVarArgs(shortTypeName);
 			}
-			buf.append(shortTypeName).append(' ').append(method.getParameters()[i].getName());
+			buf.append(shortTypeName).append(' ').append(argumentNameSource.getArgumentNameFor(method, i));
 		}
 	}
 
@@ -224,6 +243,24 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @return
 	 */
 	public String makeDelegateCall(Method method, String targetInterfaceName, Set<String> importsOut) {
+		return this.makeDelegateCall(method, targetInterfaceName, importsOut, new ArgumentNameSource() {
+		});
+	}
+
+	/**
+	 * Generate the line of code calling the static method
+	 * 
+	 * @param method
+	 * @param targetInterfaceName
+	 *            The name of the wrapper interface, to avoid class name
+	 *            conflicts
+	 * @param importsOut
+	 *            For receiving imports needed
+	 * @param argumentNameSource
+	 * @return
+	 */
+	public String makeDelegateCall(Method method, String targetInterfaceName, Set<String> importsOut,
+			ArgumentNameSource argumentNameSource) {
 		StringBuilder buf = new StringBuilder();
 		if (!"void".equals(method.getReturnType().getTypeName())) {
 			buf.append("return ");
@@ -240,7 +277,8 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 			if (i > 0) {
 				buf.append(", ");
 			}
-			buf.append("arg").append(i);
+			buf.append(argumentNameSource.getArgumentNameFor(method, i));
+			// buf.append("arg").append(i);
 		}
 		buf.append(");");
 		return buf.toString();
@@ -449,8 +487,11 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		return buf.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see org.interfaceit.ClassCodeGenerator#generateClassToFile(java.io.File, java.lang.String, java.lang.Class, java.lang.String, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.interfaceit.ClassCodeGenerator#generateClassToFile(java.io.File,
+	 * java.lang.String, java.lang.Class, java.lang.String, int)
 	 */
 	@Override
 	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
@@ -471,8 +512,11 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		return fileToWrite;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.interfaceit.ClassCodeGenerator#generateClassToFile(java.io.File, java.lang.String, java.lang.Class, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.interfaceit.ClassCodeGenerator#generateClassToFile(java.io.File,
+	 * java.lang.String, java.lang.Class, java.lang.String)
 	 */
 	@Override
 	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
