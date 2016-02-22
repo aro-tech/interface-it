@@ -4,6 +4,7 @@
 package org.interfaceit.meta.arguments;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 
 /**
  * Represents the source of argument names used By default, reflection-found
@@ -23,7 +24,11 @@ public interface ArgumentNameSource {
 	 * @return The argument name (arg0, arg1, etc. if no meta info is available)
 	 */
 	default String getArgumentNameFor(Method method, int zeroBasedArgumentIndex) {
-		return method.getParameters()[zeroBasedArgumentIndex].getName();
+		Parameter[] parameters = method.getParameters();
+		if(zeroBasedArgumentIndex >= parameters.length) {
+			return "arg" + zeroBasedArgumentIndex;
+		}
+		return parameters[zeroBasedArgumentIndex].getName();
 	}
 
 }

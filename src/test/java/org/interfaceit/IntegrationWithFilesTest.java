@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.interfaceit.ui.commandline.CommandLineMain;
+import org.interfaceit.util.ZipFileUtils;
+import org.interfaceit.util.mixin.AssertJ;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +27,7 @@ import org.mockito.Mockito;
  * @author aro_tech
  *
  */
-public class IntegrationWithFilesTest {
+public class IntegrationWithFilesTest implements AssertJ {
 
 	private ClassCodeGenerator underTest = new DelegateMethodGenerator();
 	// private Set<String> imports;
@@ -70,6 +72,14 @@ public class IntegrationWithFilesTest {
 		Assertions.assertThat(resultLines).hasSameSizeAs(expectedLines).containsAll(expectedLines);
 	}
 
+	@Test
+	public void can_read_zip_file_lines() throws IOException {
+		URL testZipURL = this.getClass().getResource("/test.zip");
+		File testZip = new File(testZipURL.getPath());
+		List<String> lines = ZipFileUtils.readFileInZipArchive(testZip, "a/b/ziptest.txt");
+		assertThat(lines).contains("Test line 1", "Test line 2");
+	}
+
 	/**
 	 * Overwrites auto-generated examples stored in Git
 	 * 
@@ -91,7 +101,10 @@ public class IntegrationWithFilesTest {
 			String[] args = { "-d", examplesDir.getAbsolutePath(), "-n", "Math", "-c", "java.lang.Math", "-p",
 					packageName };
 			CommandLineMain.main(args);
-			resultFile = new File(examplesDir.getAbsolutePath() + "/Math.java");//underTest.generateClassToFile(examplesDir, "Math", java.lang.Math.class, packageName);
+			resultFile = new File(examplesDir.getAbsolutePath() + "/Math.java");// underTest.generateClassToFile(examplesDir,
+																				// "Math",
+																				// java.lang.Math.class,
+																				// packageName);
 			Assertions.assertThat(resultFile).exists().canRead();
 
 			// org.junit.Assert
