@@ -79,6 +79,14 @@ public class IntegrationWithFilesTest implements AssertJ {
 		List<String> lines = ZipFileUtils.readFileInZipArchive(testZip, "a/b/ziptest.txt");
 		assertThat(lines).contains("Test line 1", "Test line 2");
 	}
+	
+	@Test
+	public void can_handle_reading_nonexistent_file_in_zip() throws IOException {
+		URL testZipURL = this.getClass().getResource("/test.zip");
+		File testZip = new File(testZipURL.getPath());
+		List<String> lines = ZipFileUtils.readFileInZipArchive(testZip, "c/d/bogus.txt");
+		assertThat(lines).isEmpty();
+	}
 
 	/**
 	 * Overwrites auto-generated examples stored in Git
