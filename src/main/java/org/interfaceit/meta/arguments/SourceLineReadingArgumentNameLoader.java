@@ -345,7 +345,6 @@ public class SourceLineReadingArgumentNameLoader {
 				target.add(method, index++, simplify(argType), tok.getValue());
 				break;
 			}
-			;
 		}
 	}
 
