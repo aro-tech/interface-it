@@ -42,7 +42,6 @@ public class ClassNameUtils {
 		return result;
 	}
 
-
 	private static void cleanUpAndAddImport(Set<String> imports, String extracted) {
 		StringBuilder buf = new StringBuilder();
 		char[] chars = extracted.toCharArray();
@@ -78,6 +77,9 @@ public class ClassNameUtils {
 	 * @return Name without package
 	 */
 	public static String extractSimpleName(String fullName) {
+		if (fullName.endsWith("...")) {
+			return doNameExtraction(fullName.substring(0, fullName.length() - 3)) + "...";
+		}
 		return doNameExtraction(fullName).replace('$', '.');
 	}
 
@@ -114,12 +116,15 @@ public class ClassNameUtils {
 	}
 
 	/**
-	 * Get the method's class name, shortened if there's no conflict with the target interface name
+	 * Get the method's class name, shortened if there's no conflict with the
+	 * target interface name
+	 * 
 	 * @param declaringClass
 	 * @param targetInterfaceName
 	 * @return the name
 	 */
-	public static String getDelegateClassNameWithoutPackageIfNoConflict(Class<?> declaringClass, String targetInterfaceName) {
+	public static String getDelegateClassNameWithoutPackageIfNoConflict(Class<?> declaringClass,
+			String targetInterfaceName) {
 		String delegateClassName = declaringClass.getSimpleName();
 		if (delegateClassName.equals(targetInterfaceName)) {
 			delegateClassName = declaringClass.getCanonicalName();

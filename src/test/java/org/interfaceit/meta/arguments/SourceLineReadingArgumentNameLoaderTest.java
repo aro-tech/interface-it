@@ -137,12 +137,41 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 		verifyNoMoreInteractions(target);
 		
 	}
+	
+	/**
+	 * Test method for {@link org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader#parseAndLoad(java.util.List, org.interfaceit.meta.arguments.LookupArgumentNameSource)}.
+	 */
+	@Test
+	public void should_load_for_one_varargs_arg() {
+		sourceLines.add("public static <T> void clearInvocations(T ... mocks) {");		
+		underTest.parseAndLoad(sourceLines, target);		
+		verify(target).add("clearInvocations", 0, "T...", "mocks");
+	}
 
+	/**
+	 * Test method for {@link org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader#parseAndLoad(java.util.List, org.interfaceit.meta.arguments.LookupArgumentNameSource)}.
+	 */
+	@Test
+	public void should_load_for_type_with_extends() {
+		sourceLines.add("public static Stubber doThrow(Class<? extends Throwable> toBeThrown) {");		
+		underTest.parseAndLoad(sourceLines, target);		
+		verify(target).add("doThrow", 0, "Class<? extends Throwable>", "toBeThrown");
+	}
+
+	/**
+	 * Test method for {@link org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader#parseAndLoad(java.util.List, org.interfaceit.meta.arguments.LookupArgumentNameSource)}.
+	 */
+	@Test
+	public void should_handle_space_after_method_name() {
+		sourceLines.add(" public static <Foosh> Foosh flibble (BoingoBoingo<Foosh> thingy) {");		
+		underTest.parseAndLoad(sourceLines, target);		
+		verify(target).add("flibble", 0, "BoingoBoingo<Foosh>", "thingy");
+	}
+
+	
+	
 	/*
 	 * TODO: test the following lines: 
-	 public static <T> void clearInvocations(T ... mocks) {
-    public static Stubber doThrow(Class<? extends Throwable> toBeThrown) {
-  public static <T extends Throwable> ThrowableTypeAssert<T> assertThatExceptionOfType(final Class<? extends T> exceptionType) {
   public static void useDefaultDateFormatsOnly() {
 		public static final Thingy THINGY = new Thingy(){};
 	 */

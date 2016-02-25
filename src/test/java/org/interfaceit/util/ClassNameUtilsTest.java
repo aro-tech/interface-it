@@ -39,6 +39,13 @@ public class ClassNameUtilsTest implements AssertJ {
 	}
 
 	@Test
+	public void can_extract_simple_name_without_messing_up_varargs() {
+		assertThat(ClassNameUtils.extractSimpleName("T..."))
+				.isEqualTo("T...");
+	}
+
+	
+	@Test
 	public void can_extract_imports() {
 		assertThat(ClassNameUtils.makeImports("org.foo.Bar<com.whatsit.FoobleyWoo$Thingy, org.yippi.Skippi[]>"))
 				.contains("org.foo.Bar").contains("com.whatsit.FoobleyWoo").contains("org.yippi.Skippi");

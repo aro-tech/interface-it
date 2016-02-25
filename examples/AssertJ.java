@@ -418,8 +418,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.AbstractIterableAssert<?, ? extends java.lang.Iterable<? extends T>, T> org.assertj.core.api.Assertions.assertThat(java.lang.Iterable<? extends T>)
      * {@link org.assertj.core.api.Assertions#assertThat(java.lang.Iterable)}
      */
-    default <T> AbstractIterableAssert<?, ? extends Iterable<? extends T>, T> assertThat(Iterable<? extends T> arg0) {
-        return Assertions.assertThat(arg0);
+    default <T> AbstractIterableAssert<?, ? extends Iterable<? extends T>, T> assertThat(Iterable<? extends T> actual) {
+        return Assertions.assertThat(actual);
     }
 
 
@@ -428,8 +428,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.AbstractIterableAssert<?, ? extends java.lang.Iterable<? extends T>, T> org.assertj.core.api.Assertions.assertThat(java.util.Iterator<? extends T>)
      * {@link org.assertj.core.api.Assertions#assertThat(java.util.Iterator)}
      */
-    default <T> AbstractIterableAssert<?, ? extends Iterable<? extends T>, T> assertThat(Iterator<? extends T> arg0) {
-        return Assertions.assertThat(arg0);
+    default <T> AbstractIterableAssert<?, ? extends Iterable<? extends T>, T> assertThat(Iterator<? extends T> actual) {
+        return Assertions.assertThat(actual);
     }
 
 
@@ -438,8 +438,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.AbstractListAssert<?, ? extends java.util.List<? extends T>, T> org.assertj.core.api.Assertions.assertThat(java.util.List<? extends T>)
      * {@link org.assertj.core.api.Assertions#assertThat(java.util.List)}
      */
-    default <T> AbstractListAssert<?, ? extends List<? extends T>, T> assertThat(List<? extends T> arg0) {
-        return Assertions.assertThat(arg0);
+    default <T> AbstractListAssert<?, ? extends List<? extends T>, T> assertThat(List<? extends T> actual) {
+        return Assertions.assertThat(actual);
     }
 
 
@@ -508,8 +508,8 @@ public interface AssertJ {
      * Delegate call to public static <K,V> org.assertj.core.api.MapAssert<K, V> org.assertj.core.api.Assertions.assertThat(java.util.Map<K, V>)
      * {@link org.assertj.core.api.Assertions#assertThat(java.util.Map)}
      */
-    default <K,V> MapAssert<K, V> assertThat(Map<K, V> arg0) {
-        return Assertions.assertThat(arg0);
+    default <K,V> MapAssert<K, V> assertThat(Map<K, V> actual) {
+        return Assertions.assertThat(actual);
     }
 
 
@@ -618,8 +618,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.AbstractListAssert<?, ? extends java.util.List<? extends T>, T> org.assertj.core.api.Assertions.assertThat(java.util.stream.Stream<? extends T>)
      * {@link org.assertj.core.api.Assertions#assertThat(java.util.stream.Stream)}
      */
-    default <T> AbstractListAssert<?, ? extends List<? extends T>, T> assertThat(Stream<? extends T> arg0) {
-        return Assertions.assertThat(arg0);
+    default <T> AbstractListAssert<?, ? extends List<? extends T>, T> assertThat(Stream<? extends T> actual) {
+        return Assertions.assertThat(actual);
     }
 
 
@@ -818,8 +818,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.condition.DoesNotHave<T> org.assertj.core.api.Assertions.doesNotHave(org.assertj.core.api.Condition<? super T>)
      * {@link org.assertj.core.api.Assertions#doesNotHave(org.assertj.core.api.Condition)}
      */
-    default <T> DoesNotHave<T> doesNotHave(Condition<? super T> arg0) {
-        return Assertions.doesNotHave(arg0);
+    default <T> DoesNotHave<T> doesNotHave(Condition<? super T> condition) {
+        return Assertions.doesNotHave(condition);
     }
 
 
@@ -978,8 +978,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.condition.Not<T> org.assertj.core.api.Assertions.not(org.assertj.core.api.Condition<? super T>)
      * {@link org.assertj.core.api.Assertions#not(org.assertj.core.api.Condition)}
      */
-    default <T> Not<T> not(Condition<? super T> arg0) {
-        return Assertions.not(arg0);
+    default <T> Not<T> not(Condition<? super T> condition) {
+        return Assertions.not(condition);
     }
 
 
