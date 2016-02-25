@@ -9,6 +9,7 @@ import java.io.PrintStream;
 
 import org.interfaceit.ClassCodeGenerator;
 import org.interfaceit.DelegateMethodGenerator;
+import org.interfaceit.meta.arguments.ArgumentNameSource;
 
 /**
  * Main class for command line interface
@@ -73,7 +74,7 @@ public class CommandLineMain {
 
 		try {
 			File result = generator.generateClassToFile(directoryPath, targetInterfaceName, delegateClass,
-					targetPackageName);
+					targetPackageName, new ArgumentNameSource(){});
 			giveSuccessFeedback(result, out);
 		} catch (IOException e) {
 			e.printStackTrace(out); // TODO: improve error handling

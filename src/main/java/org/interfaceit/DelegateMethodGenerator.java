@@ -71,11 +71,13 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param importsOut
 	 *            The method potentially adds values to this set if imports are
 	 *            required
+	 * @param argumentNameSource,
 	 * 
 	 * @return the code for the method delegation
 	 */
-	public String makeDelegateMethod(Method method, String targetInterfaceName, Set<String> importsOut) {
-		return this.makeDelegateMethod(targetInterfaceName, method, importsOut,
+	public String makeDelegateMethod(Method method, String targetInterfaceName, Set<String> importsOut,
+			ArgumentNameSource argumentNameSource) {
+		return this.makeDelegateMethod(targetInterfaceName, method, importsOut, argumentNameSource,
 				this.makeIndentationUnit(DEFAULT_INDENTATION_SPACES));
 	}
 
@@ -89,11 +91,12 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param importsOut
 	 *            The method potentially adds values to this set if imports are
 	 *            required
+	 * @param argumentNameSource
 	 * @param indentationUnit
 	 * @return the code for the method delegation
 	 */
 	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
-			String indentationUnit) {
+			ArgumentNameSource argumentNameSource, String indentationUnit) {
 		StringBuilder buf = new StringBuilder();
 		StringBuilder paramsForJavadocLink = new StringBuilder();
 		for (Type cur : method.getParameterTypes()) {
@@ -107,10 +110,10 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 				.append("{@link ").append(method.getDeclaringClass().getTypeName()).append('#').append(method.getName())
 				.append("(").append(paramsForJavadocLink.toString()).append(")}").append(NEWLINE)
 				.append(indentationUnit).append(" */").append(NEWLINE).append(indentationUnit)
-				.append(this.makeMethodSignature(method, importsOut)).append(" {").append(NEWLINE)
+				.append(this.makeMethodSignature(method, importsOut, argumentNameSource)).append(" {").append(NEWLINE)
 				.append(indentationUnit).append(indentationUnit)
-				.append(this.makeDelegateCall(method, targetInterfaceName, importsOut)).append(NEWLINE)
-				.append(indentationUnit).append("}").append(NEWLINE);
+				.append(this.makeDelegateCall(method, targetInterfaceName, importsOut, argumentNameSource))
+				.append(NEWLINE).append(indentationUnit).append("}").append(NEWLINE);
 
 		return buf.toString();
 	}
@@ -136,20 +139,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		buf.append(')');
 		addThrowsClauseToSignatureUpdatingImports(method, importNamesOut, buf);
 		return buf.toString();
-	}
-
-	/**
-	 * Generate the non-static signature of the method
-	 * 
-	 * @param method
-	 * @param importNamesOut
-	 *            collects any java imports required for the arguments and/or
-	 *            return type
-	 * @return The signature
-	 */
-	protected String makeMethodSignature(Method method, Set<String> imports) {
-		return this.makeMethodSignature(method, imports, new ArgumentNameSource() {
-		});
 	}
 
 	private void addThrowsClauseToSignatureUpdatingImports(Method method, Set<String> importNamesOut,
@@ -228,22 +217,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 			importNamesOut.addAll(ClassNameUtils.makeImports(fullTypeName));
 		}
 		return shortTypeName;
-	}
-
-	/**
-	 * Generate the line of code calling the static method
-	 * 
-	 * @param method
-	 * @param targetInterfaceName
-	 *            The name of the wrapper interface, to avoid class name
-	 *            conflicts
-	 * @param importsOut
-	 *            For receiving imports needed
-	 * @return
-	 */
-	public String makeDelegateCall(Method method, String targetInterfaceName, Set<String> importsOut) {
-		return this.makeDelegateCall(method, targetInterfaceName, importsOut, new ArgumentNameSource() {
-		});
 	}
 
 	/**
@@ -376,11 +349,12 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param targetPackageName
 	 * @param targetInterfaceName
 	 * @param delegateClass
+	 * @param argumentNameSource
 	 * @return Generated code
 	 */
 	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
-			Class<?> delegateClass) {
-		return this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
+			Class<?> delegateClass, ArgumentNameSource argumentNameSource) {
+		return this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass, argumentNameSource,
 				DEFAULT_INDENTATION_SPACES);
 	}
 
@@ -391,17 +365,18 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param targetPackageName
 	 * @param targetInterfaceName
 	 * @param delegateClass
-	 * @param
+	 * @param argumentNameSource
+	 * @param indentationSpaces
 	 * @return Generated code
 	 */
 	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
-			Class<?> delegateClass, int indentationSpaces) {
+			Class<?> delegateClass, ArgumentNameSource argumentNameSource, int indentationSpaces) {
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
 		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, indentationSpaces,
 				targetInterfaceName);
 		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, indentationSpaces,
-				targetInterfaceName);
+				targetInterfaceName, argumentNameSource);
 		appendPackage(targetPackageName, result);
 		appendSortedImports(result, imports, targetInterfaceName);
 		appendInterfaceBody(targetInterfaceName, delegateClass, indentationSpaces, result, constants, methods);
@@ -456,12 +431,13 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param delegateClass
 	 * @param importsUpdated
 	 * @param targetInterfaceName
+	 * @param argumentNameSource
 	 * @return code
 	 */
 	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
-			String targetInterfaceName) {
+			String targetInterfaceName, ArgumentNameSource argumentNameSource) {
 		return this.generateMethodsForClassUpdatingImports(delegateClass, importsUpdated, DEFAULT_INDENTATION_SPACES,
-				targetInterfaceName);
+				targetInterfaceName, argumentNameSource);
 	}
 
 	/**
@@ -471,17 +447,17 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param importsUpdated
 	 * @param indentationSpaces
 	 * @param targetInterfaceName
+	 * @param argumentNameSource
 	 * @return code
 	 */
 	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
-			int indentationSpaces, String targetInterfaceName) {
+			int indentationSpaces, String targetInterfaceName, ArgumentNameSource argumentNameSource) {
 		StringBuilder buf = new StringBuilder();
 		String indentationUnit = makeIndentationUnit(indentationSpaces);
 
 		for (Method cur : this.listStaticMethodsForClass(delegateClass)) {
-			buf.append(NEWLINE)
-					.append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated, indentationUnit))
-					.append(NEWLINE).append(NEWLINE);
+			buf.append(NEWLINE).append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated,
+					argumentNameSource, indentationUnit)).append(NEWLINE).append(NEWLINE);
 		}
 		return buf.toString();
 	}
@@ -494,9 +470,9 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 */
 	@Override
 	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
-			String targetPackageName, int indentationSpaces) throws IOException {
+			String targetPackageName, ArgumentNameSource argumentNameSource, int indentationSpaces) throws IOException {
 		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
-				indentationSpaces), interfaceNameToFileName(targetInterfaceName));
+				argumentNameSource, indentationSpaces), interfaceNameToFileName(targetInterfaceName));
 	}
 
 	private String interfaceNameToFileName(String targetInterfaceName) {
@@ -519,9 +495,9 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 */
 	@Override
 	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
-			String targetPackageName) throws IOException {
-		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass),
-				interfaceNameToFileName(targetInterfaceName));
+			String targetPackageName, ArgumentNameSource argumentNameSource) throws IOException {
+		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
+				argumentNameSource), interfaceNameToFileName(targetInterfaceName));
 	}
 
 }

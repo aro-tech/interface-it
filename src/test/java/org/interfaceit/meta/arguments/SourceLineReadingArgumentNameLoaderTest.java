@@ -131,8 +131,6 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 		sourceLines.add(" Board board /*, int whoops */) {");		
 		sourceLines.add(" {");		
 
-
-
 		underTest.parseAndLoad(sourceLines, target);		
 		verify(target).add("flobble", 0, "OptionalLong", "thingy");
 		verify(target).add("flobble", 1, "Board", "board");
@@ -140,5 +138,13 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 		
 	}
 
+	/*
+	 * TODO: test the following lines: 
+	 public static <T> void clearInvocations(T ... mocks) {
+    public static Stubber doThrow(Class<? extends Throwable> toBeThrown) {
+  public static <T extends Throwable> ThrowableTypeAssert<T> assertThatExceptionOfType(final Class<? extends T> exceptionType) {
+  public static void useDefaultDateFormatsOnly() {
+		public static final Thingy THINGY = new Thingy(){};
+	 */
 
 }

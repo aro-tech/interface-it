@@ -502,8 +502,8 @@ public interface Assert {
      * Delegate call to public static <T> void org.junit.Assert.assertThat(T,org.hamcrest.Matcher<? super T>)
      * {@link org.junit.Assert#assertThat(java.lang.Object,org.hamcrest.Matcher)}
      */
-    default <T> void assertThat(T arg0, Matcher<? super T> arg1) {
-        org.junit.Assert.assertThat(arg0, arg1);
+    default <T> void assertThat(T assertion, Matcher<? super T> arg1) {
+        org.junit.Assert.assertThat(assertion, arg1);
     }
 
 
@@ -512,8 +512,8 @@ public interface Assert {
      * Delegate call to public static <T> void org.junit.Assert.assertThat(java.lang.String,T,org.hamcrest.Matcher<? super T>)
      * {@link org.junit.Assert#assertThat(java.lang.String,java.lang.Object,org.hamcrest.Matcher)}
      */
-    default <T> void assertThat(String arg0, T arg1, Matcher<? super T> arg2) {
-        org.junit.Assert.assertThat(arg0, arg1, arg2);
+    default <T> void assertThat(String actual, T arg1, Matcher<? super T> arg2) {
+        org.junit.Assert.assertThat(actual, arg1, arg2);
     }
 
 
@@ -552,8 +552,8 @@ public interface Assert {
      * Delegate call to public static void org.junit.Assert.fail(java.lang.String)
      * {@link org.junit.Assert#fail(java.lang.String)}
      */
-    default void fail(String arg0) {
-        org.junit.Assert.fail(arg0);
+    default void fail(String failureMessage) {
+        org.junit.Assert.fail(failureMessage);
     }
 
 

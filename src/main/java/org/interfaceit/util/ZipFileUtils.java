@@ -20,16 +20,19 @@ import java.util.zip.ZipFile;
 public class ZipFileUtils {
 
 	/**
+	 * Extract the text lines from one or more files in a zip archive
 	 * @param zipFilePath
 	 * @param filePathWithinZipStructure
-	 * @return
+	 * @return Lines from all the files, in sequence
 	 * @throws IOException
 	 */
-	public static List<String> readFileInZipArchive(File zipFile, String filePathWithinZipStructure)
+	public static List<String> readFilesInZipArchive(File zipFile, String... filePathsWithinZipStructure)
 			throws IOException {
 		List<String> lines = new ArrayList<>();
 		try(ZipFile zf = new ZipFile(zipFile)) {
-			readFileLinesIntoList(filePathWithinZipStructure, lines, zf);				
+			for(String filePathWithinZipStructure: filePathsWithinZipStructure) {
+				readFileLinesIntoList(filePathWithinZipStructure, lines, zf);								
+			}
 		}
 		return lines;
 	}
