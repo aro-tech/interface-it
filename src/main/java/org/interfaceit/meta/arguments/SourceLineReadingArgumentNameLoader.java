@@ -310,9 +310,13 @@ public class SourceLineReadingArgumentNameLoader {
 		ctx.setInsideArgs(true);
 		String[] parts = word.split("\\(");
 		ctx.addMethodName(parts[0]);
-		if (parts.length > 1) {
+		if (parts.length > 1 && isNotEndOfArgs(parts)) {
 			ctx.setCurrentType(parts[1]);
 		}
+	}
+
+	private boolean isNotEndOfArgs(String[] parts) {
+		return !parts[1].startsWith(")");
 	}
 
 	private boolean wordContainsParenOpeningArgumentsButNotMethodName(int indexOfOpen) {
@@ -349,7 +353,11 @@ public class SourceLineReadingArgumentNameLoader {
 	}
 
 	private boolean isStaticMethodSignatureStart(String line) {
-		return line.indexOf('(') >= 0 && line.contains("static ");
+		int openParenIx = line.indexOf('(');
+		int staticIx = line.indexOf("static");
+		int eqIx = line.indexOf('=');
+
+		return staticIx >= 0 && openParenIx >= staticIx && eqIx < 0;
 	}
 
 	private boolean isStaticMethodSignatureEnd(String line) {
