@@ -24,8 +24,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.IEEEremainder(double,double)
      * {@link java.lang.Math#IEEEremainder(double,double)}
      */
-    default double IEEEremainder(double arg0, double arg1) {
-        return java.lang.Math.IEEEremainder(arg0, arg1);
+    default double IEEEremainder(double f1, double f2) {
+        return java.lang.Math.IEEEremainder(f1, f2);
     }
 
 
@@ -34,8 +34,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.abs(double)
      * {@link java.lang.Math#abs(double)}
      */
-    default double abs(double arg0) {
-        return java.lang.Math.abs(arg0);
+    default double abs(double a) {
+        return java.lang.Math.abs(a);
     }
 
 
@@ -44,8 +44,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.abs(float)
      * {@link java.lang.Math#abs(float)}
      */
-    default float abs(float arg0) {
-        return java.lang.Math.abs(arg0);
+    default float abs(float a) {
+        return java.lang.Math.abs(a);
     }
 
 
@@ -54,8 +54,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.abs(int)
      * {@link java.lang.Math#abs(int)}
      */
-    default int abs(int arg0) {
-        return java.lang.Math.abs(arg0);
+    default int abs(int a) {
+        return java.lang.Math.abs(a);
     }
 
 
@@ -64,8 +64,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.abs(long)
      * {@link java.lang.Math#abs(long)}
      */
-    default long abs(long arg0) {
-        return java.lang.Math.abs(arg0);
+    default long abs(long a) {
+        return java.lang.Math.abs(a);
     }
 
 
@@ -74,8 +74,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.acos(double)
      * {@link java.lang.Math#acos(double)}
      */
-    default double acos(double arg0) {
-        return java.lang.Math.acos(arg0);
+    default double acos(double a) {
+        return java.lang.Math.acos(a);
     }
 
 
@@ -94,8 +94,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.addExact(long,long)
      * {@link java.lang.Math#addExact(long,long)}
      */
-    default long addExact(long arg0, long arg1) {
-        return java.lang.Math.addExact(arg0, arg1);
+    default long addExact(long x, long y) {
+        return java.lang.Math.addExact(x, y);
     }
 
 
@@ -104,8 +104,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.asin(double)
      * {@link java.lang.Math#asin(double)}
      */
-    default double asin(double arg0) {
-        return java.lang.Math.asin(arg0);
+    default double asin(double a) {
+        return java.lang.Math.asin(a);
     }
 
 
@@ -114,8 +114,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.atan(double)
      * {@link java.lang.Math#atan(double)}
      */
-    default double atan(double arg0) {
-        return java.lang.Math.atan(arg0);
+    default double atan(double a) {
+        return java.lang.Math.atan(a);
     }
 
 
@@ -124,8 +124,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.atan2(double,double)
      * {@link java.lang.Math#atan2(double,double)}
      */
-    default double atan2(double arg0, double arg1) {
-        return java.lang.Math.atan2(arg0, arg1);
+    default double atan2(double y, double x) {
+        return java.lang.Math.atan2(y, x);
     }
 
 
@@ -134,8 +134,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.cbrt(double)
      * {@link java.lang.Math#cbrt(double)}
      */
-    default double cbrt(double arg0) {
-        return java.lang.Math.cbrt(arg0);
+    default double cbrt(double a) {
+        return java.lang.Math.cbrt(a);
     }
 
 
@@ -144,8 +144,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.ceil(double)
      * {@link java.lang.Math#ceil(double)}
      */
-    default double ceil(double arg0) {
-        return java.lang.Math.ceil(arg0);
+    default double ceil(double a) {
+        return java.lang.Math.ceil(a);
     }
 
 
@@ -154,8 +154,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.copySign(double,double)
      * {@link java.lang.Math#copySign(double,double)}
      */
-    default double copySign(double arg0, double arg1) {
-        return java.lang.Math.copySign(arg0, arg1);
+    default double copySign(double magnitude, double sign) {
+        return java.lang.Math.copySign(magnitude, sign);
     }
 
 
@@ -174,8 +174,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.cos(double)
      * {@link java.lang.Math#cos(double)}
      */
-    default double cos(double arg0) {
-        return java.lang.Math.cos(arg0);
+    default double cos(double a) {
+        return java.lang.Math.cos(a);
     }
 
 
@@ -184,8 +184,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.cosh(double)
      * {@link java.lang.Math#cosh(double)}
      */
-    default double cosh(double arg0) {
-        return java.lang.Math.cosh(arg0);
+    default double cosh(double x) {
+        return java.lang.Math.cosh(x);
     }
 
 
@@ -194,8 +194,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.decrementExact(int)
      * {@link java.lang.Math#decrementExact(int)}
      */
-    default int decrementExact(int arg0) {
-        return java.lang.Math.decrementExact(arg0);
+    default int decrementExact(int a) {
+        return java.lang.Math.decrementExact(a);
     }
 
 
@@ -204,8 +204,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.decrementExact(long)
      * {@link java.lang.Math#decrementExact(long)}
      */
-    default long decrementExact(long arg0) {
-        return java.lang.Math.decrementExact(arg0);
+    default long decrementExact(long a) {
+        return java.lang.Math.decrementExact(a);
     }
 
 
@@ -214,8 +214,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.exp(double)
      * {@link java.lang.Math#exp(double)}
      */
-    default double exp(double arg0) {
-        return java.lang.Math.exp(arg0);
+    default double exp(double a) {
+        return java.lang.Math.exp(a);
     }
 
 
@@ -224,8 +224,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.expm1(double)
      * {@link java.lang.Math#expm1(double)}
      */
-    default double expm1(double arg0) {
-        return java.lang.Math.expm1(arg0);
+    default double expm1(double x) {
+        return java.lang.Math.expm1(x);
     }
 
 
@@ -234,8 +234,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.floor(double)
      * {@link java.lang.Math#floor(double)}
      */
-    default double floor(double arg0) {
-        return java.lang.Math.floor(arg0);
+    default double floor(double a) {
+        return java.lang.Math.floor(a);
     }
 
 
@@ -244,8 +244,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.floorDiv(int,int)
      * {@link java.lang.Math#floorDiv(int,int)}
      */
-    default int floorDiv(int arg0, int arg1) {
-        return java.lang.Math.floorDiv(arg0, arg1);
+    default int floorDiv(int x, int y) {
+        return java.lang.Math.floorDiv(x, y);
     }
 
 
@@ -254,8 +254,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.floorDiv(long,long)
      * {@link java.lang.Math#floorDiv(long,long)}
      */
-    default long floorDiv(long arg0, long arg1) {
-        return java.lang.Math.floorDiv(arg0, arg1);
+    default long floorDiv(long x, long y) {
+        return java.lang.Math.floorDiv(x, y);
     }
 
 
@@ -264,8 +264,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.floorMod(int,int)
      * {@link java.lang.Math#floorMod(int,int)}
      */
-    default int floorMod(int arg0, int arg1) {
-        return java.lang.Math.floorMod(arg0, arg1);
+    default int floorMod(int x, int y) {
+        return java.lang.Math.floorMod(x, y);
     }
 
 
@@ -274,8 +274,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.floorMod(long,long)
      * {@link java.lang.Math#floorMod(long,long)}
      */
-    default long floorMod(long arg0, long arg1) {
-        return java.lang.Math.floorMod(arg0, arg1);
+    default long floorMod(long x, long y) {
+        return java.lang.Math.floorMod(x, y);
     }
 
 
@@ -284,8 +284,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.getExponent(double)
      * {@link java.lang.Math#getExponent(double)}
      */
-    default int getExponent(double arg0) {
-        return java.lang.Math.getExponent(arg0);
+    default int getExponent(double d) {
+        return java.lang.Math.getExponent(d);
     }
 
 
@@ -294,8 +294,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.getExponent(float)
      * {@link java.lang.Math#getExponent(float)}
      */
-    default int getExponent(float arg0) {
-        return java.lang.Math.getExponent(arg0);
+    default int getExponent(float f) {
+        return java.lang.Math.getExponent(f);
     }
 
 
@@ -304,8 +304,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.hypot(double,double)
      * {@link java.lang.Math#hypot(double,double)}
      */
-    default double hypot(double arg0, double arg1) {
-        return java.lang.Math.hypot(arg0, arg1);
+    default double hypot(double x, double y) {
+        return java.lang.Math.hypot(x, y);
     }
 
 
@@ -314,8 +314,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.incrementExact(int)
      * {@link java.lang.Math#incrementExact(int)}
      */
-    default int incrementExact(int arg0) {
-        return java.lang.Math.incrementExact(arg0);
+    default int incrementExact(int a) {
+        return java.lang.Math.incrementExact(a);
     }
 
 
@@ -324,8 +324,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.incrementExact(long)
      * {@link java.lang.Math#incrementExact(long)}
      */
-    default long incrementExact(long arg0) {
-        return java.lang.Math.incrementExact(arg0);
+    default long incrementExact(long a) {
+        return java.lang.Math.incrementExact(a);
     }
 
 
@@ -334,8 +334,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.log(double)
      * {@link java.lang.Math#log(double)}
      */
-    default double log(double arg0) {
-        return java.lang.Math.log(arg0);
+    default double log(double a) {
+        return java.lang.Math.log(a);
     }
 
 
@@ -344,8 +344,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.log10(double)
      * {@link java.lang.Math#log10(double)}
      */
-    default double log10(double arg0) {
-        return java.lang.Math.log10(arg0);
+    default double log10(double a) {
+        return java.lang.Math.log10(a);
     }
 
 
@@ -354,8 +354,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.log1p(double)
      * {@link java.lang.Math#log1p(double)}
      */
-    default double log1p(double arg0) {
-        return java.lang.Math.log1p(arg0);
+    default double log1p(double x) {
+        return java.lang.Math.log1p(x);
     }
 
 
@@ -364,8 +364,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.max(double,double)
      * {@link java.lang.Math#max(double,double)}
      */
-    default double max(double arg0, double arg1) {
-        return java.lang.Math.max(arg0, arg1);
+    default double max(double a, double b) {
+        return java.lang.Math.max(a, b);
     }
 
 
@@ -374,8 +374,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.max(float,float)
      * {@link java.lang.Math#max(float,float)}
      */
-    default float max(float arg0, float arg1) {
-        return java.lang.Math.max(arg0, arg1);
+    default float max(float a, float b) {
+        return java.lang.Math.max(a, b);
     }
 
 
@@ -384,8 +384,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.max(int,int)
      * {@link java.lang.Math#max(int,int)}
      */
-    default int max(int arg0, int arg1) {
-        return java.lang.Math.max(arg0, arg1);
+    default int max(int a, int b) {
+        return java.lang.Math.max(a, b);
     }
 
 
@@ -394,8 +394,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.max(long,long)
      * {@link java.lang.Math#max(long,long)}
      */
-    default long max(long arg0, long arg1) {
-        return java.lang.Math.max(arg0, arg1);
+    default long max(long a, long b) {
+        return java.lang.Math.max(a, b);
     }
 
 
@@ -404,8 +404,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.min(double,double)
      * {@link java.lang.Math#min(double,double)}
      */
-    default double min(double arg0, double arg1) {
-        return java.lang.Math.min(arg0, arg1);
+    default double min(double a, double b) {
+        return java.lang.Math.min(a, b);
     }
 
 
@@ -414,8 +414,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.min(float,float)
      * {@link java.lang.Math#min(float,float)}
      */
-    default float min(float arg0, float arg1) {
-        return java.lang.Math.min(arg0, arg1);
+    default float min(float a, float b) {
+        return java.lang.Math.min(a, b);
     }
 
 
@@ -424,8 +424,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.min(int,int)
      * {@link java.lang.Math#min(int,int)}
      */
-    default int min(int arg0, int arg1) {
-        return java.lang.Math.min(arg0, arg1);
+    default int min(int a, int b) {
+        return java.lang.Math.min(a, b);
     }
 
 
@@ -434,8 +434,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.min(long,long)
      * {@link java.lang.Math#min(long,long)}
      */
-    default long min(long arg0, long arg1) {
-        return java.lang.Math.min(arg0, arg1);
+    default long min(long a, long b) {
+        return java.lang.Math.min(a, b);
     }
 
 
@@ -444,8 +444,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.multiplyExact(int,int)
      * {@link java.lang.Math#multiplyExact(int,int)}
      */
-    default int multiplyExact(int arg0, int arg1) {
-        return java.lang.Math.multiplyExact(arg0, arg1);
+    default int multiplyExact(int x, int y) {
+        return java.lang.Math.multiplyExact(x, y);
     }
 
 
@@ -454,8 +454,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.multiplyExact(long,long)
      * {@link java.lang.Math#multiplyExact(long,long)}
      */
-    default long multiplyExact(long arg0, long arg1) {
-        return java.lang.Math.multiplyExact(arg0, arg1);
+    default long multiplyExact(long x, long y) {
+        return java.lang.Math.multiplyExact(x, y);
     }
 
 
@@ -464,8 +464,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.negateExact(int)
      * {@link java.lang.Math#negateExact(int)}
      */
-    default int negateExact(int arg0) {
-        return java.lang.Math.negateExact(arg0);
+    default int negateExact(int a) {
+        return java.lang.Math.negateExact(a);
     }
 
 
@@ -474,8 +474,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.negateExact(long)
      * {@link java.lang.Math#negateExact(long)}
      */
-    default long negateExact(long arg0) {
-        return java.lang.Math.negateExact(arg0);
+    default long negateExact(long a) {
+        return java.lang.Math.negateExact(a);
     }
 
 
@@ -484,8 +484,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.nextAfter(double,double)
      * {@link java.lang.Math#nextAfter(double,double)}
      */
-    default double nextAfter(double arg0, double arg1) {
-        return java.lang.Math.nextAfter(arg0, arg1);
+    default double nextAfter(double start, double direction) {
+        return java.lang.Math.nextAfter(start, direction);
     }
 
 
@@ -494,8 +494,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.nextAfter(float,double)
      * {@link java.lang.Math#nextAfter(float,double)}
      */
-    default float nextAfter(float arg0, double arg1) {
-        return java.lang.Math.nextAfter(arg0, arg1);
+    default float nextAfter(float start, double direction) {
+        return java.lang.Math.nextAfter(start, direction);
     }
 
 
@@ -504,8 +504,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.nextDown(double)
      * {@link java.lang.Math#nextDown(double)}
      */
-    default double nextDown(double arg0) {
-        return java.lang.Math.nextDown(arg0);
+    default double nextDown(double d) {
+        return java.lang.Math.nextDown(d);
     }
 
 
@@ -514,8 +514,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.nextDown(float)
      * {@link java.lang.Math#nextDown(float)}
      */
-    default float nextDown(float arg0) {
-        return java.lang.Math.nextDown(arg0);
+    default float nextDown(float f) {
+        return java.lang.Math.nextDown(f);
     }
 
 
@@ -524,8 +524,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.nextUp(double)
      * {@link java.lang.Math#nextUp(double)}
      */
-    default double nextUp(double arg0) {
-        return java.lang.Math.nextUp(arg0);
+    default double nextUp(double d) {
+        return java.lang.Math.nextUp(d);
     }
 
 
@@ -534,8 +534,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.nextUp(float)
      * {@link java.lang.Math#nextUp(float)}
      */
-    default float nextUp(float arg0) {
-        return java.lang.Math.nextUp(arg0);
+    default float nextUp(float f) {
+        return java.lang.Math.nextUp(f);
     }
 
 
@@ -544,8 +544,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.pow(double,double)
      * {@link java.lang.Math#pow(double,double)}
      */
-    default double pow(double arg0, double arg1) {
-        return java.lang.Math.pow(arg0, arg1);
+    default double pow(double a, double b) {
+        return java.lang.Math.pow(a, b);
     }
 
 
@@ -564,8 +564,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.rint(double)
      * {@link java.lang.Math#rint(double)}
      */
-    default double rint(double arg0) {
-        return java.lang.Math.rint(arg0);
+    default double rint(double a) {
+        return java.lang.Math.rint(a);
     }
 
 
@@ -574,8 +574,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.round(double)
      * {@link java.lang.Math#round(double)}
      */
-    default long round(double arg0) {
-        return java.lang.Math.round(arg0);
+    default long round(double a) {
+        return java.lang.Math.round(a);
     }
 
 
@@ -584,8 +584,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.round(float)
      * {@link java.lang.Math#round(float)}
      */
-    default int round(float arg0) {
-        return java.lang.Math.round(arg0);
+    default int round(float a) {
+        return java.lang.Math.round(a);
     }
 
 
@@ -594,8 +594,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.scalb(double,int)
      * {@link java.lang.Math#scalb(double,int)}
      */
-    default double scalb(double arg0, int arg1) {
-        return java.lang.Math.scalb(arg0, arg1);
+    default double scalb(double d, int scaleFactor) {
+        return java.lang.Math.scalb(d, scaleFactor);
     }
 
 
@@ -604,8 +604,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.scalb(float,int)
      * {@link java.lang.Math#scalb(float,int)}
      */
-    default float scalb(float arg0, int arg1) {
-        return java.lang.Math.scalb(arg0, arg1);
+    default float scalb(float f, int scaleFactor) {
+        return java.lang.Math.scalb(f, scaleFactor);
     }
 
 
@@ -614,8 +614,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.signum(double)
      * {@link java.lang.Math#signum(double)}
      */
-    default double signum(double arg0) {
-        return java.lang.Math.signum(arg0);
+    default double signum(double d) {
+        return java.lang.Math.signum(d);
     }
 
 
@@ -624,8 +624,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.signum(float)
      * {@link java.lang.Math#signum(float)}
      */
-    default float signum(float arg0) {
-        return java.lang.Math.signum(arg0);
+    default float signum(float f) {
+        return java.lang.Math.signum(f);
     }
 
 
@@ -634,8 +634,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.sin(double)
      * {@link java.lang.Math#sin(double)}
      */
-    default double sin(double arg0) {
-        return java.lang.Math.sin(arg0);
+    default double sin(double a) {
+        return java.lang.Math.sin(a);
     }
 
 
@@ -644,8 +644,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.sinh(double)
      * {@link java.lang.Math#sinh(double)}
      */
-    default double sinh(double arg0) {
-        return java.lang.Math.sinh(arg0);
+    default double sinh(double x) {
+        return java.lang.Math.sinh(x);
     }
 
 
@@ -654,8 +654,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.sqrt(double)
      * {@link java.lang.Math#sqrt(double)}
      */
-    default double sqrt(double arg0) {
-        return java.lang.Math.sqrt(arg0);
+    default double sqrt(double a) {
+        return java.lang.Math.sqrt(a);
     }
 
 
@@ -664,8 +664,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.subtractExact(int,int)
      * {@link java.lang.Math#subtractExact(int,int)}
      */
-    default int subtractExact(int arg0, int arg1) {
-        return java.lang.Math.subtractExact(arg0, arg1);
+    default int subtractExact(int x, int y) {
+        return java.lang.Math.subtractExact(x, y);
     }
 
 
@@ -674,8 +674,8 @@ public interface Math {
      * Delegate call to public static long java.lang.Math.subtractExact(long,long)
      * {@link java.lang.Math#subtractExact(long,long)}
      */
-    default long subtractExact(long arg0, long arg1) {
-        return java.lang.Math.subtractExact(arg0, arg1);
+    default long subtractExact(long x, long y) {
+        return java.lang.Math.subtractExact(x, y);
     }
 
 
@@ -684,8 +684,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.tan(double)
      * {@link java.lang.Math#tan(double)}
      */
-    default double tan(double arg0) {
-        return java.lang.Math.tan(arg0);
+    default double tan(double a) {
+        return java.lang.Math.tan(a);
     }
 
 
@@ -694,8 +694,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.tanh(double)
      * {@link java.lang.Math#tanh(double)}
      */
-    default double tanh(double arg0) {
-        return java.lang.Math.tanh(arg0);
+    default double tanh(double x) {
+        return java.lang.Math.tanh(x);
     }
 
 
@@ -704,8 +704,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.toDegrees(double)
      * {@link java.lang.Math#toDegrees(double)}
      */
-    default double toDegrees(double arg0) {
-        return java.lang.Math.toDegrees(arg0);
+    default double toDegrees(double angrad) {
+        return java.lang.Math.toDegrees(angrad);
     }
 
 
@@ -714,8 +714,8 @@ public interface Math {
      * Delegate call to public static int java.lang.Math.toIntExact(long)
      * {@link java.lang.Math#toIntExact(long)}
      */
-    default int toIntExact(long arg0) {
-        return java.lang.Math.toIntExact(arg0);
+    default int toIntExact(long value) {
+        return java.lang.Math.toIntExact(value);
     }
 
 
@@ -724,8 +724,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.toRadians(double)
      * {@link java.lang.Math#toRadians(double)}
      */
-    default double toRadians(double arg0) {
-        return java.lang.Math.toRadians(arg0);
+    default double toRadians(double angdeg) {
+        return java.lang.Math.toRadians(angdeg);
     }
 
 
@@ -734,8 +734,8 @@ public interface Math {
      * Delegate call to public static double java.lang.Math.ulp(double)
      * {@link java.lang.Math#ulp(double)}
      */
-    default double ulp(double arg0) {
-        return java.lang.Math.ulp(arg0);
+    default double ulp(double d) {
+        return java.lang.Math.ulp(d);
     }
 
 
@@ -744,8 +744,8 @@ public interface Math {
      * Delegate call to public static float java.lang.Math.ulp(float)
      * {@link java.lang.Math#ulp(float)}
      */
-    default float ulp(float arg0) {
-        return java.lang.Math.ulp(arg0);
+    default float ulp(float f) {
+        return java.lang.Math.ulp(f);
     }
 
 

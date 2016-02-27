@@ -114,13 +114,15 @@ public class IntegrationWithFilesTest implements AssertJ {
 			resultFile = underTest.generateClassToFile(examplesDir, "AssertJ", org.assertj.core.api.Assertions.class,
 					packageName, nameSource, 4);
 			Assertions.assertThat(resultFile).exists().canRead();
-			verifyCountOccurences(resultFile, 47, "        return Assertions.assertThat(actual);");
+			verifyCountOccurences(resultFile, 52, "        return Assertions.assertThat(actual);");
 
 			String[] args = { "-d", examplesDir.getAbsolutePath(), "-n", "Math", "-c", "java.lang.Math", "-p",
 					packageName, "-s", examplesSourceZip.getAbsolutePath() };
 			CommandLineMain.main(args);
 			resultFile = new File(examplesDir.getAbsolutePath() + "/Math.java");
 			Assertions.assertThat(resultFile).exists().canRead();
+			verifyCountOccurences(resultFile, 0, "arg0)");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw e;
@@ -132,12 +134,12 @@ public class IntegrationWithFilesTest implements AssertJ {
 		Path path = FileSystems.getDefault().getPath(resultFile.getAbsolutePath());
 		long count = 0;
 		try {
-			count = Files.lines(path).filter(str -> str.equals(expected)).count();
+			count = Files.lines(path).filter(str -> str.contains(expected)).count();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		assertThat(count).as("Occurrence count of " + expectedOcurrenceCount + " for expected line: " + expected)
-				.isGreaterThanOrEqualTo(expectedOcurrenceCount);
+				.isEqualTo(expectedOcurrenceCount);
 	}
 
 	/**

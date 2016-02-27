@@ -137,4 +137,32 @@ public class ArgumentParserTest implements AssertJ {
 		assertThat(makeArgumentParser("", "-d", "relative/path", "").getWriteDirectoryPath().getAbsolutePath())
 				.isEqualTo(new File("relative/path").getAbsolutePath());
 	}
+
+	/**
+	 * Test method for
+	 * {@link org.interfaceit.ui.commandline.ArgumentParser#getWriteDirectoryPath()}
+	 * .
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void returns_empty_optional_source_zip_by_default() throws IOException {
+		assertThat(makeArgumentParser().getSourceZipOrJarFileObjectOption().isPresent()).isFalse();
+	}
+
+	/**
+	 * Test method for
+	 * {@link org.interfaceit.ui.commandline.ArgumentParser#getWriteDirectoryPath()}
+	 * .
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void can_get_source_jar_path() throws IOException {
+		String pathname = "relative/path/Fake.jar";
+		assertThat(
+				makeArgumentParser("", "-s", pathname, "").getSourceZipOrJarFileObjectOption().get().getAbsolutePath())
+						.isEqualTo(new File(pathname).getAbsolutePath());
+	}
+
 }

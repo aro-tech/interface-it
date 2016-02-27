@@ -4,6 +4,7 @@
 package org.interfaceit.ui.commandline;
 
 import java.io.File;
+import java.util.Optional;
 
 /**
  * Class for parsing command-line arguments for interface-it
@@ -15,11 +16,13 @@ public class ArgumentParser {
 	private final String[] args;
 
 	static enum Flag {
-		VERSION("v", "Write version number."), TARGET_INTERFACE_NAME("n",
-				"Name of the target interface (ex: \"MyMixin\")"), WRITE_DIRECTORY("d",
-						"Directory which will contain the generated file (default value is \".\")"), DELEGATE_CLASS("c",
-								"Fully qualified delegate class name (ex: \"java.lang.Math\")"), TARGET_PACKAGE("p",
-										"The package name for the target interface (ex: \"org.example\")");
+		VERSION("v", "Write version number."),
+		TARGET_INTERFACE_NAME("n", "Name of the target interface (ex: \"MyMixin\")"),
+		WRITE_DIRECTORY("d", "Directory which will contain the generated file (default value is \".\")"),
+		DELEGATE_CLASS("c", "Fully qualified delegate class name (ex: \"java.lang.Math\")"),
+		TARGET_PACKAGE("p", "The package name for the target interface (ex: \"org.example\")"),
+		SOURCE_ZIP("s","File path of the jar or zip file containg source code to be used to recover argument names lost during compilation");
+		
 		private final String flag;
 		private final String helpMessage;
 
@@ -130,6 +133,22 @@ public class ArgumentParser {
 	 */
 	public boolean hasInsufficientArguments() {
 		return !isHelpRequest() && !isVersionRequest() && null == this.findValueAfterFlag(Flag.DELEGATE_CLASS, null);
+	}
+
+	/**
+	 * @return Optional object containing possible source code archive file reference
+	 */
+	public Optional<File> getSourceZipOrJarFileObjectOption() {
+		return Optional.ofNullable(getSourceBundleFileFromArgs());
+	}
+
+	private File getSourceBundleFileFromArgs() {
+		String path = findValueAfterFlag(Flag.SOURCE_ZIP, null);
+		File file = null;
+		if(null != path) {
+			file = new File(path);
+		}
+		return file;
 	}
 
 }
