@@ -116,9 +116,9 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Assert.assertTrue(doubleThatMethod.isPresent());
 
 		assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), imports, defaultNameSource).trim())
-				.startsWith("default double doubleThat(Matcher<Double> ").endsWith(")");
+				.startsWith("default double doubleThat(ArgumentMatcher<Double> ").endsWith(")");
 
-		assertThat(this.imports).contains("org.hamcrest.Matcher");
+		assertThat(this.imports).contains("org.mockito.ArgumentMatcher");
 	}
 
 	@Test

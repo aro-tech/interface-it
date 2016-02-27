@@ -3,6 +3,10 @@
  */
 package org.interfaceit.util;
 
+import java.lang.reflect.Method;
+
+import org.assertj.core.api.Assertions;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.interfaceit.util.mixin.AssertJ;
 import org.junit.Test;
 
@@ -40,11 +44,9 @@ public class ClassNameUtilsTest implements AssertJ {
 
 	@Test
 	public void can_extract_simple_name_without_messing_up_varargs() {
-		assertThat(ClassNameUtils.extractSimpleName("T..."))
-				.isEqualTo("T...");
+		assertThat(ClassNameUtils.extractSimpleName("T...")).isEqualTo("T...");
 	}
 
-	
 	@Test
 	public void can_extract_imports() {
 		assertThat(ClassNameUtils.makeImports("org.foo.Bar<com.whatsit.FoobleyWoo$Thingy, org.yippi.Skippi[]>"))
@@ -60,6 +62,13 @@ public class ClassNameUtilsTest implements AssertJ {
 		assertThat(ClassNameUtils.convertToVarArgs("String[]")).isEqualTo("String...");
 		assertThat(ClassNameUtils.convertToVarArgs("String")).isEqualTo("String");
 
+	}
+
+	@Test
+	public void can_normalize_inner_class_for_lookup_key() throws NoSuchMethodException, SecurityException {
+		Method method = Assertions.class.getMethod("assertThatThrownBy", ThrowingCallable.class);
+
+		assertThat(ClassNameUtils.getNormalizedArgTypeForLookupKey(method, 0)).isEqualTo("ThrowingCallable");
 	}
 
 }

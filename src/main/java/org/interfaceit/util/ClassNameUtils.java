@@ -3,6 +3,8 @@
  */
 package org.interfaceit.util;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
@@ -131,5 +133,52 @@ public class ClassNameUtils {
 		}
 		return delegateClassName;
 	}
+	
+	/**
+	 * Retrieve and massage the type info to a standardized type name for a lookup key
+	 * @param method
+	 * @param zeroBasedArgumentIndex
+	 * @return The normalized type name for the specified argument of the given method
+	 */
+	public static String getNormalizedArgTypeForLookupKey(Method method, int zeroBasedArgumentIndex) {
+		Type[] genericParameterTypes = method.getGenericParameterTypes();
+		if (genericParameterTypes.length <= zeroBasedArgumentIndex) {
+			return null;
+		}
+		return getTypeNameForLookupKey(method, zeroBasedArgumentIndex, genericParameterTypes);
+	}
+
+	private static String getTypeNameForLookupKey(Method method, int argIndex, Type[] genericParameterTypes) {
+		String rawTypeName = genericParameterTypes[argIndex].getTypeName();
+		return convertToVarArgsIfNeeded(removeParentClass(removePackageInfo(rawTypeName)), method, argIndex);
+	}
+
+	private static String removeParentClass(String typeName) {
+		int lastDotIx = typeName.lastIndexOf('.');
+		if (lastDotIx >= 0) {
+			typeName = typeName.substring(lastDotIx + 1);
+		}
+		return typeName;
+	}
+
+	private static String convertToVarArgsIfNeeded(String typeName, Method method, int zeroBasedArgumentIndex) {
+		if (method.isVarArgs() && method.getParameterCount() == zeroBasedArgumentIndex + 1) {
+			typeName = replaceEndingSquareBraces(typeName);
+		}
+		return typeName;
+	}
+
+	private static String removePackageInfo(String typeName) {
+		int lastDotIx = typeName.lastIndexOf('.');
+		if (lastDotIx >= 0) {
+			typeName = ClassNameUtils.extractSimpleName(typeName);
+		}
+		return typeName;
+	}
+
+	private static String replaceEndingSquareBraces(String typeName) {
+		return typeName.replace("[]", "...");
+	}
+
 
 }

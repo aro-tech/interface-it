@@ -94,9 +94,27 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	@Test
 	public void should_load_for_one_template_arg() {
 		sourceLines.add(" public static <Foosh> Foosh flibble(BoingoBoingo<Foosh> thingy) {");
+		sourceLines.add("public static boolean booleanThat(ArgumentMatcher<Boolean> matcher) {");
 		underTest.parseAndLoad(sourceLines, target);
 		verify(target).add("flibble", 0, "BoingoBoingo<Foosh>", "thingy");
+		verify(target).add("booleanThat", 0, "ArgumentMatcher<Boolean>", "matcher");
 	}
+	
+	/**
+	 * Test method for
+	 * {@link org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader#parseAndLoad(java.util.List, org.interfaceit.meta.arguments.LookupArgumentNameSource)}
+	 * .
+	 */
+	@Test
+	public void can_handle_final_arg() {
+		sourceLines.add("public static boolean booleanThing(final ArgumentMatcher<Boolean> matcher,final int int1, final int int2) {");
+		underTest.parseAndLoad(sourceLines, target);
+		verify(target).add("booleanThing", 0, "ArgumentMatcher<Boolean>", "matcher");
+		verify(target).add("booleanThing", 1, "int", "int1");
+		verify(target).add("booleanThing", 2, "int", "int2");
+
+	}
+
 
 	/**
 	 * Test method for
@@ -177,7 +195,7 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 		underTest.parseAndLoad(sourceLines, target);
 		verify(target).add("doThrow", 0, "Class<? extends Throwable>", "toBeThrown");
 	}
-
+	 
 	/**
 	 * Test method for
 	 * {@link org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader#parseAndLoad(java.util.List, org.interfaceit.meta.arguments.LookupArgumentNameSource)}

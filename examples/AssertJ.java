@@ -118,8 +118,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.allOf(org.assertj.core.api.Condition<? super T>...)
      * {@link org.assertj.core.api.Assertions#allOf(org.assertj.core.api.Condition[])}
      */
-    default <T> Condition<T> allOf(Condition<? super T>... arg0) {
-        return Assertions.allOf(arg0);
+    default <T> Condition<T> allOf(Condition<? super T>... conditions) {
+        return Assertions.allOf(conditions);
     }
 
 
@@ -128,8 +128,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.allOf(java.lang.Iterable<? extends org.assertj.core.api.Condition<? super T>>)
      * {@link org.assertj.core.api.Assertions#allOf(java.lang.Iterable)}
      */
-    default <T> Condition<T> allOf(Iterable<? extends Condition<? super T>> arg0) {
-        return Assertions.allOf(arg0);
+    default <T> Condition<T> allOf(Iterable<? extends Condition<? super T>> conditions) {
+        return Assertions.allOf(conditions);
     }
 
 
@@ -138,8 +138,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.anyOf(org.assertj.core.api.Condition<? super T>...)
      * {@link org.assertj.core.api.Assertions#anyOf(org.assertj.core.api.Condition[])}
      */
-    default <T> Condition<T> anyOf(Condition<? super T>... arg0) {
-        return Assertions.anyOf(arg0);
+    default <T> Condition<T> anyOf(Condition<? super T>... conditions) {
+        return Assertions.anyOf(conditions);
     }
 
 
@@ -148,8 +148,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.Condition<T> org.assertj.core.api.Assertions.anyOf(java.lang.Iterable<? extends org.assertj.core.api.Condition<? super T>>)
      * {@link org.assertj.core.api.Assertions#anyOf(java.lang.Iterable)}
      */
-    default <T> Condition<T> anyOf(Iterable<? extends Condition<? super T>> arg0) {
-        return Assertions.anyOf(arg0);
+    default <T> Condition<T> anyOf(Iterable<? extends Condition<? super T>> conditions) {
+        return Assertions.anyOf(conditions);
     }
 
 
@@ -158,8 +158,8 @@ public interface AssertJ {
      * Delegate call to public static <T> T org.assertj.core.api.Assertions.assertThat(org.assertj.core.api.AssertProvider<T>)
      * {@link org.assertj.core.api.Assertions#assertThat(org.assertj.core.api.AssertProvider)}
      */
-    default <T> T assertThat(AssertProvider<T> arg0) {
-        return Assertions.assertThat(arg0);
+    default <T> T assertThat(AssertProvider<T> component) {
+        return Assertions.assertThat(component);
     }
 
 
@@ -718,8 +718,8 @@ public interface AssertJ {
      * Delegate call to public static <T> org.assertj.core.api.ThrowableTypeAssert<T> org.assertj.core.api.Assertions.assertThatExceptionOfType(java.lang.Class<? extends T>)
      * {@link org.assertj.core.api.Assertions#assertThatExceptionOfType(java.lang.Class)}
      */
-    default <T extends Throwable> ThrowableTypeAssert<T> assertThatExceptionOfType(Class<? extends T> arg0) {
-        return Assertions.assertThatExceptionOfType(arg0);
+    default <T extends Throwable> ThrowableTypeAssert<T> assertThatExceptionOfType(Class<? extends T> exceptionType) {
+        return Assertions.assertThatExceptionOfType(exceptionType);
     }
 
 
@@ -728,8 +728,8 @@ public interface AssertJ {
      * Delegate call to public static org.assertj.core.api.AbstractThrowableAssert<?, ? extends java.lang.Throwable> org.assertj.core.api.Assertions.assertThatThrownBy(org.assertj.core.api.ThrowableAssert$ThrowingCallable)
      * {@link org.assertj.core.api.Assertions#assertThatThrownBy(org.assertj.core.api.ThrowableAssert$ThrowingCallable)}
      */
-    default AbstractThrowableAssert<?, ? extends Throwable> assertThatThrownBy(ThrowableAssert.ThrowingCallable arg0) {
-        return Assertions.assertThatThrownBy(arg0);
+    default AbstractThrowableAssert<?, ? extends Throwable> assertThatThrownBy(ThrowableAssert.ThrowingCallable shouldRaiseThrowable) {
+        return Assertions.assertThatThrownBy(shouldRaiseThrowable);
     }
 
 
@@ -748,8 +748,8 @@ public interface AssertJ {
      * Delegate call to public static java.lang.Throwable org.assertj.core.api.Assertions.catchThrowable(org.assertj.core.api.ThrowableAssert$ThrowingCallable)
      * {@link org.assertj.core.api.Assertions#catchThrowable(org.assertj.core.api.ThrowableAssert$ThrowingCallable)}
      */
-    default Throwable catchThrowable(ThrowableAssert.ThrowingCallable arg0) {
-        return Assertions.catchThrowable(arg0);
+    default Throwable catchThrowable(ThrowableAssert.ThrowingCallable shouldRaiseThrowable) {
+        return Assertions.catchThrowable(shouldRaiseThrowable);
     }
 
 
@@ -878,8 +878,8 @@ public interface AssertJ {
      * Delegate call to public static void org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown(java.lang.Class<? extends java.lang.Throwable>)
      * {@link org.assertj.core.api.Assertions#failBecauseExceptionWasNotThrown(java.lang.Class)}
      */
-    default void failBecauseExceptionWasNotThrown(Class<? extends Throwable> arg0) {
-        Assertions.failBecauseExceptionWasNotThrown(arg0);
+    default void failBecauseExceptionWasNotThrown(Class<? extends Throwable> exceptionClass) {
+        Assertions.failBecauseExceptionWasNotThrown(exceptionClass);
     }
 
 
@@ -908,8 +908,8 @@ public interface AssertJ {
      * Delegate call to public static org.assertj.core.api.filter.InFilter org.assertj.core.api.Assertions.in(java.lang.Object...)
      * {@link org.assertj.core.api.Assertions#in(java.lang.Object[])}
      */
-    default InFilter in(Object... arg0) {
-        return Assertions.in(arg0);
+    default InFilter in(Object... values) {
+        return Assertions.in(values);
     }
 
 
@@ -998,8 +998,8 @@ public interface AssertJ {
      * Delegate call to public static org.assertj.core.api.filter.NotInFilter org.assertj.core.api.Assertions.notIn(java.lang.Object...)
      * {@link org.assertj.core.api.Assertions#notIn(java.lang.Object[])}
      */
-    default NotInFilter notIn(Object... arg0) {
-        return Assertions.notIn(arg0);
+    default NotInFilter notIn(Object... valuesNotToMatch) {
+        return Assertions.notIn(valuesNotToMatch);
     }
 
 
@@ -1098,8 +1098,8 @@ public interface AssertJ {
      * Delegate call to public static void org.assertj.core.api.Assertions.shouldHaveThrown(java.lang.Class<? extends java.lang.Throwable>)
      * {@link org.assertj.core.api.Assertions#shouldHaveThrown(java.lang.Class)}
      */
-    default void shouldHaveThrown(Class<? extends Throwable> arg0) {
-        Assertions.shouldHaveThrown(arg0);
+    default void shouldHaveThrown(Class<? extends Throwable> exceptionClass) {
+        Assertions.shouldHaveThrown(exceptionClass);
     }
 
 
@@ -1108,8 +1108,8 @@ public interface AssertJ {
      * Delegate call to public static org.assertj.core.groups.Tuple org.assertj.core.api.Assertions.tuple(java.lang.Object...)
      * {@link org.assertj.core.api.Assertions#tuple(java.lang.Object[])}
      */
-    default Tuple tuple(Object... arg0) {
-        return Assertions.tuple(arg0);
+    default Tuple tuple(Object... values) {
+        return Assertions.tuple(values);
     }
 
 

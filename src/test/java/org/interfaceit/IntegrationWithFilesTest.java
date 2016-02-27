@@ -70,7 +70,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 
 		URL expectedURL = this.getClass().getResource("/MockitoEnabled.txt");
 		File expected = new File(expectedURL.getPath());
-		// System.out.println(resultFile.getAbsolutePath());
+		System.out.println(resultFile.getAbsolutePath());
 		Assertions.assertThat(resultFile).exists().canRead();
 		List<String> resultLines = readTrimmedLines(resultFile.toPath());
 		List<String> expectedLines = readTrimmedLines(expected.toPath());
@@ -100,20 +100,18 @@ public class IntegrationWithFilesTest implements AssertJ {
 	 */
 	@Test
 	public void build_examples() throws IOException {
-		// TODO: add source zip
 		File examplesSourceZip = getExamplesZipFile();
 		LookupArgumentNameSource nameSource = loadArgumentNames(examplesSourceZip);
 
 		final String packageName = "org.interfaceit.util.mixin";
 		File resultFile;
 		try {
-			resultFile = underTest.generateClassToFile(examplesDir, "Mockito", org.mockito.Mockito.class, packageName,
-					nameSource, 4);
-			Assertions.assertThat(resultFile).exists().canRead();
+			buildAndVerifyMockito(nameSource, packageName); 
 
 			resultFile = underTest.generateClassToFile(examplesDir, "AssertJ", org.assertj.core.api.Assertions.class,
 					packageName, nameSource, 4);
 			Assertions.assertThat(resultFile).exists().canRead();
+			verifyCountOccurences(resultFile, 0, "arg0)");
 			verifyCountOccurences(resultFile, 52, "        return Assertions.assertThat(actual);");
 
 			String[] args = { "-d", examplesDir.getAbsolutePath(), "-n", "Math", "-c", "java.lang.Math", "-p",
@@ -128,6 +126,15 @@ public class IntegrationWithFilesTest implements AssertJ {
 			throw e;
 		}
 
+	}
+
+	private void buildAndVerifyMockito(LookupArgumentNameSource nameSource, final String packageName)
+			throws IOException {
+		File resultFile;
+		resultFile = underTest.generateClassToFile(examplesDir, "Mockito", org.mockito.Mockito.class, packageName,
+				nameSource, 4);
+		Assertions.assertThat(resultFile).exists().canRead();
+		verifyCountOccurences(resultFile, 0, "arg0)");
 	}
 
 	private void verifyCountOccurences(File resultFile, int expectedOcurrenceCount, final String expected) {

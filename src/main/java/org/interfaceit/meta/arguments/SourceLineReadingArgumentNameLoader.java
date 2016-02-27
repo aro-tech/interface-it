@@ -86,7 +86,9 @@ public class SourceLineReadingArgumentNameLoader {
 	}
 
 	private static enum TokenType {
-		METHOD_NAME, ARGUMENT_TYPE, ARGUMENT_NAME;
+		METHOD_NAME,
+		ARGUMENT_TYPE,
+		ARGUMENT_NAME;
 	}
 
 	private static class Token {
@@ -126,7 +128,7 @@ public class SourceLineReadingArgumentNameLoader {
 		private boolean insideArgs = false;
 		private boolean isDone = false;
 		private final List<Token> result;
-	
+
 		public LoopContext(List<Token> result) {
 			super();
 			this.result = result;
@@ -134,6 +136,7 @@ public class SourceLineReadingArgumentNameLoader {
 
 		/**
 		 * Add tokens for one argument into the results
+		 * 
 		 * @param word
 		 */
 		void addOneArgument(String word) {
@@ -143,6 +146,7 @@ public class SourceLineReadingArgumentNameLoader {
 
 		/**
 		 * Add the method name to the results
+		 * 
 		 * @param name
 		 */
 		void addMethodName(String name) {
@@ -227,7 +231,7 @@ public class SourceLineReadingArgumentNameLoader {
 		LoopContext ctx = new LoopContext(result);
 		for (int i = 0; i < words.length && ctx.isNotDone(); i++) {
 			String word = words[i].trim();
-			if (word.length() > 0) {
+			if (word.length() > 0 && !"final".equals(word)) {
 				processCurrentNonemptyWord(word, words, ctx, i);
 			}
 		}
@@ -266,7 +270,7 @@ public class SourceLineReadingArgumentNameLoader {
 		String[] parts = word.split(",");
 		if (parts.length > 0) {
 			ctx.addOneArgument(parts[0]);
-			ctx.setCurrentType(parts.length > 1 ? parts[1] : null);
+			ctx.setCurrentType(parts.length > 1 && !"final".equals(parts[1]) ? parts[1] : null);
 		}
 	}
 
@@ -292,8 +296,7 @@ public class SourceLineReadingArgumentNameLoader {
 		if (wordContainsMethodName(indexOfOpen)) {
 			atStartOfArgsExtractMethodNameAndPossiblyFirstArgType(word, ctx);
 		} else if (wordContainsParenOpeningArgumentsButNotMethodName(indexOfOpen)) {
-			atStartOfArgsSetPreviousWordAsMethodNameAndPossiblyExtractFirstArgType(word, words, ctx,
-					loopCounter);
+			atStartOfArgsSetPreviousWordAsMethodNameAndPossiblyExtractFirstArgType(word, words, ctx, loopCounter);
 		}
 	}
 
@@ -301,7 +304,7 @@ public class SourceLineReadingArgumentNameLoader {
 			LoopContext ctx, int loopCounter) {
 		ctx.setInsideArgs(true);
 		ctx.addMethodName(words[loopCounter - 1].trim());
-		if(word.length() > 1) {
+		if (word.length() > 1) {
 			ctx.setCurrentType(word.substring(1));
 		}
 	}
@@ -310,7 +313,7 @@ public class SourceLineReadingArgumentNameLoader {
 		ctx.setInsideArgs(true);
 		String[] parts = word.split("\\(");
 		ctx.addMethodName(parts[0]);
-		if (parts.length > 1 && isNotEndOfArgs(parts)) {
+		if (parts.length > 1 && isNotEndOfArgs(parts) && !"final".equals(parts[1])) {
 			ctx.setCurrentType(parts[1]);
 		}
 	}
