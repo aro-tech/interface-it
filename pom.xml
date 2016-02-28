@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.aro_tech</groupId>
 	<artifactId>interface-it</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.6.0</version>
 	<name>InterfaceIt</name>
 	<description>Java code generator to create an interface which delegates to a class's static methods</description>
 
