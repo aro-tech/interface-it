@@ -16,22 +16,18 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * Class for reading zipped files
+ * Class for reading source files
  * 
  * @author aro_tech
  *
  */
-public class FileUtils {
+public class FileUtils implements SourceFileReader {
 
-	/**
-	 * Extract the text lines from one or more files in a zip archive
-	 * 
-	 * @param zipFilePath
-	 * @param filePathWithinZipStructure
-	 * @return Lines from all the files, in sequence
-	 * @throws IOException
+	/* (non-Javadoc)
+	 * @see org.interfaceit.util.SourceFileReader#readFilesInZipArchive(java.io.File, java.lang.String)
 	 */
-	public static List<String> readFilesInZipArchive(File zipFile, String... filePathsWithinZipStructure)
+	@Override
+	public List<String> readFilesInZipArchive(File zipFile, String... filePathsWithinZipStructure)
 			throws IOException {
 		List<String> lines = new ArrayList<>();
 		try (ZipFile zf = new ZipFile(zipFile)) {
@@ -42,7 +38,11 @@ public class FileUtils {
 		return lines;
 	}
 
-	public static List<String> readTrimmedLinesFromFilePath(Path path) {
+	/* (non-Javadoc)
+	 * @see org.interfaceit.util.SourceFileReader#readTrimmedLinesFromFilePath(java.nio.file.Path)
+	 */
+	@Override
+	public List<String> readTrimmedLinesFromFilePath(Path path) {
 		try {
 			return Files.lines(path).filter(s -> s.trim().length() > 0).map(s -> s.trim()).collect(Collectors.toList());
 		} catch (IOException e) {
@@ -51,7 +51,7 @@ public class FileUtils {
 		}
 	}
 
-	private static void readFileLinesIntoList(String filePathWithinZipStructure, List<String> lines, ZipFile zf)
+	private void readFileLinesIntoList(String filePathWithinZipStructure, List<String> lines, ZipFile zf)
 			throws IOException {
 		ZipEntry entry = zf.getEntry(filePathWithinZipStructure);
 		if (null != entry) {
@@ -59,7 +59,7 @@ public class FileUtils {
 		}
 	}
 
-	private static void readEntryLinesIntoList(List<String> lines, ZipFile zf, ZipEntry entry) throws IOException {
+	private void readEntryLinesIntoList(List<String> lines, ZipFile zf, ZipEntry entry) throws IOException {
 		long size = entry.getSize();
 		if (size > 0) {
 			try (BufferedReader br = new BufferedReader(new InputStreamReader(zf.getInputStream(entry)))) {

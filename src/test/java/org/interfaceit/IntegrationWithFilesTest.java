@@ -9,16 +9,15 @@ import java.net.URL;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.meta.arguments.LookupArgumentNameSource;
 import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader;
 import org.interfaceit.ui.commandline.CommandLineMain;
-import org.interfaceit.util.ZipFileUtils;
+import org.interfaceit.util.FileUtils;
+import org.interfaceit.util.SourceFileReader;
 import org.interfaceit.util.mixin.AssertJ;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,9 +33,9 @@ import org.mockito.Mockito;
 public class IntegrationWithFilesTest implements AssertJ {
 
 	private ClassCodeGenerator underTest = new DelegateMethodGenerator();
-	// private Set<String> imports;
 	private static File tmpDir;
 	private static File examplesDir;
+	private SourceFileReader sourceReader = new FileUtils();
 
 	/**
 	 * @throws java.lang.Exception
@@ -67,13 +66,13 @@ public class IntegrationWithFilesTest implements AssertJ {
 		File resultFile = underTest.generateClassToFile(tmpDir, "MockitoEnabled", Mockito.class, "org.interfaceit.test",
 				new ArgumentNameSource() {
 				}, 5);
-
+		
 		URL expectedURL = this.getClass().getResource("/MockitoEnabled.txt");
 		File expected = new File(expectedURL.getPath());
 		System.out.println(resultFile.getAbsolutePath());
 		Assertions.assertThat(resultFile).exists().canRead();
-		List<String> resultLines = readTrimmedLines(resultFile.toPath());
-		List<String> expectedLines = readTrimmedLines(expected.toPath());
+		List<String> resultLines = sourceReader.readTrimmedLinesFromFilePath(resultFile.toPath());
+		List<String> expectedLines = sourceReader.readTrimmedLinesFromFilePath(expected.toPath());
 		Assertions.assertThat(resultLines).hasSameSizeAs(expectedLines).containsAll(expectedLines);
 	}
 
@@ -81,7 +80,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 	public void can_read_zip_file_lines() throws IOException {
 		URL testZipURL = this.getClass().getResource("/test.zip");
 		File testZip = new File(testZipURL.getPath());
-		List<String> lines = ZipFileUtils.readFilesInZipArchive(testZip, "a/b/ziptest.txt");
+		List<String> lines = sourceReader.readFilesInZipArchive(testZip, "a/b/ziptest.txt");
 		assertThat(lines).contains("Test line 1", "Test line 2");
 	}
 
@@ -89,7 +88,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 	public void can_handle_reading_nonexistent_file_in_zip() throws IOException {
 		URL testZipURL = this.getClass().getResource("/test.zip");
 		File testZip = new File(testZipURL.getPath());
-		List<String> lines = ZipFileUtils.readFilesInZipArchive(testZip, "c/d/bogus.txt");
+		List<String> lines = sourceReader.readFilesInZipArchive(testZip, "c/d/bogus.txt");
 		assertThat(lines).isEmpty();
 	}
 
@@ -106,7 +105,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 		final String packageName = "org.interfaceit.util.mixin";
 		File resultFile;
 		try {
-			buildAndVerifyMockito(nameSource, packageName); 
+			buildAndVerifyMockito(nameSource, packageName);
 
 			resultFile = underTest.generateClassToFile(examplesDir, "AssertJ", org.assertj.core.api.Assertions.class,
 					packageName, nameSource, 4);
@@ -114,18 +113,40 @@ public class IntegrationWithFilesTest implements AssertJ {
 			verifyCountOccurences(resultFile, 0, "arg0)");
 			verifyCountOccurences(resultFile, 52, "        return Assertions.assertThat(actual);");
 
-			String[] args = { "-d", examplesDir.getAbsolutePath(), "-n", "Math", "-c", "java.lang.Math", "-p",
-					packageName, "-s", examplesSourceZip.getAbsolutePath() };
-			CommandLineMain.main(args);
-			resultFile = new File(examplesDir.getAbsolutePath() + "/Math.java");
-			Assertions.assertThat(resultFile).exists().canRead();
-			verifyCountOccurences(resultFile, 0, "arg0)");
+			generateClassFromCommandLineMainAndVerify(packageName, "java.lang.Math", "Math", examplesSourceZip);
+
+			generateClassFromCommandLineMainAndVerify(packageName, "java.net.URLEncoder", "URLEncoding", getExampleSourceFile());
 
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw e;
 		}
 
+	}
+
+	private File getExampleSourceFile() {
+		return getResourceFile("/exampleSrc.txt");
+	}
+
+	private File getResourceFile(String fileName) {
+		URL url = this.getClass().getResource(fileName);
+		File file = new File(url.getPath());
+		return file;
+	}
+	
+	private File getExamplesZipFile() {
+		return getResourceFile("/examples.zip");
+	}
+
+	private void generateClassFromCommandLineMainAndVerify(final String packageName, String targetClass,
+			String generatedClassName, File sourcePath) {
+		File resultFile;
+		String[] args = { "-d", examplesDir.getAbsolutePath(), "-n", generatedClassName, "-c", targetClass, "-p",
+				packageName, "-s", sourcePath.getAbsolutePath() };
+		CommandLineMain.main(args);
+		resultFile = new File(examplesDir.getAbsolutePath() + "/" + generatedClassName + ".java");
+		Assertions.assertThat(resultFile).exists().canRead();
+		verifyCountOccurences(resultFile, 0, "arg0)");
 	}
 
 	private void buildAndVerifyMockito(LookupArgumentNameSource nameSource, final String packageName)
@@ -149,35 +170,12 @@ public class IntegrationWithFilesTest implements AssertJ {
 				.isEqualTo(expectedOcurrenceCount);
 	}
 
-	/**
-	 * @param examplesZipFile
-	 * @return
-	 * @throws IOException
-	 */
 	private LookupArgumentNameSource loadArgumentNames(File examplesZipFile) throws IOException {
-		List<String> lines = ZipFileUtils.readFilesInZipArchive(examplesZipFile, "org/mockito/Mockito.java",
+		List<String> lines = sourceReader.readFilesInZipArchive(examplesZipFile, "org/mockito/Mockito.java",
 				"org/mockito/Matchers.java", "org/assertj/core/api/Assertions.java");
 		LookupArgumentNameSource nameSource = new LookupArgumentNameSource();
 		new SourceLineReadingArgumentNameLoader().parseAndLoad(lines, nameSource);
 		return nameSource;
-	}
-
-	/**
-	 * @return
-	 */
-	private File getExamplesZipFile() {
-		URL testZipURL = this.getClass().getResource("/examples.zip");
-		File testZip = new File(testZipURL.getPath());
-		return testZip;
-	}
-
-	private static List<String> readTrimmedLines(Path path) {
-		try {
-			return Files.lines(path).filter(s -> s.trim().length() > 0).map(s -> s.trim()).collect(Collectors.toList());
-		} catch (IOException e) {
-			e.printStackTrace();
-			return new ArrayList<String>();
-		}
 	}
 
 }

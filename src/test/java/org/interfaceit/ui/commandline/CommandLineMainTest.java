@@ -9,6 +9,8 @@ import java.io.PrintStream;
 
 import org.interfaceit.ClassCodeGenerator;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
+import org.interfaceit.util.FileUtils;
+import org.interfaceit.util.SourceFileReader;
 import org.interfaceit.util.mixin.AssertJ;
 import org.interfaceit.util.mixin.Mockito;
 import org.junit.Before;
@@ -23,6 +25,7 @@ import org.junit.Test;
 public class CommandLineMainTest implements AssertJ, Mockito {
 	private PrintStream out;
 	private ClassCodeGenerator generator;
+	private SourceFileReader reader = new FileUtils();
 
 	@Before
 	public void setUp() throws Exception {
@@ -36,14 +39,14 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		File result = new File(".");
 		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
-		CommandLineMain.execute(args, out, generator, new ArgumentParser(args));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(contains(result.getAbsolutePath()));
 	}
 
 	@Test
 	public void execute_prints_version_if_flag() {
 		String[] args = { "-v" };
-		CommandLineMain.execute(args, out, generator, new ArgumentParser(args));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(contains(ClassCodeGenerator.PRODUCT_VERSION));
 		verifyNoMoreInteractions(out);
 		verifyZeroInteractions(generator);
@@ -52,7 +55,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	@Test
 	public void empty_args_execute_prints_help_text() {
 		String[] args = {};
-		CommandLineMain.execute(args, out, generator, new ArgumentParser(args));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(ArgumentParser.getHelpText());
 		verifyZeroInteractions(generator);
 	}
@@ -60,7 +63,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	@Test
 	public void no_args_execute_prints_help_text() {
 		String[] args = {};
-		CommandLineMain.execute(args, out, generator, new ArgumentParser(args));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(ArgumentParser.getHelpText());
 		verifyZeroInteractions(generator);
 	}
@@ -68,7 +71,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	@Test
 	public void only_unknown_args_execute_prints_help_text() {
 		String[] args = { "foo", "bar" };
-		CommandLineMain.execute(args, out, generator, new ArgumentParser(args));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(ArgumentParser.getHelpText());
 		verifyZeroInteractions(generator);
 	}
@@ -76,7 +79,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	@Test
 	public void no_args_execute_prints_no_args_text() {
 		String[] args = {};
-		CommandLineMain.execute(args, out, generator, new ArgumentParser(args));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(contains("No arguments"));
 		verifyZeroInteractions(generator);
 	}
@@ -84,7 +87,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	@Test
 	public void help_arg_execute_prints_help_text() {
 		String[] args = { "help" };
-		CommandLineMain.execute(args, out, generator, new ArgumentParser(args));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(ArgumentParser.getHelpText());
 		verifyZeroInteractions(generator);
 	}

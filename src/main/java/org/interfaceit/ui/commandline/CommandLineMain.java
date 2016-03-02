@@ -16,6 +16,7 @@ import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.meta.arguments.LookupArgumentNameSource;
 import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader;
 import org.interfaceit.util.FileUtils;
+import org.interfaceit.util.SourceFileReader;
 
 /**
  * Main class for command line interface
@@ -37,7 +38,7 @@ public class CommandLineMain {
 	 */
 	public static void main(String[] args) {
 		ArgumentParser argParser = new ArgumentParser(args);
-		execute(args, System.out, new DelegateMethodGenerator(), argParser);
+		execute(args, System.out, new DelegateMethodGenerator(), argParser, new FileUtils());
 	}
 
 	/**
@@ -45,15 +46,17 @@ public class CommandLineMain {
 	 * @param out
 	 * @param generator
 	 * @param argParser
+	 * @param sourceReader
 	 */
-	static void execute(String[] args, PrintStream out, ClassCodeGenerator generator, ArgumentParser argParser) {
+	static void execute(String[] args, PrintStream out, ClassCodeGenerator generator, ArgumentParser argParser,
+			SourceFileReader sourceReader) {
 		if (argParser.isVersionRequest()) {
 			printVersion(out);
 		} else if (argParser.isHelpRequest() || argParser.hasInsufficientArguments()) {
 			printArgFeedbackAndHelp(args, out);
 		} else {
 			try {
-				generateClassFileAndPrintFeedback(out, generator, argParser);
+				generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader);
 			} catch (ClassNotFoundException cnfe) {
 				out.println("Incorrect or unspecified class name in arguments: " + args);
 			}
@@ -72,22 +75,22 @@ public class CommandLineMain {
 	}
 
 	private static void generateClassFileAndPrintFeedback(PrintStream out, ClassCodeGenerator generator,
-			ArgumentParser argParser) throws ClassNotFoundException {
+			ArgumentParser argParser, SourceFileReader sourceReader) throws ClassNotFoundException {
 		Class<?> delegateClass = argParser.getDelegateClass();
 
 		try {
 			File result = generator.generateClassToFile(argParser.getWriteDirectoryPath(),
 					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
-					makeArgumentNameSource(argParser, delegateClass));
+					makeArgumentNameSource(argParser, delegateClass, sourceReader));
 			giveSuccessFeedback(result, out);
 		} catch (IOException e) {
 			e.printStackTrace(out); // TODO: improve error handling
 		}
 	}
 
-	private static ArgumentNameSource makeArgumentNameSource(ArgumentParser argParser, Class<?> delegateClass)
-			throws IOException {
-		List<String> sourceLines = getSourceCodeLines(delegateClass, argParser);
+	private static ArgumentNameSource makeArgumentNameSource(ArgumentParser argParser, Class<?> delegateClass,
+			SourceFileReader sourceReader) throws IOException {
+		List<String> sourceLines = getSourceCodeLines(delegateClass, argParser, sourceReader);
 		ArgumentNameSource argSource = new ArgumentNameSource() {
 		};
 		if (null != sourceLines) {
@@ -98,16 +101,16 @@ public class CommandLineMain {
 		return argSource;
 	}
 
-	private static List<String> getSourceCodeLines(Class<?> delegateClass, ArgumentParser argParser)
-			throws IOException {
+	private static List<String> getSourceCodeLines(Class<?> delegateClass, ArgumentParser argParser,
+			SourceFileReader sourceReader) throws IOException {
 		List<String> sourceLines = null;
 		Optional<File> sourceArchive = argParser.getSourceZipOrJarFileObjectOption();
 		Optional<File> sourceFile = argParser.getSourceFileObjectOption();
 
 		if (sourceArchive.isPresent()) {
-			sourceLines = FileUtils.readFilesInZipArchive(sourceArchive.get(), classToPaths(delegateClass));
+			sourceLines = sourceReader.readFilesInZipArchive(sourceArchive.get(), classToPaths(delegateClass));
 		} else if (sourceFile.isPresent()) {
-			sourceLines = FileUtils.readTrimmedLinesFromFilePath(sourceFile.get().toPath());
+			sourceLines = sourceReader.readTrimmedLinesFromFilePath(sourceFile.get().toPath());
 		}
 		return sourceLines;
 	}
