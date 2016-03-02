@@ -15,7 +15,7 @@ import org.interfaceit.DelegateMethodGenerator;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.meta.arguments.LookupArgumentNameSource;
 import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader;
-import org.interfaceit.util.ZipFileUtils;
+import org.interfaceit.util.FileUtils;
 
 /**
  * Main class for command line interface
@@ -53,7 +53,7 @@ public class CommandLineMain {
 			printArgFeedbackAndHelp(args, out);
 		} else {
 			try {
-				tryFileGeneration(out, generator, argParser);
+				generateClassFileAndPrintFeedback(out, generator, argParser);
 			} catch (ClassNotFoundException cnfe) {
 				out.println("Incorrect or unspecified class name in arguments: " + args);
 			}
@@ -71,49 +71,57 @@ public class CommandLineMain {
 		out.println(ArgumentParser.getHelpText());
 	}
 
-	private static void tryFileGeneration(PrintStream out, ClassCodeGenerator generator, ArgumentParser argParser)
-			throws ClassNotFoundException {
-		File directoryPath = argParser.getWriteDirectoryPath();
+	private static void generateClassFileAndPrintFeedback(PrintStream out, ClassCodeGenerator generator,
+			ArgumentParser argParser) throws ClassNotFoundException {
 		Class<?> delegateClass = argParser.getDelegateClass();
-		String targetInterfaceName = argParser.getTargetInterfaceName();
-		String targetPackageName = argParser.getPackageName();
-		Optional<File> sourceArchive = argParser.getSourceZipOrJarFileObjectOption();
-		ArgumentNameSource argSource = new ArgumentNameSource() {
-		};
-		if (sourceArchive.isPresent()) {
-			argSource = new LookupArgumentNameSource();
-			List<String> sourceLines;
-			try {
-				sourceLines = ZipFileUtils.readFilesInZipArchive(sourceArchive.get(), classToPaths(delegateClass));
-				new SourceLineReadingArgumentNameLoader().parseAndLoad(sourceLines,
-						(LookupArgumentNameSource) argSource);
-			} catch (IOException e) {
-				e.printStackTrace(); // TODO: improve error handling
-			}
-		}
 
 		try {
-			File result = generator.generateClassToFile(directoryPath, targetInterfaceName, delegateClass,
-					targetPackageName, argSource);
+			File result = generator.generateClassToFile(argParser.getWriteDirectoryPath(),
+					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
+					makeArgumentNameSource(argParser, delegateClass));
 			giveSuccessFeedback(result, out);
 		} catch (IOException e) {
 			e.printStackTrace(out); // TODO: improve error handling
 		}
 	}
 
+	private static ArgumentNameSource makeArgumentNameSource(ArgumentParser argParser, Class<?> delegateClass)
+			throws IOException {
+		List<String> sourceLines = getSourceCodeLines(delegateClass, argParser);
+		ArgumentNameSource argSource = new ArgumentNameSource() {
+		};
+		if (null != sourceLines) {
+			argSource = new LookupArgumentNameSource();
+			new SourceLineReadingArgumentNameLoader().parseAndLoad(sourceLines, (LookupArgumentNameSource) argSource);
+
+		}
+		return argSource;
+	}
+
+	private static List<String> getSourceCodeLines(Class<?> delegateClass, ArgumentParser argParser)
+			throws IOException {
+		List<String> sourceLines = null;
+		Optional<File> sourceArchive = argParser.getSourceZipOrJarFileObjectOption();
+		Optional<File> sourceFile = argParser.getSourceFileObjectOption();
+
+		if (sourceArchive.isPresent()) {
+			sourceLines = FileUtils.readFilesInZipArchive(sourceArchive.get(), classToPaths(delegateClass));
+		} else if (sourceFile.isPresent()) {
+			sourceLines = FileUtils.readTrimmedLinesFromFilePath(sourceFile.get().toPath());
+		}
+		return sourceLines;
+	}
+
 	private static String[] classToPaths(Class<?> target) {
 		List<String> paths = new ArrayList<>();
 		Class<?> current = target;
-		while(null != current && !"java.lang.Object".equals(current.getCanonicalName())) {
+		while (null != current && !"java.lang.Object".equals(current.getCanonicalName())) {
 			paths.add(current.getCanonicalName().replace('.', '/') + ".java");
 			current = current.getSuperclass();
 		}
 		return paths.toArray(new String[0]);
 	}
 
-	/**
-	 * @param result
-	 */
 	private static void giveSuccessFeedback(File result, PrintStream out) {
 		out.println("Wrote file: " + result.getAbsolutePath());
 	}

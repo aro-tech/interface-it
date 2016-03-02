@@ -1,18 +1,43 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.aro_tech</groupId>
+	<groupId>org.interfaceit</groupId>
 	<artifactId>interface-it</artifactId>
-	<version>0.6.0</version>
-	<name>InterfaceIt</name>
+	<version>0.7.0_SNAPSHOT</version>
+	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Java code generator to create an interface which delegates to a class's static methods</description>
+	<url>https://github.com/aro-tech/interface-it</url>
+	<licenses>
+		<license>
+			<name>Mozilla Public License 2.0</name>
+			<url>https://www.mozilla.org/en-US/MPL/2.0/</url>
+		</license>
+	</licenses>
 
-
+	<developers>
+		<developer>
+			<name>aro-tech</name>
+			<email>aro_tech@gmx.com</email>
+			<organization>aro-tech</organization>
+			<organizationUrl>https://github.com/aro-tech/interface-it</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git@github.com:aro-tech/interface-it.git</connection>
+		<developerConnection>scm:git:git@github.com:aro-tech/interface-it.git</developerConnection>
+		<url>git@github.com:aro-tech/interface-it.git</url>
+	</scm>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/aro-tech/interface-it/issues</url>
+	</issueManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+
+
 
 	<dependencies>
 		<dependency>

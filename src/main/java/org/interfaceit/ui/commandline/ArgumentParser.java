@@ -21,7 +21,7 @@ public class ArgumentParser {
 		WRITE_DIRECTORY("d", "Directory which will contain the generated file (default value is \".\")"),
 		DELEGATE_CLASS("c", "Fully qualified delegate class name (ex: \"java.lang.Math\")"),
 		TARGET_PACKAGE("p", "The package name for the target interface (ex: \"org.example\")"),
-		SOURCE_ZIP("s","File path of the jar or zip file containg source code to be used to recover argument names lost during compilation");
+		SOURCE_ZIP("s","File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation");
 		
 		private final String flag;
 		private final String helpMessage;
@@ -139,16 +139,34 @@ public class ArgumentParser {
 	 * @return Optional object containing possible source code archive file reference
 	 */
 	public Optional<File> getSourceZipOrJarFileObjectOption() {
-		return Optional.ofNullable(getSourceBundleFileFromArgs());
+		return Optional.ofNullable(getSourceBundleFileFromArgs(".zip",".jar"));
 	}
 
-	private File getSourceBundleFileFromArgs() {
+	private File getSourceBundleFileFromArgs(String... expectedExtensions) {
 		String path = findValueAfterFlag(Flag.SOURCE_ZIP, null);
 		File file = null;
 		if(null != path) {
-			file = new File(path);
+			if(expectedExtensions.length < 1 || endsWithOneOf(path, expectedExtensions)) {
+				file = new File(path);				
+			}
 		}
 		return file;
+	}
+	
+	
+
+	private boolean endsWithOneOf(String path, String[] expectedExtensionsLowerCase) {
+		String pathLowerCase = path.toLowerCase();
+		for(String cur: expectedExtensionsLowerCase) {
+			if(pathLowerCase.endsWith(cur)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Optional<File> getSourceFileObjectOption() {
+		return Optional.ofNullable(getSourceBundleFileFromArgs(".java", ".txt"));
 	}
 
 }

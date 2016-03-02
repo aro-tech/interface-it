@@ -1,0 +1,6 @@
+@Deprecated
+public static String encode(String stringToEncode) {}
+
+public static String encode(String stringToEncode,
+            String characterEncoding)
+                     throws UnsupportedEncodingException {}
