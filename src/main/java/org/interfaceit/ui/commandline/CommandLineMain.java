@@ -15,6 +15,7 @@ import org.interfaceit.DelegateMethodGenerator;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.meta.arguments.LookupArgumentNameSource;
 import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader;
+import org.interfaceit.ui.meta.error.UnableToReadSource;
 import org.interfaceit.util.FileUtils;
 import org.interfaceit.util.SourceFileReader;
 
@@ -82,15 +83,28 @@ public class CommandLineMain {
 			File result = generator.generateClassToFile(argParser.getWriteDirectoryPath(),
 					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
 					makeArgumentNameSource(argParser, delegateClass, sourceReader));
-			giveSuccessFeedback(result, out);
-		} catch (IOException e) {
-			e.printStackTrace(out); // TODO: improve error handling
+			printSuccessFeedback(result, out);
+		} catch (UnableToReadSource err) {
+			printErrorFeedback(out, err.getCause(),
+					"Error reading specified source file: " + argParser.getSourceFlagText());
+		} catch (Exception e) {
+			printErrorFeedback(out, e, "Error writing output.");
 		}
 	}
 
+	private static void printErrorFeedback(PrintStream out, Exception e, String message) {
+		out.println(message);
+		e.printStackTrace(out);
+	}
+
 	private static ArgumentNameSource makeArgumentNameSource(ArgumentParser argParser, Class<?> delegateClass,
-			SourceFileReader sourceReader) throws IOException {
-		List<String> sourceLines = getSourceCodeLines(delegateClass, argParser, sourceReader);
+			SourceFileReader sourceReader) throws UnableToReadSource {
+		List<String> sourceLines;
+		try {
+			sourceLines = getSourceCodeLines(delegateClass, argParser, sourceReader);
+		} catch (IOException e) {
+			throw new UnableToReadSource(e);
+		}
 		ArgumentNameSource argSource = new ArgumentNameSource() {
 		};
 		if (null != sourceLines) {
@@ -125,7 +139,7 @@ public class CommandLineMain {
 		return paths.toArray(new String[0]);
 	}
 
-	private static void giveSuccessFeedback(File result, PrintStream out) {
+	private static void printSuccessFeedback(File result, PrintStream out) {
 		out.println("Wrote file: " + result.getAbsolutePath());
 	}
 

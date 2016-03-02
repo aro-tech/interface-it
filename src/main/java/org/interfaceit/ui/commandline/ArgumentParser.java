@@ -21,7 +21,7 @@ public class ArgumentParser {
 		WRITE_DIRECTORY("d", "Directory which will contain the generated file (default value is \".\")"),
 		DELEGATE_CLASS("c", "Fully qualified delegate class name (ex: \"java.lang.Math\")"),
 		TARGET_PACKAGE("p", "The package name for the target interface (ex: \"org.example\")"),
-		SOURCE_ZIP("s","File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation");
+		SOURCE_PATH("s","File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation");
 		
 		private final String flag;
 		private final String helpMessage;
@@ -97,7 +97,6 @@ public class ArgumentParser {
 	}
 
 	/**
-	 * 
 	 * @return true if the arguments indicate that this is a simple version
 	 *         request
 	 */
@@ -106,7 +105,6 @@ public class ArgumentParser {
 	}
 
 	/**
-	 * 
 	 * @return Help text with args
 	 */
 	public static String getHelpText() {
@@ -143,7 +141,7 @@ public class ArgumentParser {
 	}
 
 	private File getSourceBundleFileFromArgs(String... expectedExtensions) {
-		String path = findValueAfterFlag(Flag.SOURCE_ZIP, null);
+		String path = findValueAfterFlag(Flag.SOURCE_PATH, null);
 		File file = null;
 		if(null != path) {
 			if(expectedExtensions.length < 1 || endsWithOneOf(path, expectedExtensions)) {
@@ -165,8 +163,18 @@ public class ArgumentParser {
 		return false;
 	}
 
+	/**
+	 * @return optional of file object, present if the -s flag specifies a .java or .txt file
+	 */
 	public Optional<File> getSourceFileObjectOption() {
 		return Optional.ofNullable(getSourceBundleFileFromArgs(".java", ".txt"));
+	}
+
+	/**
+	 * @return The text for the -s flag
+	 */
+	public String getSourceFlagText() {
+		return this.findValueAfterFlag(Flag.SOURCE_PATH, "");
 	}
 
 }
