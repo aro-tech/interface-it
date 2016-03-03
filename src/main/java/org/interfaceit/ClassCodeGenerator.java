@@ -15,7 +15,7 @@ public interface ClassCodeGenerator {
 	/**
 	 * The version to display
 	 */
-	String PRODUCT_VERSION = "0.7.0_SNAPSHOT";
+	String PRODUCT_VERSION = "0.7.0-SNAPSHOT";
 
 	/**
 	 * Generate and write to file a delegate wrapping mix-in interface
