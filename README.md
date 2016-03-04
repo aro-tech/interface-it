@@ -52,6 +52,10 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 
 ###v0.7.0
 
+ * improved error handling (done)
+ 
+ * read individual source file or jar/zip rather than only jar or zip for argument names (done)
+
  * access to release binaries
  
  * handle deprecated methods according to a flag
