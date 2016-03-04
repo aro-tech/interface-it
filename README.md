@@ -45,6 +45,9 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 -s > File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation 
 ```
 
+##Latest release
+[v0.6.0] (https://github.com/aro-tech/interface-it/releases/tag/v0.6.0) 
+
 ##Roadmap and future directions:
 
 ###v0.7.0
