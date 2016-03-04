@@ -1,6 +1,7 @@
 # interface-it
 Java-8 mix-in interface code generator
 
+##Background
 The arrival of default interfaces in Java 8 opens the door to "mix-in" interfaces - a form of multiple inheritance.
 
 For example:
@@ -12,19 +13,41 @@ public class A implements MixinB, MixinC {
 In Java 8 it's possible that class A, despite having 0 implementation, is actually a useful class because MixinB and MixinC have
 default method implementations.
 
+##What interface-it does
+
 The interface-it library uses reflection to auto-generate Java code for mix-in classes that delegate to static methods.  
+
+##Why?
 
 This can be useful in unit tests, because libraries like Mockito and AssertJ use a lot of static methods. With a generated 
 mix-in, you can replace static methods by inherited methods.
 
-It's also useful for refactoring legacy code. You can replace static calls with calls to a mix-in interface that can be mocked
-in unit tests.
+It's also useful for refactoring legacy code. You can replace static calls with calls to a mix-in interface - reducing the coupling in the design because the mix-in can be overridden (and mocked in unit tests).  
 
 Anywhere that you use static imports, you might want to consider generating a mix-in interface instead.
 
-There are examples at: https://github.com/aro-tech/interface-it/examples
+##How to use interface-it
 
-Possible roadmap and future directions:
+Many of you may just need to copy and paste a source file from the [examples](https://github.com/aro-tech/interface-it/examples "examples")
+ and adjust it to the needs of your project.  There are delegate interfaces for [AssertJ](https://github.com/aro-tech/interface-it/blob/master/examples/AssertJ.java "AssertJ"), [Mockito](https://github.com/aro-tech/interface-it/blob/master/examples/Mockito.java "Mockito"), and [JUnit Assert](https://github.com/aro-tech/interface-it/blob/master/examples/Assert.java "JUnit Assert") which you can use in your own unit tests.  A unit test class which implements some of these is [DelegateMethodGeneratorTest](https://github.com/aro-tech/interface-it/blob/master/src/test/java/org/interfaceit/DelegateMethodGeneratorTest.java "DelegateMethodGeneratorTest.java source").
+
+If you want to generate mix-ins which wrap other static classes, such as in your own legacy code, you need to build the jar file using `mvn clean package`. *Coming soon: access to release binaries.*
+
+Once you have the binary, you run the jar file, providing a classpath which allows loading the class you want to wrap (and any classes it needs to load for its method signatures) and the appropriate command-line arguments. [An example .bat file](https://github.com/aro-tech/interface-it/blob/master/examples/mockitoComandLineExample.bat "Example .bat file: mockitoComandLineExample.bat") is provided to show how this is done.   
+ 
+##Command-line flags
+```
+-v > Write version number.
+-n > Name of the target interface (ex: "MyMixin")
+-d > Directory which will contain the generated file (default value is ".")
+-c > Fully qualified delegate class name (ex: "java.lang.Math")
+-p > The package name for the target interface (ex: "org.example")
+-s > File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation 
+```
+
+##Possible roadmap and future directions:
+
+ * access to release binaries
  
  * handle deprecated methods according to a flag
  
@@ -37,7 +60,7 @@ Possible roadmap and future directions:
  * Generate mix-ins for singletons ?
 
 
-Acknowledgments: 
+##Acknowledgments 
 Inspired by the following articles:
  - http://blog.javabien.net/2014/04/23/what-if-assertj-used-java-8/
  - https://solidsoft.wordpress.com/2015/12/01/using-mockito-without-static-imports-with-java-8/

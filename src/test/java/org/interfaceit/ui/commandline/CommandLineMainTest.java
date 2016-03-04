@@ -92,7 +92,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		verify(out).println(ArgumentParser.getHelpText());
 		verifyZeroInteractions(generator);
 	}
-	
+
 	@Test
 	public void execute_prints_error_message_on_generation_error() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
@@ -101,7 +101,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(contains("Error writing output"));
 	}
-	
+
 	@Test
 	public void execute_prints_error_message_source_jar_read_error() throws ClassNotFoundException, IOException {
 		String sourceFile = "bogus.jar";
@@ -110,5 +110,27 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(contains("Error reading specified source file: " + sourceFile));
 	}
+
+	@Test
+	public void execute_prints_error_message_notifying_about_jar_flag() throws ClassNotFoundException, IOException {
+		String sourceFile = "bogus.jar";
+		String[] args = { "-cp", "whatever", "-d", ".", "-n", "Thingy", "-c", "org.whoosit.Whazzit", "-p",
+				"com.example", "-s", sourceFile };
+		// doThrow(new IOException()).when(reader).readFilesInZipArchive(any(),
+		// any());
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
+		verify(out).println(contains("Incorrect or unspecified"));
+		verify(out).println(contains("Class not found: org.whoosit.Whazzit"));
+		verify(out).println(contains("IMPORTANT: If you run this application using the "
+				+ "\"-jar\" flag, the classpath in the commandline is ignored by Java.  "
+				+ "\nTry adding this jar to the classpath, eliminate the -jar flag, and add the main class:"
+				+ " java -cp <the path of this jar>;whatever org.interfaceit.ui.commandline.CommandLineMain -n Thingy -p com.example -c org.whoosit.Whazzit -s bogus.jar -d ."));
+	}
+
+	// ArgumentParser argParser = makeArgumentParser("-n", "MyTestMockito",
+	// "-c", "org.mockito.Mockito", "-p",
+	// "org.test.package", "-d", "tmp", "-s",
+	// "<YOUR HOME
+	// DIRECTORY>\\.m2\\repository\\org\\mockito\\mockito-core\\2.0.43-beta\\mockito-core-2.0.43-beta-sources.jar");
 
 }

@@ -5,6 +5,7 @@ package org.interfaceit.ui.commandline;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import org.interfaceit.util.mixin.AssertJ;
 import org.junit.Before;
@@ -161,9 +162,8 @@ public class ArgumentParserTest implements AssertJ {
 	public void can_get_source_jar_path() throws IOException {
 		String pathname = "relative/path/Fake.jar";
 		ArgumentParser argParser = makeArgumentParser("", "-s", pathname, "");
-		assertThat(
-				argParser.getSourceZipOrJarFileObjectOption().get().getAbsolutePath())
-						.isEqualTo(new File(pathname).getAbsolutePath());
+		assertThat(argParser.getSourceZipOrJarFileObjectOption().get().getAbsolutePath())
+				.isEqualTo(new File(pathname).getAbsolutePath());
 		assertThat(argParser.getSourceFileObjectOption().isPresent()).isFalse();
 	}
 
@@ -179,8 +179,18 @@ public class ArgumentParserTest implements AssertJ {
 		String pathname = "relative/path/Fake.java";
 		ArgumentParser argParser = makeArgumentParser("", "-s", pathname, "");
 		assertThat(argParser.getSourceZipOrJarFileObjectOption().isPresent()).isFalse();
-		assertThat(
-				argParser.getSourceFileObjectOption().get().getAbsolutePath())
-						.isEqualTo(new File(pathname).getAbsolutePath());
+		assertThat(argParser.getSourceFileObjectOption().get().getAbsolutePath())
+				.isEqualTo(new File(pathname).getAbsolutePath());
+	}
+
+	@Test
+	public void can_get_map_of_flags() {
+		ArgumentParser argParser = makeArgumentParser("-n", "MyTestMockito", "-c", "org.mockito.Mockito", "-p",
+				"org.test.package", "-d", "tmp", "-s",
+				"<YOUR HOME DIRECTORY>\\.m2\\repository\\org\\mockito\\mockito-core\\2.0.43-beta\\mockito-core-2.0.43-beta-sources.jar");
+
+		Map<String, String> map = argParser.getFlagMap();
+
+		assertThat(map).isNotEmpty().containsEntry("-c", "org.mockito.Mockito").containsEntry("-n", "MyTestMockito");
 	}
 }

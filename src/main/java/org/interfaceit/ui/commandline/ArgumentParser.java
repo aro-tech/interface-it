@@ -4,6 +4,8 @@
 package org.interfaceit.ui.commandline;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -14,6 +16,7 @@ import java.util.Optional;
  */
 public class ArgumentParser {
 	private final String[] args;
+	private Map<String, String> flagMap = new HashMap<>();
 
 	static enum Flag {
 		VERSION("v", "Write version number."),
@@ -56,6 +59,15 @@ public class ArgumentParser {
 	public ArgumentParser(String[] args) {
 		super();
 		this.args = args;
+		String currentFlag = null;
+		for(String currentWord: args) {
+			if(null == currentFlag && currentWord.startsWith("-")) {
+				currentFlag = currentWord;
+			} else {
+				flagMap.put(currentFlag, currentWord);
+				currentFlag = null;
+			}
+		}
 	}
 
 	/**
@@ -74,12 +86,11 @@ public class ArgumentParser {
 	}
 
 	private String findValueAfterFlag(Flag flag, String defaultValue) {
-		for (int i = 0; i < args.length; i++) {
-			if (args[i].equals(flag.getFlag()) && args.length > i + 1) {
-				return args[i + 1];
-			}
+		String value = flagMap.get(flag.getFlag());
+		if(null == value) {
+			value = defaultValue;
 		}
-		return defaultValue;
+		return value;
 	}
 
 	/**
@@ -174,6 +185,14 @@ public class ArgumentParser {
 	 */
 	public String getSourceFlagText() {
 		return this.findValueAfterFlag(Flag.SOURCE_PATH, "");
+	}
+
+	/**
+	 * @return map of arguments where an entry contains flag and value (ex: "-c"
+	 *         -> "org.mockito.Mockito")
+	 */
+	public Map<String, String> getFlagMap() {
+		return flagMap;
 	}
 
 }

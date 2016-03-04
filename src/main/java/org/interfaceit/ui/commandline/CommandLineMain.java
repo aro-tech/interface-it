@@ -7,8 +7,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.interfaceit.ClassCodeGenerator;
 import org.interfaceit.DelegateMethodGenerator;
@@ -59,9 +62,35 @@ public class CommandLineMain {
 			try {
 				generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader);
 			} catch (ClassNotFoundException cnfe) {
-				out.println("Incorrect or unspecified class name in arguments: " + args);
+				String argsStr = String.join("\n>", Arrays.asList(args));
+				out.println("Incorrect or unspecified class name in arguments: \n>" + argsStr);
+				out.println("Class not found: " + cnfe.getMessage());
+				warnIfUsingJarAndClasspathFlags(out, argParser);
 			}
 		}
+	}
+
+	private static void warnIfUsingJarAndClasspathFlags(PrintStream out, ArgumentParser argParser) {
+		Map<String, String> flagMap = argParser.getFlagMap();
+		String cp = getClasspathFromArgs(flagMap);
+		if (null != cp) {
+			String flags = flagMap.entrySet().stream()
+					.filter(e -> !"-cp".equals(e.getKey()) && !"-classpath".equals(e.getKey()))
+					.map(e -> String.join(" ", e.getKey(), e.getValue())).collect(Collectors.joining(" "));
+			out.println(
+					"IMPORTANT: If you run this application using the \"-jar\" flag, the classpath in the commandline is ignored by Java.  "
+							+ "\nTry adding this jar to the classpath, eliminate the -jar flag, and add the main class: "
+							+ "java -cp <the path of this jar>;" + cp
+							+ " org.interfaceit.ui.commandline.CommandLineMain " + flags.toString());
+		}
+	}
+
+	private static String getClasspathFromArgs(Map<String, String> flagMap) {
+		String cp = flagMap.get("-cp");
+		if (null == cp) {
+			cp = flagMap.get("-classpath");
+		}
+		return cp;
 	}
 
 	private static void printVersion(PrintStream out) {
