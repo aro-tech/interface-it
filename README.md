@@ -45,19 +45,27 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 -s > File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation 
 ```
 
-##Possible roadmap and future directions:
+##Roadmap and future directions:
+
+###v0.7.0
 
  * access to release binaries
  
  * handle deprecated methods according to a flag
- 
- * custom ANT task ?
- 
- * Maven plugin ?
- 
- * Eclipse plugin ?
- 
+
+###future
+
  * Generate mix-ins for singletons ?
+
+
+###Possible complementary projects
+ 
+ * custom ANT task 
+ 
+ * Maven plugin 
+ 
+ * Eclipse plugin 
+ 
 
 
 ##Acknowledgments 
