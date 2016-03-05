@@ -21,6 +21,7 @@ public interface URLEncoding {
      * Delegate call to public static java.lang.String java.net.URLEncoder.encode(java.lang.String)
      * {@link java.net.URLEncoder#encode(java.lang.String)}
      */
+    @Deprecated
     default String encode(String stringToEncode) {
         return URLEncoder.encode(stringToEncode);
     }

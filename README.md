@@ -58,12 +58,13 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 
  * access to release binaries
  
- * handle deprecated methods according to a flag
+ * propagate @Deprecated annotation (done)
 
 ###future
 
  * Generate mix-ins for singletons ?
 
+ * ignore deprecated methods according to a flag ?
 
 ###Possible complementary projects
  

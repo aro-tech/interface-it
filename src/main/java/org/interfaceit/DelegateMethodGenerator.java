@@ -109,9 +109,9 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 				.append(method.toGenericString()).append(NEWLINE).append(indentationUnit).append(" * ")
 				.append("{@link ").append(method.getDeclaringClass().getTypeName()).append('#').append(method.getName())
 				.append("(").append(paramsForJavadocLink.toString()).append(")}").append(NEWLINE)
-				.append(indentationUnit).append(" */").append(NEWLINE).append(indentationUnit)
-				.append(this.makeMethodSignature(method, importsOut, argumentNameSource)).append(" {").append(NEWLINE)
-				.append(indentationUnit).append(indentationUnit)
+				.append(indentationUnit).append(" */").append(NEWLINE)
+				.append(this.makeMethodSignature(method, importsOut, argumentNameSource, indentationUnit)).append(" {")
+				.append(NEWLINE).append(indentationUnit).append(indentationUnit)
 				.append(this.makeDelegateCall(method, targetInterfaceName, importsOut, argumentNameSource))
 				.append(NEWLINE).append(indentationUnit).append("}").append(NEWLINE);
 
@@ -127,18 +127,27 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 *            return type
 	 * @param argumentNameSource
 	 *            For naming arguments
+	 * @param indentationSpaces
 	 * @return The signature
 	 */
 	protected String makeMethodSignature(Method method, Set<String> importNamesOut,
-			ArgumentNameSource argumentNameSource) {
+			ArgumentNameSource argumentNameSource, String indentationUnit) {
 		StringBuilder buf = new StringBuilder();
-		buf.append("default ").append(makeGenericMarkerAndUpdateImports(method, importNamesOut));
+		if (isDeprecated(method)) {
+			buf.append(indentationUnit).append("@Deprecated").append(NEWLINE);
+		}
+		buf.append(indentationUnit).append("default ")
+				.append(makeGenericMarkerAndUpdateImports(method, importNamesOut));
 		buf.append(extractShortNameAndUpdateImports(importNamesOut, method.getGenericReturnType().getTypeName()));
 		buf.append(' ').append(method.getName()).append('(');
 		appendMethodArgumentsInSignature(method, importNamesOut, buf, argumentNameSource);
 		buf.append(')');
 		addThrowsClauseToSignatureUpdatingImports(method, importNamesOut, buf);
 		return buf.toString();
+	}
+
+	private boolean isDeprecated(Method method) {
+		return method.getDeclaredAnnotationsByType(Deprecated.class).length > 0;
 	}
 
 	private void addThrowsClauseToSignatureUpdatingImports(Method method, Set<String> importNamesOut,

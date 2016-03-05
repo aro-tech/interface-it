@@ -89,7 +89,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		Assert.assertTrue(when.isPresent());
 
-		assertThat(underTest.makeMethodSignature(when.get(), this.imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(when.get(), this.imports, defaultNameSource, ""))
 				.startsWith("default <T> OngoingStubbing<T> when(T");
 
 		assertThat(this.imports).contains("org.mockito.stubbing.OngoingStubbing");
@@ -102,7 +102,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		Assert.assertTrue(verifyMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, defaultNameSource, ""))
 				.startsWith("default <T> T verify(T").contains(", VerificationMode").endsWith(")");
 
 		assertThat(this.imports).contains("org.mockito.verification.VerificationMode");
@@ -115,7 +115,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		Assert.assertTrue(doubleThatMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), imports, defaultNameSource).trim())
+		assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default double doubleThat(ArgumentMatcher<Double> ").endsWith(")");
 
 		assertThat(this.imports).contains("org.mockito.ArgumentMatcher");
@@ -129,7 +129,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		Assert.assertTrue(method.isPresent());
 
-		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource).trim())
+		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default Throwable catchThrowable(ThrowableAssert.ThrowingCallable ").endsWith(")");
 
 		assertThat(this.imports).contains("org.assertj.core.api.ThrowableAssert");
@@ -145,7 +145,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		Assert.assertTrue(method.isPresent());
 
-		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource).trim())
+		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default <T extends AssertDelegateTarget> T assertThat(T ").endsWith(")");
 
 		assertThat(this.imports).contains("org.assertj.core.api.AssertDelegateTarget");
@@ -159,7 +159,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		Assert.assertTrue(entryMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(entryMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(entryMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace("default <K,V> MapEntry<K, V> entry(K arg0, V arg1)");
 
 		assertThat(this.imports).contains("org.assertj.core.data.MapEntry");
@@ -183,7 +183,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		Assert.assertTrue(assertMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(assertMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(assertMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace(
 						"default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0)");
 
@@ -198,7 +198,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		Assert.assertTrue(tupleMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(tupleMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(tupleMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace("default Tuple tuple(Object... arg0)");
 
 		assertThat(this.imports).contains("org.assertj.core.groups.Tuple");
@@ -299,7 +299,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 		HashSet<String> importNamesOut = new HashSet<String>();
 		String signature = underTest.makeMethodSignature(Thread.class.getMethod("sleep", long.class), importNamesOut,
-				defaultNameSource);
+				defaultNameSource, "");
 
 		assertThat(signature).contains(" throws InterruptedException");
 		assertThat(importNamesOut).contains("java.lang.InterruptedException");
@@ -409,7 +409,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		when(this.mockArgNameSource.getArgumentNameFor(verifyMethod.get(), 0)).thenReturn("mock");
 		when(this.mockArgNameSource.getArgumentNameFor(verifyMethod.get(), 1)).thenReturn("mode");
 
-		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, mockArgNameSource))
+		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, mockArgNameSource, ""))
 				.isEqualToIgnoringWhitespace("default <T> T verify(T mock, VerificationMode mode)");
 
 		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "Mockito", imports, mockArgNameSource))
@@ -417,8 +417,16 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 
 	}
 
-	// TODO: mapping argument names
-	// TODO: generate whole interface file with imports
+	@Test
+	public void should_propagate_deprecation() {
+		Optional<Method> deprecatedMethod = underTest.listStaticMethodsForClass(java.net.URLEncoder.class).stream()
+				.filter((Method m) -> m.getDeclaredAnnotationsByType(Deprecated.class).length > 0).findFirst();
+
+		Assert.assertTrue(deprecatedMethod.isPresent());
+
+		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "   ")).startsWith("   @Deprecated" + System.lineSeparator() + "   default");
+	}
+
 	// TODO: handle singleton calls?
 	// TODO: mapping from Javadoc
 
