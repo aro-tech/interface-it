@@ -13,6 +13,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,26 +40,36 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @return List of all static methods
 	 */
 	protected List<Method> listStaticMethodsForClass(Class<?> clazz) {
-		return Arrays.stream(clazz.getMethods()).filter(m -> Modifier.isStatic(m.getModifiers())).sorted((m1, m2) -> {
+		return Arrays.stream(clazz.getMethods()).filter(m -> Modifier.isStatic(m.getModifiers()))
+				.sorted(makeMethodSorter()).collect(Collectors.toList());
+	}
+
+	private Comparator<? super Method> makeMethodSorter() {
+		return (m1, m2) -> {
 			int val = m1.getName().compareTo(m2.getName());
 			int parameterCountM1 = m1.getParameterCount();
 			if (val == 0) {
 				val = Integer.compare(parameterCountM1, m2.getParameterCount());
 			}
 			if (val == 0) {
-				for (int i = 0; val == 0 && i < parameterCountM1; i++) {
-					val = ClassNameUtils.extractSimpleName(m1.getParameters()[i].getParameterizedType().getTypeName())
-							.toLowerCase()
-							.compareTo(ClassNameUtils
-									.extractSimpleName(m2.getParameters()[i].getParameterizedType().getTypeName())
-									.toLowerCase());
-				}
+				val = compareSimpleTypeNamesOfParameters(m1, m2, val, parameterCountM1);
 			}
 			if (val == 0) {
 				val = m1.toGenericString().compareTo(m2.toGenericString());
 			}
 			return val;
-		}).collect(Collectors.toList());
+		};
+	}
+
+	private int compareSimpleTypeNamesOfParameters(Method m1, Method m2, int val, int parameterCountM1) {
+		for (int i = 0; val == 0 && i < parameterCountM1; i++) {
+			val = ClassNameUtils.extractSimpleName(m1.getParameters()[i].getParameterizedType().getTypeName())
+					.toLowerCase()
+					.compareTo(ClassNameUtils
+							.extractSimpleName(m2.getParameters()[i].getParameterizedType().getTypeName())
+							.toLowerCase());
+		}
+		return val;
 	}
 
 	/**
@@ -102,17 +113,10 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
 			ArgumentNameSource argumentNameSource, String indentationUnit) {
 		StringBuilder buf = new StringBuilder();
-		StringBuilder paramsForJavadocLink = new StringBuilder();
-		for (Type cur : method.getParameterTypes()) {
-			if (paramsForJavadocLink.length() > 0) {
-				paramsForJavadocLink.append(',');
-			}
-			paramsForJavadocLink.append(cur.getTypeName());
-		}
 		buf.append(indentationUnit).append("/**").append(NEWLINE).append(indentationUnit).append(" * Delegate call to ")
 				.append(method.toGenericString()).append(NEWLINE).append(indentationUnit).append(" * ")
 				.append("{@link ").append(method.getDeclaringClass().getTypeName()).append('#').append(method.getName())
-				.append("(").append(paramsForJavadocLink.toString()).append(")}").append(NEWLINE)
+				.append("(").append(generateParamsForJavadocLink(method)).append(")}").append(NEWLINE)
 				.append(indentationUnit).append(" */").append(NEWLINE)
 				.append(this.makeMethodSignature(method, importsOut, argumentNameSource, indentationUnit)).append(" {")
 				.append(NEWLINE).append(indentationUnit).append(indentationUnit)
@@ -120,6 +124,17 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 				.append(NEWLINE).append(indentationUnit).append("}").append(NEWLINE);
 
 		return buf.toString();
+	}
+
+	private String generateParamsForJavadocLink(Method method) {
+		StringBuilder paramsForJavadocLink = new StringBuilder();
+		for (Type cur : method.getParameterTypes()) {
+			if (paramsForJavadocLink.length() > 0) {
+				paramsForJavadocLink.append(',');
+			}
+			paramsForJavadocLink.append(cur.getTypeName());
+		}
+		return paramsForJavadocLink.toString();
 	}
 
 	/**
