@@ -36,7 +36,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * Get all static methods for a class
 	 * 
 	 * @param clazz
-	 * @return
+	 * @return List of all static methods
 	 */
 	protected List<Method> listStaticMethodsForClass(Class<?> clazz) {
 		return Arrays.stream(clazz.getMethods()).filter(m -> Modifier.isStatic(m.getModifiers())).sorted((m1, m2) -> {
@@ -71,7 +71,8 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param importsOut
 	 *            The method potentially adds values to this set if imports are
 	 *            required
-	 * @param argumentNameSource,
+	 * @param argumentNameSource
+	 *            Provider of argument name information lost during compilation
 	 * 
 	 * @return the code for the method delegation
 	 */
@@ -92,7 +93,10 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 *            The method potentially adds values to this set if imports are
 	 *            required
 	 * @param argumentNameSource
+	 *            Provider of argument name information lost during compilation
 	 * @param indentationUnit
+	 *            spaces to be inserted n times at the beginning of lines based
+	 *            on block depth
 	 * @return the code for the method delegation
 	 */
 	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
@@ -127,7 +131,9 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 *            return type
 	 * @param argumentNameSource
 	 *            For naming arguments
-	 * @param indentationSpaces
+	 * @param indentationUnit
+	 *            spaces to be inserted n times at the beginning of lines based
+	 *            on block depth
 	 * @return The signature
 	 */
 	protected String makeMethodSignature(Method method, Set<String> importNamesOut,
@@ -238,7 +244,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param importsOut
 	 *            For receiving imports needed
 	 * @param argumentNameSource
-	 * @return
+	 * @return The line of code which calls the delegate class's static method
 	 */
 	public String makeDelegateCall(Method method, String targetInterfaceName, Set<String> importsOut,
 			ArgumentNameSource argumentNameSource) {
@@ -309,15 +315,16 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 
 	/**
 	 * Generate Java code declaring and assigning constants which refer to each
-	 * constant in the delegate class
+	 * constant in the delegate class This version uses default indentation in
+	 * the generated Java code
 	 * 
 	 * @param clazz
 	 * @param importsUpdated
 	 *            As a side effect, the imports needed for these constants are
 	 *            added to the set
 	 * @param targetInterfaceName
-	 *            TODO
-	 * @return
+	 * @return The Java code declaring and initializing all constants for the
+	 *         wrapper interface
 	 */
 	protected String generateConstantsForClassUpdatingImports(Class<?> clazz, Set<String> importsUpdated,
 			String targetInterfaceName) {
@@ -335,8 +342,8 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 *            added to the set
 	 * @param indentationSpaces
 	 * @param targetInterfaceName
-	 *            TODO
-	 * @return
+	 * @return The Java code declaring and initializing all constants for the
+	 *         wrapper interface
 	 */
 	protected String generateConstantsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
 			int indentationSpaces, String targetInterfaceName) {

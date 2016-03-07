@@ -71,7 +71,6 @@ public class ArgumentParser {
 	}
 
 	/**
-	 * @param args
 	 * @return Package name for the target interface
 	 */
 	public String getPackageName() {

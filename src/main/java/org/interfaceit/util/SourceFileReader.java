@@ -10,8 +10,8 @@ public interface SourceFileReader {
 	/**
 	 * Extract the text lines from one or more files in a zip archive
 	 * 
-	 * @param zipFilePath
-	 * @param filePathWithinZipStructure
+	 * @param zipFile
+	 * @param filePathsWithinZipStructure
 	 * @return Lines from all the files, in sequence
 	 * @throws IOException
 	 */
