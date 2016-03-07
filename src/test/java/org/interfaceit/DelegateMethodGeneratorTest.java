@@ -428,6 +428,5 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 	}
 
 	// TODO: handle singleton calls?
-	// TODO: mapping from Javadoc
 
 }

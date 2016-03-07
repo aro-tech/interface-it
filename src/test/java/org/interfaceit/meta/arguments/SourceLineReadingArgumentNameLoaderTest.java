@@ -6,7 +6,6 @@ package org.interfaceit.meta.arguments;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.assertj.core.api.AbstractByteArrayAssert;
 import org.interfaceit.util.mixin.Mockito;
 import org.junit.Before;
 import org.junit.Test;

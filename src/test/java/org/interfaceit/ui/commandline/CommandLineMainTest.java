@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.io.PrintStream;
 
 import org.interfaceit.ClassCodeGenerator;
-import org.interfaceit.meta.arguments.ArgumentNameSource;
-import org.interfaceit.util.FileUtils;
 import org.interfaceit.util.SourceFileReader;
 import org.interfaceit.util.mixin.AssertJ;
 import org.interfaceit.util.mixin.Mockito;
