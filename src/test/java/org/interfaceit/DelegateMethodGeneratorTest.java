@@ -50,21 +50,12 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 	public void can_find_static_methods() {
 		List<Method> results = underTest.listStaticMethodsForClass(Assertions.class);// (Thread.class);
 		assertThat(results).isNotEmpty();
-		// for (Method cur : results) {
-		//
-		// if (cur.getName().equals("assertThat")) {
-		// for (Parameter p : cur.getParameters()) {
-		// System.out.println("type=" + p.getType());
-		// }
-		// }
-		// }
 	}
 
 	@Test
 	public void can_find_constants() {
 		List<Field> results = underTest.listConstantsForClass(org.mockito.Mockito.class);
 		assertThat(results).isNotEmpty();
-		// System.out.println(results);
 	}
 
 	@Test
@@ -76,7 +67,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 				"public static final Answer RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;",
 				"{@link org.mockito.Mockito#RETURNS_SMART_NULLS}",
 				"public static final Answer RETURNS_SMART_NULLS = Mockito.RETURNS_SMART_NULLS;");
-		// System.out.println(result);
 
 		assertThat(imports).contains("org.mockito.stubbing.Answer", "org.mockito.Mockito");
 
@@ -135,7 +125,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 		assertThat(this.imports).contains("org.assertj.core.api.ThrowableAssert");
 	}
 
-	// <T extends AssertDelegateTarget> T assertThat(T assertion)
 	@Test
 	public void can_generate_generic_extends_adt_method_signature_with_import() {
 		Optional<Method> method = underTest.listStaticMethodsForClass(Assertions.class).stream()
@@ -168,14 +157,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 
 	@Test
 	public void can_generate_complex_asert_method_signature_with_import() {
-
-		/*
-		 * TODO: test for return type of: public static
-		 * AbstractCharSequenceAssert<?, ? extends CharSequence>
-		 * assertThat(CharSequence actual) { return
-		 * AssertionsForInterfaceTypes.assertThat(actual); }
-		 */
-
 		Optional<Method> assertMethod = underTest.listStaticMethodsForClass(org.assertj.core.api.Assertions.class)
 				.stream().filter((Method m) -> "assertThat".equals(m.getName()) && m.getParameters().length == 1
 						&& m.getParameters()[0].getParameterizedType().toString().contains("CharSeq"))
@@ -188,7 +169,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 						"default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0)");
 
 		assertThat(this.imports).contains("org.assertj.core.api.AbstractCharSequenceAssert");
-
 	}
 
 	@Test
@@ -202,7 +182,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 				.isEqualToIgnoringWhitespace("default Tuple tuple(Object... arg0)");
 
 		assertThat(this.imports).contains("org.assertj.core.groups.Tuple");
-
 	}
 
 	@Test
@@ -253,8 +232,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 						"* {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}")
 				.contains("*/").contains("default <T> T verify(T arg0, VerificationMode arg1) {")
 				.contains("return Mockito.verify(arg0, arg1);").endsWith("}" + System.lineSeparator());
-		// System.out.println(delegateMethod);
-
 		assertThat(this.imports).contains("org.mockito.verification.VerificationMode");
 	}
 
@@ -270,8 +247,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 				.contains("* {@link org.mockito.Matchers#anyDouble()}").contains("*/")
 				.contains("default double anyDouble() {").contains("return Matchers.anyDouble();")
 				.endsWith("}" + System.lineSeparator());
-		// System.out.println(delegateMethod);
-
 		assertThat(this.imports).contains("org.mockito.Matchers");
 	}
 
@@ -287,16 +262,11 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 				.contains("{@link org.mockito.Mockito#when(java.lang.Object)}").contains("*/")
 				.contains("default <T> OngoingStubbing<T> when(T arg0) {").contains("return Mockito.when(arg0);")
 				.endsWith("}" + System.lineSeparator());
-		// System.out.println(delegateMethod);
-
 		assertThat(this.imports).contains("org.mockito.stubbing.OngoingStubbing");
 	}
 
 	@Test
 	public void signature_includes_throws() throws NoSuchMethodException, SecurityException {
-		// public static native void java.lang.Thread.sleep(long) throws
-		// java.lang.InterruptedException
-
 		HashSet<String> importNamesOut = new HashSet<String>();
 		String signature = underTest.makeMethodSignature(Thread.class.getMethod("sleep", long.class), importNamesOut,
 				defaultNameSource, "");
@@ -312,9 +282,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 		Class<org.mockito.Mockito> delegateClass = org.mockito.Mockito.class;
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, targetInterfaceName, delegateClass,
 				defaultNameSource);
-
-		// System.out.println(classText);
-
 		assertThat(classText)
 				.startsWith("package org.interfaceit.results;" + System.lineSeparator() + System.lineSeparator())
 				.doesNotContain("import org.mockito.Mockito").doesNotContain("import java.lang.Class<").contains("/**")
@@ -323,7 +290,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 						"* {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}")
 				.contains("*/").contains("default <T> T verify(T arg0, VerificationMode arg1) {")
 				.contains("return org.mockito.Mockito.verify(arg0, arg1);");
-
 	}
 
 	@Test
@@ -331,8 +297,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 		final int indentationSpaces = 5;
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, "MyMath", Math.class, defaultNameSource,
 				indentationSpaces);
-		// System.out.println(classText);
-
 		String[] lines = classText.split("\n");
 		int indentationLevel = 0;
 		for (int lineNum = 0; lineNum < lines.length; lineNum++) {
