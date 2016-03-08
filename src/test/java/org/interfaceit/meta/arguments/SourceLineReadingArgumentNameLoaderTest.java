@@ -37,7 +37,7 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	public void should_load_for_one_primitive_arg() {
 		sourceLines.add("public static AbstractByteAssert<?> assertThat(byte actual) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("assertThat", 0, "byte", "actual");
+		verify(target).add("assertThat", 0, "byte", "actual", 1);
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	public void should_load_for_one_primitive_array_arg() {
 		sourceLines.add("    public static AbstractByteArrayAssert<?> assertThat(byte[] actual) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("assertThat", 0, "byte[]", "actual");
+		verify(target).add("assertThat", 0, "byte[]", "actual", 1);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	public void should_load_for_one_object_arg() {
 		sourceLines.add(" public static BoingoBoingo flibble(java.util.OptionalLong thingy) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("flibble", 0, "OptionalLong", "thingy");
+		verify(target).add("flibble", 0, "OptionalLong", "thingy", 1);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 		sourceLines.add(" }");
 
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("flibble", 0, "OptionalLong", "thingy");
+		verify(target).add("flibble", 0, "OptionalLong", "thingy", 1);
 		verifyNoMoreInteractions(target);
 	}
 
@@ -95,8 +95,8 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 		sourceLines.add(" public static <Foosh> Foosh flibble(BoingoBoingo<Foosh> thingy) {");
 		sourceLines.add("public static boolean booleanThat(ArgumentMatcher<Boolean> matcher) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("flibble", 0, "BoingoBoingo<Foosh>", "thingy");
-		verify(target).add("booleanThat", 0, "ArgumentMatcher<Boolean>", "matcher");
+		verify(target).add("flibble", 0, "BoingoBoingo<Foosh>", "thingy", 1);
+		verify(target).add("booleanThat", 0, "ArgumentMatcher<Boolean>", "matcher", 1);
 	}
 	
 	/**
@@ -108,9 +108,9 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	public void can_handle_final_arg() {
 		sourceLines.add("public static boolean booleanThing(final ArgumentMatcher<Boolean> matcher,final int int1, final int int2) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("booleanThing", 0, "ArgumentMatcher<Boolean>", "matcher");
-		verify(target).add("booleanThing", 1, "int", "int1");
-		verify(target).add("booleanThing", 2, "int", "int2");
+		verify(target).add("booleanThing", 0, "ArgumentMatcher<Boolean>", "matcher", 3);
+		verify(target).add("booleanThing", 1, "int", "int1", 3);
+		verify(target).add("booleanThing", 2, "int", "int2", 3);
 
 	}
 
@@ -124,8 +124,8 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	public void should_load_for_two_template_args() {
 		sourceLines.add(" public static <T,U> T flibble(BoingoBoingo<T> thingy, U whatsit) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("flibble", 0, "BoingoBoingo<T>", "thingy");
-		verify(target).add("flibble", 1, "U", "whatsit");
+		verify(target).add("flibble", 0, "BoingoBoingo<T>", "thingy", 2);
+		verify(target).add("flibble", 1, "U", "whatsit", 2);
 	}
 
 	/**
@@ -140,12 +140,12 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 		sourceLines.add("       A a,B b) {");
 
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("flibble", 0, "BoingoBoingo<T>", "thingy");
-		verify(target).add("flibble", 1, "U", "whatsit");
-		verify(target).add("flibble", 2, "Set<String>", "cheese");
-		verify(target).add("flibble", 3, "Scoop", "scoop");
-		verify(target).add("flibble", 4, "A", "a");
-		verify(target).add("flibble", 5, "B", "b");
+		verify(target).add("flibble", 0, "BoingoBoingo<T>", "thingy", 6);
+		verify(target).add("flibble", 1, "U", "whatsit", 6);
+		verify(target).add("flibble", 2, "Set<String>", "cheese", 6);
+		verify(target).add("flibble", 3, "Scoop", "scoop", 6);
+		verify(target).add("flibble", 4, "A", "a", 6);
+		verify(target).add("flibble", 5, "B", "b", 6);
 	}
 
 	/**
@@ -165,8 +165,8 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 		sourceLines.add(" {");
 
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("flobble", 0, "OptionalLong", "thingy");
-		verify(target).add("flobble", 1, "Board", "board");
+		verify(target).add("flobble", 0, "OptionalLong", "thingy", 2);
+		verify(target).add("flobble", 1, "Board", "board", 2);
 		verifyNoMoreInteractions(target);
 
 	}
@@ -180,7 +180,7 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	public void should_load_for_one_varargs_arg() {
 		sourceLines.add("public static <T> void clearInvocations(T ... mocks) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("clearInvocations", 0, "T...", "mocks");
+		verify(target).add("clearInvocations", 0, "T...", "mocks", 1);
 	}
 
 	/**
@@ -192,7 +192,7 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	public void should_load_for_type_with_extends() {
 		sourceLines.add("public static Stubber doThrow(Class<? extends Throwable> toBeThrown) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("doThrow", 0, "Class<? extends Throwable>", "toBeThrown");
+		verify(target).add("doThrow", 0, "Class<? extends Throwable>", "toBeThrown", 1);
 	}
 	 
 	/**
@@ -204,7 +204,7 @@ public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
 	public void should_handle_space_after_method_name() {
 		sourceLines.add(" public static <Foosh> Foosh flibble (BoingoBoingo<Foosh> thingy) {");
 		underTest.parseAndLoad(sourceLines, target);
-		verify(target).add("flibble", 0, "BoingoBoingo<Foosh>", "thingy");
+		verify(target).add("flibble", 0, "BoingoBoingo<Foosh>", "thingy", 1);
 	}
 
 	/**

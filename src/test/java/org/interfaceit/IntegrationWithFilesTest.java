@@ -117,6 +117,8 @@ public class IntegrationWithFilesTest implements AssertJ {
 
 			generateClassFromCommandLineMainAndVerify(packageName, "java.net.URLEncoder", "URLEncoding", getExampleSourceFile());
 
+			generateClassFromCommandLineMainAndVerify(packageName, "org.junit.Assert", "JUnitAssert", getExampleSourceFile());
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw e;

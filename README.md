@@ -56,9 +56,11 @@ Once you have the binary, you run the jar file, providing a classpath which allo
  
  * read individual source file or jar/zip rather than only jar or zip for argument names (done)
 
- * access to release binaries
+ * access to release binaries (working on it)
  
  * propagate @Deprecated annotation (done)
+ 
+ * fix issue with argument names when two method signatures are the same except one has an extra parameter at the beginning (done)
 
 ###future
 

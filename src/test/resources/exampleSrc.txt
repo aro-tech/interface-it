@@ -1,6 +1,90 @@
+// from URLEncoder
 @Deprecated
 public static String encode(String stringToEncode) {}
 
 public static String encode(String stringToEncode,
             String characterEncoding)
                      throws UnsupportedEncodingException {}
+ 
+ // from JUnit Assert                                       
+    public static void assertTrue(String message, boolean condition) {
+    public static void assertTrue(boolean condition) {
+    public static void assertFalse(String message, boolean condition) {
+    public static void assertFalse(boolean condition) {
+    public static void fail(String message) {
+    public static void fail() {
+    public static void assertEquals(String message, Object expected,
+            Object actual) {
+    public static void assertEquals(Object expected, Object actual) {
+    public static void assertNotEquals(String message, Object unexpected,
+            Object actual) {
+    public static void assertNotEquals(Object unexpected, Object actual) {
+    public static void assertNotEquals(String message, long unexpected, long actual) {
+    public static void assertNotEquals(long unexpected, long actual) {
+    public static void assertNotEquals(String message, double unexpected,
+            double actual, double delta) {
+    public static void assertNotEquals(double unexpected, double actual, double delta) {
+    public static void assertNotEquals(float unexpected, float actual, float delta) {
+    public static void assertArrayEquals(String message, Object[] expecteds,
+            Object[] actuals) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(Object[] expecteds, Object[] actuals) {
+    public static void assertArrayEquals(String message, boolean[] expecteds,
+            boolean[] actuals) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(boolean[] expecteds, boolean[] actuals) {
+    public static void assertArrayEquals(String message, byte[] expecteds,
+            byte[] actuals) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(byte[] expecteds, byte[] actuals) {
+    public static void assertArrayEquals(String message, char[] expecteds,
+            char[] actuals) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(char[] expecteds, char[] actuals) {
+    public static void assertArrayEquals(String message, short[] expecteds,
+            short[] actuals) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(short[] expecteds, short[] actuals) {
+    public static void assertArrayEquals(String message, int[] expecteds,
+            int[] actuals) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(int[] expecteds, int[] actuals) {
+    public static void assertArrayEquals(String message, long[] expecteds,
+            long[] actuals) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(long[] expecteds, long[] actuals) {
+    public static void assertArrayEquals(String message, double[] expecteds,
+            double[] actuals, double delta) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(double[] expecteds, double[] actuals, double delta) {
+    public static void assertArrayEquals(String message, float[] expecteds,
+            float[] actuals, float delta) throws ArrayComparisonFailure {
+    public static void assertArrayEquals(float[] expecteds, float[] actuals, float delta) {
+    public static void assertEquals(String message, double expected,
+            double actual, double delta) {
+    public static void assertEquals(String message, float expected,
+            float actual, float delta) {
+    public static void assertNotEquals(String message, float unexpected,
+            float actual, float delta) {
+    public static void assertEquals(long expected, long actual) {
+    public static void assertEquals(String message, long expected, long actual) {
+    @Deprecated
+    public static void assertEquals(double expected, double actual) {
+    @Deprecated
+    public static void assertEquals(String message, double expected,
+            double actual) {
+    public static void assertEquals(double expected, double actual, double delta) {
+    public static void assertEquals(float expected, float actual, float delta) {
+    public static void assertNotNull(String message, Object object) {
+    public static void assertNotNull(Object object) {
+    public static void assertNull(String message, Object object) {
+    public static void assertNull(Object object) {
+    public static void assertSame(String message, Object expected, Object actual) {
+    public static void assertSame(Object expected, Object actual) {     
+    public static void assertNotSame(String message, Object unexpected,
+            Object actual) {
+    public static void assertNotSame(Object unexpected, Object actual) {
+    static String format(String message, Object expected, Object actual) {
+    @Deprecated
+    public static void assertEquals(String message, Object[] expecteds,
+    @Deprecated
+    public static void assertEquals(Object[] expecteds, Object[] actuals) {
+    @Deprecated
+    public static <T> void assertThat(T actual, Matcher<? super T> matcher) {
+    @Deprecated
+    public static <T> void assertThat(String reason, T actual,
+            Matcher<? super T> matcher) {
+    public static void assertThrows(Class<? extends Throwable> expectedThrowable, ThrowingRunnable runnable) {
+    public static <T extends Throwable> T expectThrows(Class<T> expectedThrowable, ThrowingRunnable runnable) {

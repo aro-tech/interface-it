@@ -359,10 +359,20 @@ public class SourceLineReadingArgumentNameLoader {
 				argType = tok.getValue();
 				break;
 			case ARGUMENT_NAME:
-				target.add(method, index++, simplify(argType), tok.getValue());
+				target.add(method, index++, simplify(argType), tok.getValue(), countArguments(tokens));
 				break;
 			}
 		}
+	}
+
+	private int countArguments(List<Token> tokens) {
+		int count = 0;
+		for(Token token: tokens) {
+			if(token.getType() == TokenType.ARGUMENT_NAME) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	private boolean isStaticMethodSignatureStart(String line) {

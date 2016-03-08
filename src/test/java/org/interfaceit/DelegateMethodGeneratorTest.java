@@ -14,8 +14,8 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.util.mixin.AssertJ;
+import org.interfaceit.util.mixin.JUnitAssert;
 import org.interfaceit.util.mixin.Mockito;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +25,7 @@ import org.junit.Test;
  * @author aro_tech
  *
  */
-public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
+public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAssert {
 	private static final String TARGET_PACKAGE = "org.interfaceit.results";
 	private DelegateMethodGenerator underTest = new DelegateMethodGenerator();
 	private Set<String> imports;
@@ -87,7 +87,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> when = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "when".equals(m.getName()) && m.getParameters().length == 1).findFirst();
 
-		Assert.assertTrue(when.isPresent());
+		assertTrue(when.isPresent());
 
 		assertThat(underTest.makeMethodSignature(when.get(), this.imports, defaultNameSource, ""))
 				.startsWith("default <T> OngoingStubbing<T> when(T");
@@ -100,7 +100,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> verifyMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "verify".equals(m.getName()) && m.getParameters().length == 2).findFirst();
 
-		Assert.assertTrue(verifyMethod.isPresent());
+		assertTrue(verifyMethod.isPresent());
 
 		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, defaultNameSource, ""))
 				.startsWith("default <T> T verify(T").contains(", VerificationMode").endsWith(")");
@@ -113,7 +113,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> doubleThatMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "doubleThat".equals(m.getName()) && m.getParameters().length == 1).findFirst();
 
-		Assert.assertTrue(doubleThatMethod.isPresent());
+		assertTrue(doubleThatMethod.isPresent());
 
 		assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default double doubleThat(ArgumentMatcher<Double> ").endsWith(")");
@@ -127,7 +127,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 				.filter((Method m) -> "catchThrowable".equals(m.getName()) && m.getParameters().length == 1)
 				.findFirst();
 
-		Assert.assertTrue(method.isPresent());
+		assertTrue(method.isPresent());
 
 		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default Throwable catchThrowable(ThrowableAssert.ThrowingCallable ").endsWith(")");
@@ -143,7 +143,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 						&& m.getParameterTypes()[0].getSimpleName().equals("AssertDelegateTarget"))
 				.findFirst();
 
-		Assert.assertTrue(method.isPresent());
+		assertTrue(method.isPresent());
 
 		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default <T extends AssertDelegateTarget> T assertThat(T ").endsWith(")");
@@ -157,7 +157,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 				.stream().filter((Method m) -> "entry".equals(m.getName()) && m.getParameters().length == 2)
 				.findFirst();
 
-		Assert.assertTrue(entryMethod.isPresent());
+		assertTrue(entryMethod.isPresent());
 
 		assertThat(underTest.makeMethodSignature(entryMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace("default <K,V> MapEntry<K, V> entry(K arg0, V arg1)");
@@ -181,7 +181,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 						&& m.getParameters()[0].getParameterizedType().toString().contains("CharSeq"))
 				.findFirst();
 
-		Assert.assertTrue(assertMethod.isPresent());
+		assertTrue(assertMethod.isPresent());
 
 		assertThat(underTest.makeMethodSignature(assertMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace(
@@ -196,7 +196,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> tupleMethod = underTest.listStaticMethodsForClass(org.assertj.core.api.Assertions.class)
 				.stream().filter((Method m) -> "tuple".equals(m.getName())).findFirst();
 
-		Assert.assertTrue(tupleMethod.isPresent());
+		assertTrue(tupleMethod.isPresent());
 
 		assertThat(underTest.makeMethodSignature(tupleMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace("default Tuple tuple(Object... arg0)");
@@ -210,7 +210,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> verifyMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "verify".equals(m.getName()) && m.getParameters().length == 2).findFirst();
 
-		Assert.assertTrue(verifyMethod.isPresent());
+		assertTrue(verifyMethod.isPresent());
 
 		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "MyMockito", imports, defaultNameSource))
 				.isEqualToIgnoringWhitespace("return Mockito.verify(arg0, arg1);");
@@ -221,7 +221,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> whenMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "when".equals(m.getName()) && m.getParameters().length == 1).findFirst();
 
-		Assert.assertTrue(whenMethod.isPresent());
+		assertTrue(whenMethod.isPresent());
 
 		assertThat(underTest.makeDelegateCall(whenMethod.get(), "MyMockito", imports, defaultNameSource))
 				.isEqualToIgnoringWhitespace("return Mockito.when(arg0);");
@@ -232,7 +232,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> resetMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "reset".equals(m.getName())).findFirst();
 
-		Assert.assertTrue(resetMethod.isPresent());
+		assertTrue(resetMethod.isPresent());
 
 		assertThat(underTest.makeDelegateCall(resetMethod.get(), "MyMockito", imports, defaultNameSource))
 				.isEqualToIgnoringWhitespace("Mockito.reset(arg0);");
@@ -243,7 +243,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> verifyMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "verify".equals(m.getName()) && m.getParameters().length == 2).findFirst();
 
-		Assert.assertTrue(verifyMethod.isPresent());
+		assertTrue(verifyMethod.isPresent());
 
 		String delegateMethod = underTest.makeDelegateMethod(verifyMethod.get(), "MyMockito", imports,
 				defaultNameSource);
@@ -263,7 +263,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> method = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "anyDouble".equals(m.getName())).findFirst();
 
-		Assert.assertTrue(method.isPresent());
+		assertTrue(method.isPresent());
 
 		String delegateMethod = underTest.makeDelegateMethod(method.get(), "Mockito", imports, defaultNameSource);
 		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + method.get().toGenericString())
@@ -280,7 +280,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> whenMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "when".equals(m.getName()) && m.getParameters().length == 1).findFirst();
 
-		Assert.assertTrue(whenMethod.isPresent());
+		assertTrue(whenMethod.isPresent());
 
 		String delegateMethod = underTest.makeDelegateMethod(whenMethod.get(), "MyMockito", imports, defaultNameSource);
 		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + whenMethod.get().toGenericString())
@@ -356,7 +356,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 															// in javadoc
 															// comment
 						}
-						Assert.assertEquals(
+						assertEquals(
 								"Expected " + expectedIndentationSpaces + " and not " + leadingSpaces
 										+ " leading spaces for line " + lineNum + ": " + line,
 								expectedIndentationSpaces, leadingSpaces);
@@ -381,7 +381,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> verifyMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "verify".equals(m.getName()) && m.getParameters().length == 2).findFirst();
 
-		Assert.assertTrue(verifyMethod.isPresent());
+		assertTrue(verifyMethod.isPresent());
 
 		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "Mockito", imports, defaultNameSource))
 				.isEqualToIgnoringWhitespace("return org.mockito.Mockito.verify(arg0, arg1);");
@@ -404,7 +404,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> verifyMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "verify".equals(m.getName()) && m.getParameters().length == 2).findFirst();
 
-		Assert.assertTrue(verifyMethod.isPresent());
+		assertTrue(verifyMethod.isPresent());
 
 		when(this.mockArgNameSource.getArgumentNameFor(verifyMethod.get(), 0)).thenReturn("mock");
 		when(this.mockArgNameSource.getArgumentNameFor(verifyMethod.get(), 1)).thenReturn("mode");
@@ -422,9 +422,19 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito {
 		Optional<Method> deprecatedMethod = underTest.listStaticMethodsForClass(java.net.URLEncoder.class).stream()
 				.filter((Method m) -> m.getDeclaredAnnotationsByType(Deprecated.class).length > 0).findFirst();
 
-		Assert.assertTrue(deprecatedMethod.isPresent());
+		assertTrue(deprecatedMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "   ")).startsWith("   @Deprecated" + System.lineSeparator() + "   default");
+		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "   "))
+				.startsWith("   @Deprecated" + System.lineSeparator() + "   default");
+	}
+
+	/**
+	 * This override is necessary because of a name collision between JUnit and
+	 * AssertJ
+	 */
+	@Override
+	public void fail(String message) {
+		JUnitAssert.super.fail(message);
 	}
 
 	// TODO: handle singleton calls?
