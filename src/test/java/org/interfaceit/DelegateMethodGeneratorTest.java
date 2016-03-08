@@ -298,39 +298,154 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, "MyMath", Math.class, defaultNameSource,
 				indentationSpaces);
 		String[] lines = classText.split("\n");
-		int indentationLevel = 0;
+		IndentationContext indentation = new IndentationContext();
 		for (int lineNum = 0; lineNum < lines.length; lineNum++) {
-			String line = lines[lineNum];
-			int firstNonWSIndex = -1;
-			int leadingSpaces = 0;
-			char[] lineChars = line.toCharArray();
-			for (int i = 0; i < lineChars.length; i++) {
-				if (lineChars[i] == '}') {
-					indentationLevel--;
-				}
-				if (firstNonWSIndex < 0) {
-					if (Character.isWhitespace(lineChars[i])) {
-						leadingSpaces++;
-					} else {
-						firstNonWSIndex = i;
-						int expectedIndentationSpaces = indentationLevel * indentationSpaces;
+			verifyCurrentLine(indentationSpaces, lines, indentation, lineNum);
+		}
+	}
+	
+	private static class IndentationContext {
+		private int indentationLevel = 0;
 
-						if (lineChars[i] == '*') {
-							expectedIndentationSpaces++; // expect extra space
-															// in javadoc
-															// comment
-						}
-						assertEquals(
-								"Expected " + expectedIndentationSpaces + " and not " + leadingSpaces
-										+ " leading spaces for line " + lineNum + ": " + line,
-								expectedIndentationSpaces, leadingSpaces);
-					}
-				}
-				if (lineChars[i] == '{') {
-					indentationLevel++;
-				}
+		int getLevel() {
+			return indentationLevel;
+		}
+
+		void incrementLevel() {
+			this.indentationLevel++;
+		}
+
+		void decrementLevel() {
+			this.indentationLevel--;
+		}
+
+	}
+
+	private static class LineContext {
+		private int firstNonWSIndex = -1;
+		private int leadingSpaces = 0;
+		private int i=0;
+		private final char[] lineChars;
+		private char currentChar = '-';
+		private boolean done = false;
+		
+		public LineContext(String line) {
+			super();
+			this.lineChars = line.toCharArray();
+			if(this.lineChars.length > 0) {
+				currentChar = lineChars[0];
+			} else {
+				done = true;
 			}
 		}
+
+		int getFirstNonWSIndex() {
+			return firstNonWSIndex;
+		}
+
+		void setFirstNonWSIndex(int firstNonWSIndex) {
+			this.firstNonWSIndex = firstNonWSIndex;
+		}
+
+		int getLeadingSpaces() {
+			return leadingSpaces;
+		}
+
+		void incrementLeadingSpaces() {
+			this.leadingSpaces++;
+		}
+		
+		boolean continueLoop() {
+			if(done || i + 1 >= lineChars.length) {
+				return false;
+			}
+			i++;
+			currentChar = this.lineChars[i];
+			return true;
+		}
+
+		int getI() {
+			return i;
+		}
+
+
+		char getCurrentChar() {
+			return currentChar;
+		}
+		
+	}
+
+	private void verifyCurrentLine(final int indentationSpaces, String[] lines, IndentationContext indentation,
+			int lineNum) {
+		final String line = lines[lineNum];
+		LineContext ctx = new LineContext(line);
+		if(line.length() > 0) {
+			do {
+				verifyForCurrentCharacter(indentation, ctx, line, lineNum, indentationSpaces);			
+			}while(ctx.continueLoop());			
+		}
+	}
+
+	private void verifyForCurrentCharacter(IndentationContext indentationCxt, LineContext lineCtx, final String line,
+			int lineNum, final int indentationSpaces) {
+		decrementIndentationContextIfNecessary(indentationCxt, lineCtx);
+		if (wasWhitespaceToThisPoint(lineCtx)) {
+			handleMoreWhitespaceOrEndOfWhitespace(indentationCxt, lineCtx, line, lineNum, indentationSpaces);
+		}
+		incrementIndentationContextIfNecessary(indentationCxt, lineCtx);
+	}
+
+	private void handleMoreWhitespaceOrEndOfWhitespace(IndentationContext indentationCxt, LineContext lineCtx,
+			final String line, int lineNum, final int indentationSpaces) {
+		if (isCurrentlyWhitespace(lineCtx)) {
+			lineCtx.incrementLeadingSpaces();
+		} else {
+			handleFirstNonWhitespaceCharacterAndVerifyIndentation(indentationCxt, lineCtx, line, lineNum,
+					indentationSpaces);
+		}
+	}
+
+	private void decrementIndentationContextIfNecessary(IndentationContext indentationCxt, LineContext lineCtx) {
+		if (lineCtx.getCurrentChar() == '}') {
+			indentationCxt.decrementLevel();
+		}
+	}
+
+	private boolean isCurrentlyWhitespace(LineContext lineCtx) {
+		return Character.isWhitespace(lineCtx.getCurrentChar());
+	}
+
+	private boolean wasWhitespaceToThisPoint(LineContext lineCtx) {
+		return lineCtx.getFirstNonWSIndex() < 0;
+	}
+
+	private void handleFirstNonWhitespaceCharacterAndVerifyIndentation(IndentationContext indentationCxt,
+			LineContext lineCtx, final String line, int lineNum, final int indentationSpaces) {
+		lineCtx.setFirstNonWSIndex(lineCtx.getI());
+		int expectedIndentationSpaces = calculateExpectedIndentationSpaces(indentationSpaces,
+				indentationCxt.getLevel(), lineCtx.getCurrentChar());
+		assertEquals(
+				"Expected " + expectedIndentationSpaces + " and not " + lineCtx.getLeadingSpaces()
+						+ " leading spaces for line " + lineNum + ": " + line,
+				expectedIndentationSpaces, lineCtx.getLeadingSpaces());
+	}
+
+
+	private void incrementIndentationContextIfNecessary(IndentationContext indentationCxt, LineContext lineCtx) {
+		if (lineCtx.getCurrentChar() == '{') {
+			indentationCxt.incrementLevel();
+		}
+	}
+
+	private int calculateExpectedIndentationSpaces(final int indentationSpaces, int indentationLevel,
+			char currentChar) {
+		int expectedIndentationSpaces = indentationLevel * indentationSpaces;
+		if (currentChar == '*') {
+			expectedIndentationSpaces++; // expect an extra space
+											// when in a javadoc
+											// comment
+		}
+		return expectedIndentationSpaces;
 	}
 
 	@Test
