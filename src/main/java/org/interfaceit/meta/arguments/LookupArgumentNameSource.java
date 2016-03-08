@@ -17,13 +17,6 @@ import org.interfaceit.util.ClassNameUtils;
 public class LookupArgumentNameSource implements ArgumentNameSource {
 	private Map<String, String> lookup = new HashMap<>();
 
-	/**
-	 * Constructor
-	 */
-	public LookupArgumentNameSource() {
-		// TODO Auto-generated constructor stub
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
