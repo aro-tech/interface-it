@@ -280,7 +280,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 				buf.append(", ");
 			}
 			buf.append(argumentNameSource.getArgumentNameFor(method, i));
-			// buf.append("arg").append(i);
 		}
 		buf.append(");");
 		return buf.toString();

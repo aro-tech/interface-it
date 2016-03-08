@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * Interface for reading source code from disk
+ * @author aro_tech
+ *
+ */
 public interface SourceFileReader {
 
 	/**
@@ -17,6 +22,11 @@ public interface SourceFileReader {
 	 */
 	List<String> readFilesInZipArchive(File zipFile, String... filePathsWithinZipStructure) throws IOException;
 
+	/**
+	 * 
+	 * @param path
+	 * @return Trimmed text lines from the given file
+	 */
 	List<String> readTrimmedLinesFromFilePath(Path path);
 
 }

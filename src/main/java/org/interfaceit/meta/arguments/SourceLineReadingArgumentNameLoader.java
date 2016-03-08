@@ -50,39 +50,49 @@ public class SourceLineReadingArgumentNameLoader {
 		}
 	}
 
-	private String adjustLineForComments(CommentStatus status, String line) {
+	private String adjustLineForComments(CommentStatus status, final String line) {
 		if (line.contains("/*")) {
-			int startIx = line.indexOf("/*");
-			int endIx = line.indexOf("*/");
-
-			if (endIx < 0) {
-				status.inComment = true;
-				if (wordContainsMethodName(startIx)) {
-					line = line.substring(0, startIx);
-				} else {
-					line = "";
-				}
-			} else {
-				if (endIx < startIx) {
-					line = line.substring(endIx + 2, startIx);
-				} else {
-					String lineStart = line.substring(0, startIx);
-					String lineEnd = line.substring(endIx + 1);
-					line = lineStart + lineEnd;
-				}
-
-			}
+			return adjustLineContainingCommentStart(status, line);
 		} else if (line.contains("*/") && status.inComment) {
-			int endIx = line.indexOf("*/");
-			status.inComment = false;
-			line = line.substring(endIx + 1);
+			return adjustLineContainingCommentEnd(status, line);
 		} else if (line.contains("//")) {
 			int ix = line.indexOf("//");
-			line = line.substring(0, ix);
+			return line.substring(0, ix);
 		} else if (status.inComment) {
-			line = "";
+			return "";
 		}
 		return line;
+	}
+
+
+	private String adjustLineContainingCommentEnd(CommentStatus status, final String line) {
+		int endIx = line.indexOf("*/");
+		status.inComment = false;
+		return line.substring(endIx + 1);
+	}
+
+	private String adjustLineContainingCommentStart(CommentStatus status, final String line) {
+		String lineOut = line;
+		int startIx = line.indexOf("/*");
+		int endIx = line.indexOf("*/");
+
+		if (endIx < 0) {
+			status.inComment = true;
+			if (wordContainsMethodName(startIx)) {
+				lineOut = lineOut.substring(0, startIx);
+			} else {
+				lineOut = "";
+			}
+		} else {
+			if (endIx < startIx) {
+				lineOut = lineOut.substring(endIx + 2, startIx);
+			} else {
+				String lineStart = lineOut.substring(0, startIx);
+				String lineEnd = lineOut.substring(endIx + 1);
+				lineOut = lineStart + lineEnd;
+			}
+		}
+		return lineOut;
 	}
 
 	private static enum TokenType {

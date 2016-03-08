@@ -10,6 +10,7 @@ import java.util.Map;
 import org.interfaceit.util.ClassNameUtils;
 
 /**
+ * ArgumentNameSource which uses a dictionary lookup
  * @author aro_tech
  *
  */

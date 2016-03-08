@@ -17,7 +17,7 @@ import java.lang.reflect.Parameter;
 public interface ArgumentNameSource {
 
 	/**
-	 * Get the name of the given methods nth argument
+	 * Get the name of the nth argument of the given method
 	 * 
 	 * @param method
 	 * @param zeroBasedArgumentIndex
