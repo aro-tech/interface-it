@@ -93,5 +93,5 @@ Inspired by the following articles:
 
 I thought that using mockito-java8 would be a good idea, but mockito-java8 was not keeping up with the latest Mockito versions, so it seemed better to make a tool that allows you to use whatever version you want of Mockito, AssertJ or whatever static classes for which you may want to make mix-ins.
 
-##My Blog
-[![The Green Bar](https://img.shields.io/badge/The_Green_Bar-1.0-brightgreen.svg)](https://thegreenbar.wordpress.com/)
+##Blog
+[![The Green Bar](https://img.shields.io/badge/My_Blog:-The_Green_Bar-brightgreen.svg)](https://thegreenbar.wordpress.com/)
