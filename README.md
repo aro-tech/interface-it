@@ -1,6 +1,26 @@
 # interface-it
 Java-8 mix-in interface code generator
 
+
+##Latest release
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aro-tech/interface-it/badge.svg)](http://search.maven.org/#artifactdetails|com.github.aro-tech|interface-it|0.7.0|jar)
+
+[v0.7.0] (https://github.com/aro-tech/interface-it/releases/tag/v0.7.0) 
+
+[downloads] (https://oss.sonatype.org/content/groups/public/com/github/aro-tech/interface-it/0.7.0/)
+
+[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.github.aro-tech/interface-it/badge.svg)](http://www.javadoc.io/doc/com.github.aro-tech/interface-it/0.7.0)
+
+In Maven:
+
+```html
+<dependency>
+  <groupId>com.github.aro-tech</groupId>
+  <artifactId>interface-it</artifactId>
+  <version>0.7.0</version>
+</dependency>
+```
+
 ##Background
 The arrival of default interfaces in Java 8 opens the door to "mix-in" interfaces - a form of multiple inheritance.
 
@@ -45,20 +65,6 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 -s > File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation 
 ```
 
-##Latest release
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aro-tech/interface-it/badge.svg)](http://search.maven.org/#artifactdetails|com.github.aro-tech|interface-it|0.7.0|jar)
-[v0.7.0] (https://github.com/aro-tech/interface-it/releases/tag/v0.7.0) 
-[Binary and javadoc downloads] (https://oss.sonatype.org/content/groups/public/com/github/aro-tech/interface-it/0.7.0/)
-
-In Maven:
-
-```html
-<dependency>
-  <groupId>com.github.aro-tech</groupId>
-  <artifactId>interface-it</artifactId>
-  <version>0.7.0</version>
-</dependency>
-```
 
 ##Roadmap and future directions:
 
