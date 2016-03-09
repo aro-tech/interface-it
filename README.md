@@ -46,7 +46,7 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 ```
 
 ##Latest release
-[v0.6.0] (https://github.com/aro-tech/interface-it/releases/tag/v0.6.0) 
+[v0.7.0] (https://github.com/aro-tech/interface-it/releases/tag/v0.7.0) 
 
 ##Roadmap and future directions:
 
