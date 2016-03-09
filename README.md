@@ -47,6 +47,7 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 
 ##Latest release
 [v0.7.0] (https://github.com/aro-tech/interface-it/releases/tag/v0.7.0) 
+[Binary and javadoc downloads] (https://oss.sonatype.org/content/groups/public/com/github/aro-tech/interface-it/0.7.0/)
 
 ##Roadmap and future directions:
 
@@ -56,7 +57,7 @@ Once you have the binary, you run the jar file, providing a classpath which allo
  
  * read individual source file or jar/zip rather than only jar or zip for argument names (done)
 
- * access to release binaries (working on it)
+ * access to release binaries (done)
  
  * propagate @Deprecated annotation (done)
  
