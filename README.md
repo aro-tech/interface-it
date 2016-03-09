@@ -46,6 +46,7 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 ```
 
 ##Latest release
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aro-tech/interface-it/badge.svg)](http://search.maven.org/#artifactdetails|com.github.aro-tech|interface-it|0.7.0|jar)
 [v0.7.0] (https://github.com/aro-tech/interface-it/releases/tag/v0.7.0) 
 [Binary and javadoc downloads] (https://oss.sonatype.org/content/groups/public/com/github/aro-tech/interface-it/0.7.0/)
 
