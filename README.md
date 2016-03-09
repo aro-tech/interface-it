@@ -49,20 +49,22 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 [v0.7.0] (https://github.com/aro-tech/interface-it/releases/tag/v0.7.0) 
 [Binary and javadoc downloads] (https://oss.sonatype.org/content/groups/public/com/github/aro-tech/interface-it/0.7.0/)
 
+In Maven:
+
+```html
+<dependency>
+  <groupId>com.github.aro-tech</groupId>
+  <artifactId>interface-it</artifactId>
+  <version>0.7.0</version>
+</dependency>
+```
+
 ##Roadmap and future directions:
 
-###v0.7.0
+###v0.8.0
 
- * improved error handling (done)
+ * ???
  
- * read individual source file or jar/zip rather than only jar or zip for argument names (done)
-
- * access to release binaries (done)
- 
- * propagate @Deprecated annotation (done)
- 
- * fix issue with argument names when two method signatures are the same except one has an extra parameter at the beginning (done)
-
 ###future
 
  * Generate mix-ins for singletons ?
