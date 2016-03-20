@@ -49,9 +49,11 @@ Anywhere that you use static imports, you might want to consider generating a mi
 Many of you may just need to copy and paste a source file from the [examples](https://github.com/aro-tech/interface-it/examples "examples")
  and adjust it to the needs of your project.  There are delegate interfaces for [AssertJ](https://github.com/aro-tech/interface-it/blob/master/examples/AssertJ.java "AssertJ"), [Mockito](https://github.com/aro-tech/interface-it/blob/master/examples/Mockito.java "Mockito"), and [JUnit Assert](https://github.com/aro-tech/interface-it/blob/master/examples/Assert.java "JUnit Assert") which you can use in your own unit tests.  A unit test class which implements some of these is [DelegateMethodGeneratorTest](https://github.com/aro-tech/interface-it/blob/master/src/test/java/org/interfaceit/DelegateMethodGeneratorTest.java "DelegateMethodGeneratorTest.java source").
 
-If you want to generate mix-ins which wrap other static classes, such as in your own legacy code, you need to build the jar file using `mvn clean package`. *Coming soon: access to release binaries.*
+If you want to generate mix-ins which wrap other static classes, such as in your own legacy code, you need to build the jar file using `mvn clean package`. 
 
 Once you have the binary, you run the jar file, providing a classpath which allows loading the class you want to wrap (and any classes it needs to load for its method signatures) and the appropriate command-line arguments. [An example .bat file](https://github.com/aro-tech/interface-it/blob/master/examples/mockitoComandLineExample.bat "Example .bat file: mockitoComandLineExample.bat") is provided to show how this is done.   
+
+**Or, [use a custom ANT task](https://github.com/aro-tech/interface-it-ant "use a custom ANT task").**
  
 ##Command-line flags
 ```
@@ -68,7 +70,14 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 
 ###v0.8.0
 
- * ???
+ * Emit error message if no delegate methods found in delegate class 
+ * Emit error message if class is not found in source archive
+ * Fix issue w/ parameterized constant type (e.g. Answer<Object> in Mockito)
+ * Create output directory if it doesn't exist
+
+###v1.0.0
+
+ * Provide statistics on generated code (number of methods and constants, etc.)
  
 ###future
 
@@ -77,8 +86,6 @@ Once you have the binary, you run the jar file, providing a classpath which allo
  * ignore deprecated methods according to a flag ?
 
 ###Possible complementary projects
- 
- * custom ANT task 
  
  * Maven plugin 
  
