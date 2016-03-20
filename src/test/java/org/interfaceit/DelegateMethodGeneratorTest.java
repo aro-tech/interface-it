@@ -18,6 +18,7 @@ import org.interfaceit.util.mixin.JUnitAssert;
 import org.interfaceit.util.mixin.Mockito;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.stubbing.Answer;
 
 /**
  * Unit tests for generating delegate methods
@@ -64,9 +65,9 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 		String result = underTest.generateConstantsForClassUpdatingImports(org.mockito.Mockito.class, imports,
 				"MyMockito");
 		assertThat(result).contains("{@link org.mockito.Mockito#RETURNS_DEFAULTS}",
-				"public static final Answer RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;",
+				"public static final Answer<Object> RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;",
 				"{@link org.mockito.Mockito#RETURNS_SMART_NULLS}",
-				"public static final Answer RETURNS_SMART_NULLS = Mockito.RETURNS_SMART_NULLS;");
+				"public static final Answer<Object> RETURNS_SMART_NULLS = Mockito.RETURNS_SMART_NULLS;");
 
 		assertThat(imports).contains("org.mockito.stubbing.Answer", "org.mockito.Mockito");
 
@@ -474,7 +475,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 		StringBuilder buf = new StringBuilder();
 		underTest.generateConstant(field, org.mockito.Mockito.class, imports, buf, "Mockito", "");
 		assertThat(buf.toString())
-				.contains("public static final Answer RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;");
+				.contains("public static final Answer<Object> RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;");
 
 	}
 

@@ -64,10 +64,9 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	private int compareSimpleTypeNamesOfParameters(Method m1, Method m2, int val, int parameterCountM1) {
 		for (int i = 0; val == 0 && i < parameterCountM1; i++) {
 			val = ClassNameUtils.extractSimpleName(m1.getParameters()[i].getParameterizedType().getTypeName())
-					.toLowerCase()
-					.compareTo(ClassNameUtils
-							.extractSimpleName(m2.getParameters()[i].getParameterizedType().getTypeName())
-							.toLowerCase());
+					.toLowerCase().compareTo(
+							ClassNameUtils.extractSimpleName(m2.getParameters()[i].getParameterizedType().getTypeName())
+									.toLowerCase());
 		}
 		return val;
 	}
@@ -318,13 +317,23 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 */
 	protected void generateConstant(Field field, Class<?> fieldClass, Set<String> imports, StringBuilder buf,
 			String targetInterfaceName, String indentationUnit) {
-		String type = extractShortNameAndUpdateImports(imports, field.getType().getTypeName());
+		String type = extractShortNameAndUpdateImports(imports, getTypeNameFromFieldForConstant(field));
 		buf.append(NEWLINE).append(indentationUnit).append("/** ").append("{@link ").append(fieldClass.getTypeName())
 				.append('#').append(field.getName()).append("} */").append(NEWLINE);
 		buf.append(indentationUnit).append("public static final ").append(type).append(' ').append(field.getName())
 				.append(" = ")
 				.append(ClassNameUtils.getDelegateClassNameWithoutPackageIfNoConflict(fieldClass, targetInterfaceName))
 				.append('.').append(field.getName()).append(";").append(NEWLINE);
+	}
+
+	private String getTypeNameFromFieldForConstant(Field field) {
+		String typeName = field.getType().getTypeName();
+		TypeVariable<?>[] typeParameters = field.getType().getTypeParameters();
+		if (null != typeParameters && typeParameters.length > 0) {
+			typeName += Arrays.asList(typeParameters).stream().map(t -> "Object")
+					.collect(Collectors.joining(",", "<", ">"));
+		}
+		return typeName;
 	}
 
 	/**

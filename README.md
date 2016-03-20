@@ -3,11 +3,11 @@ Java-8 mix-in interface code generator
 
 
 ##Latest release
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aro-tech/interface-it/badge.svg)](http://search.maven.org/#artifactdetails|com.github.aro-tech|interface-it|0.7.0|jar)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aro-tech/interface-it/badge.svg)](http://search.maven.org/#artifactdetails|com.github.aro-tech|interface-it|0.8.0|jar)
 
-[Release notes on github] (https://github.com/aro-tech/interface-it/releases/tag/v0.7.0) 
+[Release notes on github] (https://github.com/aro-tech/interface-it/releases/tag/v0.8.0) 
 
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.github.aro-tech/interface-it/badge.svg)](http://www.javadoc.io/doc/com.github.aro-tech/interface-it/0.7.0)
+[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.github.aro-tech/interface-it/badge.svg)](http://www.javadoc.io/doc/com.github.aro-tech/interface-it/0.8.0)
 
 In Maven:
 
@@ -15,7 +15,7 @@ In Maven:
 <dependency>
   <groupId>com.github.aro-tech</groupId>
   <artifactId>interface-it</artifactId>
-  <version>0.7.0</version>
+  <version>0.8.0</version>
 </dependency>
 ```
 
@@ -68,16 +68,13 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 
 ##Roadmap and future directions:
 
-###v0.8.0
-
- * Emit error message if no delegate methods found in delegate class 
- * Emit error message if class is not found in source archive
- * Fix issue w/ parameterized constant type (e.g. Answer<Object> in Mockito)
- * Create output directory if it doesn't exist
-
 ###v1.0.0
 
  * Provide statistics on generated code (number of methods and constants, etc.)
+ * Emit error message if no delegate methods found in delegate class 
+ * Emit error message if class is not found in source archive
+ * Create output directory if it doesn't exist
+ 
  
 ###future
 
