@@ -143,6 +143,11 @@
 						<manifest>
 							<mainClass>org.interfaceit.ui.commandline.CommandLineMain</mainClass>
 						</manifest>
+						<manifestEntries>
+							<Built-By>aro-tech</Built-By>
+							<ProductName>${project.artifactId}</ProductName>
+							<ProductVersion>${project.version}</ProductVersion>
+						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
