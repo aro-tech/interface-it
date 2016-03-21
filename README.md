@@ -55,6 +55,10 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 
 **Or, [use a custom ANT task](https://github.com/aro-tech/interface-it-ant "use a custom ANT task").**
  
+ **Or, create your own UI using the [ClassCodeGenerator API](http://static.javadoc.io/com.github.aro-tech/interface-it/0.8.0/org/interfaceit/ClassCodeGenerator.html "ClassCodeGenerator API").** Here's [an example usage of the API] (https://gist.github.com/aro-tech/1a30476d40ffff4dbcd4 "an example usage of the API").
+ 
+ 
+ 
 ##Command-line flags
 ```
 -v > Write version number.
