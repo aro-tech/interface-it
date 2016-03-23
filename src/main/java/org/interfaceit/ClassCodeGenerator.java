@@ -27,7 +27,7 @@ public interface ClassCodeGenerator {
 	/**
 	 * Generate and write to file a delegate wrapping mix-in interface
 	 * 
-	 * @param dir
+	 * @param saveDirectory
 	 *            The directory where the file will be saved
 	 * @param targetInterfaceName
 	 *            the name of the Jave interface (which is also the file name,
@@ -44,14 +44,14 @@ public interface ClassCodeGenerator {
 	 * @return The .java file which was written
 	 * @throws IOException
 	 */
-	File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass, String targetPackageName,
+	File generateClassToFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass, String targetPackageName,
 			ArgumentNameSource argumentNameSource, int indentationSpaces) throws IOException;
 
 	/**
 	 * Generate and write to file a delegate wrapping mix-in interface Uses
 	 * default indentation
 	 * 
-	 * @param dir
+	 * @param saveDirectory
 	 *            The directory where the file will be saved
 	 * @param targetInterfaceName
 	 *            the name of the Jave interface (which is also the file name,
@@ -66,9 +66,9 @@ public interface ClassCodeGenerator {
 	 * @return The .java file which was written
 	 * @throws IOException
 	 */
-	default File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass, String targetPackageName,
+	default File generateClassToFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass, String targetPackageName,
 			ArgumentNameSource argumentNameSource) throws IOException {
-		return generateClassToFile(dir, targetInterfaceName, delegateClass, targetPackageName, argumentNameSource, DEFAULT_INDENTATION_SPACES);
+		return generateClassToFile(saveDirectory, targetInterfaceName, delegateClass, targetPackageName, argumentNameSource, DEFAULT_INDENTATION_SPACES);
 	}
 
 }

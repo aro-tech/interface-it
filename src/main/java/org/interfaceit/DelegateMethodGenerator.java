@@ -436,9 +436,9 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * java.lang.String, java.lang.Class, java.lang.String, int)
 	 */
 	@Override
-	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
+	public File generateClassToFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass,
 			String targetPackageName, ArgumentNameSource argumentNameSource, int indentationSpaces) throws IOException {
-		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
+		return writeFile(saveDirectory, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
 				argumentNameSource, indentationSpaces), interfaceNameToFileName(targetInterfaceName));
 	}
 
