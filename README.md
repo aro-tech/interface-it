@@ -74,10 +74,11 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 
 ###v1.0.0
 
- * Provide statistics on generated code (number of methods and constants, etc.)
- * Emit error message if no delegate methods found in delegate class 
+ * Provide statistics on generated code (number of methods and constants, etc.) 
  * Emit error message if class is not found in source archive
  * Create output directory if it doesn't exist
+ * Removing redundant methods in DelegateMethodGenerator (POTENTIAL BREAKING CHANGE FOR LOW-LEVEL CLIENT CODE) (done)
+ * Moving default indentation spaces to a constant in ClassCodeGenerator (done)
  
  
 ###future

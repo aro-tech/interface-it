@@ -30,7 +30,6 @@ import org.interfaceit.util.ClassNameUtils;
  */
 public class DelegateMethodGenerator implements ClassCodeGenerator {
 
-	private static final int DEFAULT_INDENTATION_SPACES = 4;
 	private static final String NEWLINE = System.lineSeparator();
 
 	/**
@@ -69,27 +68,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 									.toLowerCase());
 		}
 		return val;
-	}
-
-	/**
-	 * Generate code for 1 static method delegation
-	 * 
-	 * @param method
-	 * @param targetInterfaceName
-	 *            The name of the wrapper interface, to avoid class name
-	 *            conflicts
-	 * @param importsOut
-	 *            The method potentially adds values to this set if imports are
-	 *            required
-	 * @param argumentNameSource
-	 *            Provider of argument name information lost during compilation
-	 * 
-	 * @return the code for the method delegation
-	 */
-	public String makeDelegateMethod(Method method, String targetInterfaceName, Set<String> importsOut,
-			ArgumentNameSource argumentNameSource) {
-		return this.makeDelegateMethod(targetInterfaceName, method, importsOut, argumentNameSource,
-				this.makeIndentationUnit(DEFAULT_INDENTATION_SPACES));
 	}
 
 	/**
@@ -302,7 +280,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		return Arrays.stream(clazz.getFields()).filter(f -> {
 			int modifiers = f.getModifiers();
 			return Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers);
-		}).sorted((f1, f2) -> f1.getName().compareTo(f2.getName())).collect(Collectors.toList());
+		}).sorted(Comparator.comparing(Field::getName)).collect(Collectors.toList());
 	}
 
 	/**
@@ -338,25 +316,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 
 	/**
 	 * Generate Java code declaring and assigning constants which refer to each
-	 * constant in the delegate class This version uses default indentation in
-	 * the generated Java code
-	 * 
-	 * @param clazz
-	 * @param importsUpdated
-	 *            As a side effect, the imports needed for these constants are
-	 *            added to the set
-	 * @param targetInterfaceName
-	 * @return The Java code declaring and initializing all constants for the
-	 *         wrapper interface
-	 */
-	protected String generateConstantsForClassUpdatingImports(Class<?> clazz, Set<String> importsUpdated,
-			String targetInterfaceName) {
-		return this.generateConstantsForClassUpdatingImports(clazz, importsUpdated, DEFAULT_INDENTATION_SPACES,
-				targetInterfaceName);
-	}
-
-	/**
-	 * Generate Java code declaring and assigning constants which refer to each
 	 * constant in the delegate class
 	 * 
 	 * @param delegateClass
@@ -379,22 +338,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 
 		importsUpdated.addAll(ClassNameUtils.makeImports(delegateClass.getTypeName()));
 		return buf.toString();
-	}
-
-	/**
-	 * Generate the code of a java interface file delegating to the target
-	 * class's static fields and methods
-	 * 
-	 * @param targetPackageName
-	 * @param targetInterfaceName
-	 * @param delegateClass
-	 * @param argumentNameSource
-	 * @return Generated code
-	 */
-	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
-			Class<?> delegateClass, ArgumentNameSource argumentNameSource) {
-		return this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass, argumentNameSource,
-				DEFAULT_INDENTATION_SPACES);
 	}
 
 	/**
@@ -469,21 +412,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * 
 	 * @param delegateClass
 	 * @param importsUpdated
-	 * @param targetInterfaceName
-	 * @param argumentNameSource
-	 * @return code
-	 */
-	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
-			String targetInterfaceName, ArgumentNameSource argumentNameSource) {
-		return this.generateMethodsForClassUpdatingImports(delegateClass, importsUpdated, DEFAULT_INDENTATION_SPACES,
-				targetInterfaceName, argumentNameSource);
-	}
-
-	/**
-	 * Generate java code for all delegate methods
-	 * 
-	 * @param delegateClass
-	 * @param importsUpdated
 	 * @param indentationSpaces
 	 * @param targetInterfaceName
 	 * @param argumentNameSource
@@ -524,19 +452,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 			w.write(content);
 		}
 		return fileToWrite;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.interfaceit.ClassCodeGenerator#generateClassToFile(java.io.File,
-	 * java.lang.String, java.lang.Class, java.lang.String)
-	 */
-	@Override
-	public File generateClassToFile(File dir, String targetInterfaceName, Class<?> delegateClass,
-			String targetPackageName, ArgumentNameSource argumentNameSource) throws IOException {
-		return writeFile(dir, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
-				argumentNameSource), interfaceNameToFileName(targetInterfaceName));
 	}
 
 }

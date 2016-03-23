@@ -33,6 +33,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 	private ArgumentNameSource mockArgNameSource = mock(ArgumentNameSource.class);
 	private ArgumentNameSource defaultNameSource = new ArgumentNameSource() {
 	};
+	private static final String DEFAULT_INDENTATION_UNIT = "    ";
 
 	/**
 	 * @throws java.lang.Exception
@@ -63,7 +64,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 	public void can_generate_constants_code() {
 		Set<String> imports = new HashSet<>();
 		String result = underTest.generateConstantsForClassUpdatingImports(org.mockito.Mockito.class, imports,
-				"MyMockito");
+				ClassCodeGenerator.DEFAULT_INDENTATION_SPACES, "MyMockito");
 		assertThat(result).contains("{@link org.mockito.Mockito#RETURNS_DEFAULTS}",
 				"public static final Answer<Object> RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;",
 				"{@link org.mockito.Mockito#RETURNS_SMART_NULLS}",
@@ -225,8 +226,8 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 
 		assertTrue(verifyMethod.isPresent());
 
-		String delegateMethod = underTest.makeDelegateMethod(verifyMethod.get(), "MyMockito", imports,
-				defaultNameSource);
+		String delegateMethod = underTest.makeDelegateMethod("MyMockito", verifyMethod.get(), imports,
+				defaultNameSource, DEFAULT_INDENTATION_UNIT);
 		assertThat(delegateMethod).contains("/**")
 				.contains("* Delegate call to " + verifyMethod.get().toGenericString())
 				.contains(
@@ -243,7 +244,8 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 
 		assertTrue(method.isPresent());
 
-		String delegateMethod = underTest.makeDelegateMethod(method.get(), "Mockito", imports, defaultNameSource);
+		String delegateMethod = underTest.makeDelegateMethod("Mockito", method.get(), imports, defaultNameSource,
+				DEFAULT_INDENTATION_UNIT);
 		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + method.get().toGenericString())
 				.contains("* {@link org.mockito.Matchers#anyDouble()}").contains("*/")
 				.contains("default double anyDouble() {").contains("return Matchers.anyDouble();")
@@ -258,7 +260,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 
 		assertTrue(whenMethod.isPresent());
 
-		String delegateMethod = underTest.makeDelegateMethod(whenMethod.get(), "MyMockito", imports, defaultNameSource);
+		String delegateMethod = underTest.makeDelegateMethod("MyMockito", whenMethod.get(), imports, defaultNameSource, DEFAULT_INDENTATION_UNIT);
 		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + whenMethod.get().toGenericString())
 				.contains("{@link org.mockito.Mockito#when(java.lang.Object)}").contains("*/")
 				.contains("default <T> OngoingStubbing<T> when(T arg0) {").contains("return Mockito.when(arg0);")
@@ -282,7 +284,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 		String targetInterfaceName = "Mockito";
 		Class<org.mockito.Mockito> delegateClass = org.mockito.Mockito.class;
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, targetInterfaceName, delegateClass,
-				defaultNameSource);
+				defaultNameSource, ClassCodeGenerator.DEFAULT_INDENTATION_SPACES);
 		assertThat(classText)
 				.startsWith("package org.interfaceit.results;" + System.lineSeparator() + System.lineSeparator())
 				.doesNotContain("import org.mockito.Mockito").doesNotContain("import java.lang.Class<").contains("/**")
@@ -304,7 +306,7 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 			verifyCurrentLine(indentationSpaces, lines, indentation, lineNum);
 		}
 	}
-	
+
 	private static class IndentationContext {
 		private int indentationLevel = 0;
 
@@ -325,15 +327,15 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 	private static class LineContext {
 		private int firstNonWSIndex = -1;
 		private int leadingSpaces = 0;
-		private int i=0;
+		private int i = 0;
 		private final char[] lineChars;
 		private char currentChar = '-';
 		private boolean done = false;
-		
+
 		public LineContext(String line) {
 			super();
 			this.lineChars = line.toCharArray();
-			if(this.lineChars.length > 0) {
+			if (this.lineChars.length > 0) {
 				currentChar = lineChars[0];
 			} else {
 				done = true;
@@ -355,9 +357,9 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 		void incrementLeadingSpaces() {
 			this.leadingSpaces++;
 		}
-		
+
 		boolean continueLoop() {
-			if(done || i + 1 >= lineChars.length) {
+			if (done || i + 1 >= lineChars.length) {
 				return false;
 			}
 			i++;
@@ -369,21 +371,20 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 			return i;
 		}
 
-
 		char getCurrentChar() {
 			return currentChar;
 		}
-		
+
 	}
 
 	private void verifyCurrentLine(final int indentationSpaces, String[] lines, IndentationContext indentation,
 			int lineNum) {
 		final String line = lines[lineNum];
 		LineContext ctx = new LineContext(line);
-		if(line.length() > 0) {
+		if (line.length() > 0) {
 			do {
-				verifyForCurrentCharacter(indentation, ctx, line, lineNum, indentationSpaces);			
-			}while(ctx.continueLoop());			
+				verifyForCurrentCharacter(indentation, ctx, line, lineNum, indentationSpaces);
+			} while (ctx.continueLoop());
 		}
 	}
 
@@ -423,14 +424,13 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 	private void handleFirstNonWhitespaceCharacterAndVerifyIndentation(IndentationContext indentationCxt,
 			LineContext lineCtx, final String line, int lineNum, final int indentationSpaces) {
 		lineCtx.setFirstNonWSIndex(lineCtx.getI());
-		int expectedIndentationSpaces = calculateExpectedIndentationSpaces(indentationSpaces,
-				indentationCxt.getLevel(), lineCtx.getCurrentChar());
+		int expectedIndentationSpaces = calculateExpectedIndentationSpaces(indentationSpaces, indentationCxt.getLevel(),
+				lineCtx.getCurrentChar());
 		assertEquals(
 				"Expected " + expectedIndentationSpaces + " and not " + lineCtx.getLeadingSpaces()
 						+ " leading spaces for line " + lineNum + ": " + line,
 				expectedIndentationSpaces, lineCtx.getLeadingSpaces());
 	}
-
 
 	private void incrementIndentationContextIfNecessary(IndentationContext indentationCxt, LineContext lineCtx) {
 		if (lineCtx.getCurrentChar() == '{') {
