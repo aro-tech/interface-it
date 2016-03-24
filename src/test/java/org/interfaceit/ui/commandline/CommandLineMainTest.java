@@ -6,6 +6,7 @@ package org.interfaceit.ui.commandline;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.ArrayList;
 
 import org.interfaceit.ClassCodeGenerator;
 import org.interfaceit.util.SourceFileReader;
@@ -41,6 +42,21 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
 		verify(out).println(contains(result.getAbsolutePath()));
 	}
+	
+	
+	
+	@Test
+	public void execute_prints_warning_when_source_is_empty() throws ClassNotFoundException, IOException {
+		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example", "-s", "emptyFile.txt" };
+		File result = new File(".");
+		when(reader.readFilesInZipArchive(any(), any())).thenReturn(new ArrayList<String>());
+		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+				any())).thenReturn(result);		
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader);
+		verify(out).println(contains("Warning: No source code was found"));
+		verify(out).println(contains(result.getAbsolutePath()));
+	}
+
 
 	@Test
 	public void execute_prints_version_if_flag() {
