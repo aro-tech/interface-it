@@ -70,6 +70,13 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 
 	@Test
 	public void generating_method_should_increment_statistics() {
+		callAndVerifyMakeDelegateMethod();
+		GenerationStatistics stats = underTest.getStatistics();
+		assertThat(stats.getConstantCount()).isEqualTo(0);
+		assertThat(stats.getMethodCount()).isEqualTo(1);
+	}
+
+	private void callAndVerifyMakeDelegateMethod() {
 		Optional<Method> verifyMethod = underTest.listStaticMethodsForClass(org.mockito.Mockito.class).stream()
 				.filter((Method m) -> "verify".equals(m.getName()) && m.getParameters().length == 2).findFirst();
 
@@ -78,20 +85,34 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 				defaultNameSource, " ");
 		assertThat(result).contains("default <T> T verify(T arg0, VerificationMode arg1) {")
 				.contains("return Mockito.verify(arg0, arg1);");
-		GenerationStatistics stats = underTest.getStatistics();
-		assertThat(stats.getConstantCount()).isEqualTo(0);
-		assertThat(stats.getMethodCount()).isEqualTo(1);
 	}
 
 	@Test
 	public void generating_constant_should_increment_statistics() throws NoSuchFieldException, SecurityException {
-		StringBuilder buf = new StringBuilder();
-		underTest.generateConstant(Math.class.getDeclaredField("PI"), Math.class, new HashSet<String>(), buf, "MyMath",
-				"    ");
-		assertThat(buf.toString()).contains("public static final double PI");
+		callAndVerifyGenerateConstant();
 		GenerationStatistics stats = underTest.getStatistics();
 		assertThat(stats.getConstantCount()).isEqualTo(1);
 		assertThat(stats.getMethodCount()).isEqualTo(0);
 	}
 
+
+	private void callAndVerifyGenerateConstant() throws NoSuchFieldException {
+		StringBuilder buf = new StringBuilder();
+		underTest.generateConstant(Math.class.getDeclaredField("PI"), Math.class, new HashSet<String>(), buf, "MyMath",
+				"    ");
+		assertThat(buf.toString()).contains("public static final double PI");
+	}
+
+	@Test
+	public void can_reset_statistics() throws NoSuchFieldException, SecurityException {
+		callAndVerifyGenerateConstant();
+		callAndVerifyMakeDelegateMethod();
+		GenerationStatistics stats = underTest.getStatistics();
+		assertThat(stats.getConstantCount()).isEqualTo(1);
+		assertThat(stats.getMethodCount()).isEqualTo(1);
+		underTest.resetStatistics();
+		stats = underTest.getStatistics();
+		assertThat(stats.getConstantCount()).isEqualTo(0);
+		assertThat(stats.getMethodCount()).isEqualTo(0);
+	}
 }

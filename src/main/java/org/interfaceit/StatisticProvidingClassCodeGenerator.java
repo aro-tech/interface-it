@@ -40,6 +40,11 @@ public class StatisticProvidingClassCodeGenerator extends DelegateMethodGenerato
 		this.generationStatistics.incrementConstantCount();
 		super.generateConstant(field, fieldClass, imports, buf, targetInterfaceName, indentationUnit);
 	}
+
+	public void resetStatistics() {
+		this.generationStatistics = new GenerationStatistics();
+		
+	}
 	
 	
 
