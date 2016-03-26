@@ -14,12 +14,9 @@ import java.util.Set;
 import org.assertj.core.api.Assertions;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.util.mixin.AllAssertions;
-import org.interfaceit.util.mixin.AssertJ;
-import org.interfaceit.util.mixin.JUnitAssert;
 import org.interfaceit.util.mixin.Mockito;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.stubbing.Answer;
 
 /**
  * Unit tests for generating delegate methods
