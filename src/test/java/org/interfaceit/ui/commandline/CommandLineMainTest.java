@@ -9,7 +9,6 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 
 import org.interfaceit.ClassCodeGenerator;
-import org.interfaceit.StatisticProvidingClassCodeGeneratorTest;
 import org.interfaceit.statistics.GenerationStatistics;
 import org.interfaceit.statistics.StatisticsProvider;
 import org.interfaceit.util.SourceFileReader;
