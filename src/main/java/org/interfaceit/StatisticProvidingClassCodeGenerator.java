@@ -8,15 +8,21 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 import org.interfaceit.meta.arguments.ArgumentNameSource;
+import org.interfaceit.statistics.GenerationStatistics;
+import org.interfaceit.statistics.StatisticsProvider;
 
 /**
  * Implementation of ClassCodeGenerator which provides statistics about the generated code
  * @author aro_tech
  *
  */
-public class StatisticProvidingClassCodeGenerator extends DelegateMethodGenerator implements ClassCodeGenerator {
+public class StatisticProvidingClassCodeGenerator extends DelegateMethodGenerator implements ClassCodeGenerator, StatisticsProvider {
 	private GenerationStatistics generationStatistics = new GenerationStatistics();
 	
+	/* (non-Javadoc)
+	 * @see org.interfaceit.StatisticsProvider#getStatistics()
+	 */
+	@Override
 	public GenerationStatistics getStatistics() {
 		return this.generationStatistics;
 	}
@@ -41,6 +47,10 @@ public class StatisticProvidingClassCodeGenerator extends DelegateMethodGenerato
 		super.generateConstant(field, fieldClass, imports, buf, targetInterfaceName, indentationUnit);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.interfaceit.StatisticsProvider#resetStatistics()
+	 */
+	@Override
 	public void resetStatistics() {
 		this.generationStatistics = new GenerationStatistics();
 		

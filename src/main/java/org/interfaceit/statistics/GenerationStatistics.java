@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.interfaceit;
+package org.interfaceit.statistics;
 
 /**
  * Statistics from a run of code generation

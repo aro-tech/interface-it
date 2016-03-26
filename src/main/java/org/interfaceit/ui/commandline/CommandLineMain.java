@@ -14,10 +14,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.interfaceit.ClassCodeGenerator;
-import org.interfaceit.DelegateMethodGenerator;
+import org.interfaceit.StatisticProvidingClassCodeGenerator;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.meta.arguments.LookupArgumentNameSource;
 import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader;
+import org.interfaceit.statistics.GenerationStatistics;
+import org.interfaceit.statistics.StatisticsProvider;
 import org.interfaceit.ui.meta.error.EmptySource;
 import org.interfaceit.ui.meta.error.UnableToReadSource;
 import org.interfaceit.util.FileUtils;
@@ -43,7 +45,8 @@ public class CommandLineMain {
 	 */
 	public static void main(String[] args) {
 		ArgumentParser argParser = new ArgumentParser(args);
-		execute(args, System.out, new DelegateMethodGenerator(), argParser, new FileUtils());
+		StatisticProvidingClassCodeGenerator methodGenerator = new StatisticProvidingClassCodeGenerator();
+		execute(args, System.out, methodGenerator, argParser, new FileUtils(), methodGenerator);
 	}
 
 	/**
@@ -52,16 +55,17 @@ public class CommandLineMain {
 	 * @param generator
 	 * @param argParser
 	 * @param sourceReader
+	 * @param statsProvider
 	 */
 	static void execute(String[] args, PrintStream out, ClassCodeGenerator generator, ArgumentParser argParser,
-			SourceFileReader sourceReader) {
+			SourceFileReader sourceReader, StatisticsProvider statsProvider) {
 		if (argParser.isVersionRequest()) {
 			printVersion(out);
 		} else if (argParser.isHelpRequest() || argParser.hasInsufficientArguments()) {
 			printArgFeedbackAndHelp(args, out);
 		} else {
 			try {
-				generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader);
+				generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader, statsProvider);
 			} catch (ClassNotFoundException cnfe) {
 				String argsStr = String.join("\n>", Arrays.asList(args));
 				out.println("Incorrect or unspecified class name in arguments: \n>" + argsStr);
@@ -106,13 +110,15 @@ public class CommandLineMain {
 	}
 
 	private static void generateClassFileAndPrintFeedback(PrintStream out, ClassCodeGenerator generator,
-			ArgumentParser argParser, SourceFileReader sourceReader) throws ClassNotFoundException {
+			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider)
+					throws ClassNotFoundException {
 		Class<?> delegateClass = argParser.getDelegateClass();
 
 		try {
 			File result = generator.generateClassToFile(argParser.getWriteDirectoryPath(),
-					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(), makeArgumentSource(argParser, sourceReader, delegateClass, out));
-			printSuccessFeedback(result, out);
+					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
+					makeArgumentSource(argParser, sourceReader, delegateClass, out));
+			printSuccessFeedback(result, out, statsProvider);
 		} catch (UnableToReadSource err) {
 			printErrorFeedback(out, err.getCause(),
 					"Error reading specified source file: " + argParser.getSourceFlagText());
@@ -120,7 +126,6 @@ public class CommandLineMain {
 			printErrorFeedback(out, e, "Error writing output.");
 		}
 	}
-
 
 	private static ArgumentNameSource makeArgumentSource(ArgumentParser argParser, SourceFileReader sourceReader,
 			Class<?> delegateClass, PrintStream out) throws UnableToReadSource {
@@ -191,8 +196,13 @@ public class CommandLineMain {
 		return paths.toArray(new String[0]);
 	}
 
-	private static void printSuccessFeedback(File result, PrintStream out) {
+	private static void printSuccessFeedback(File result, PrintStream out, StatisticsProvider statsProvider) {
 		out.println("Wrote file: " + result.getAbsolutePath());
+		if (null != statsProvider) {
+			GenerationStatistics stats = statsProvider.getStatistics();
+			out.println(
+					"Generated " + stats.getConstantCount() + " constants and " + stats.getMethodCount() + " methods.");
+		}
 	}
 
 }

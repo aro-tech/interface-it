@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 import org.interfaceit.meta.arguments.ArgumentNameSource;
+import org.interfaceit.statistics.GenerationStatistics;
 import org.interfaceit.util.mixin.AllAssertions;
 import org.interfaceit.util.mixin.Mockito;
 import org.junit.Before;
