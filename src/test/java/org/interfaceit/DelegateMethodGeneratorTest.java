@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.assertj.core.api.Assertions;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
+import org.interfaceit.util.mixin.AllAssertions;
 import org.interfaceit.util.mixin.AssertJ;
 import org.interfaceit.util.mixin.JUnitAssert;
 import org.interfaceit.util.mixin.Mockito;
@@ -26,7 +27,7 @@ import org.mockito.stubbing.Answer;
  * @author aro_tech
  *
  */
-public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAssert {
+public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	private static final String TARGET_PACKAGE = "org.interfaceit.results";
 	private DelegateMethodGenerator underTest = new DelegateMethodGenerator();
 	private Set<String> imports;
@@ -506,15 +507,6 @@ public class DelegateMethodGeneratorTest implements AssertJ, Mockito, JUnitAsser
 
 		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "   "))
 				.startsWith("   @Deprecated" + System.lineSeparator() + "   default");
-	}
-
-	/**
-	 * This override is necessary because of a name collision between JUnit and
-	 * AssertJ
-	 */
-	@Override
-	public void fail(String message) {
-		JUnitAssert.super.fail(message);
 	}
 
 	// TODO: handle singleton calls?
