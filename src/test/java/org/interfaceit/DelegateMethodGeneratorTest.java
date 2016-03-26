@@ -506,6 +506,4 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 				.startsWith("   @Deprecated" + System.lineSeparator() + "   default");
 	}
 
-	// TODO: handle singleton calls?
-
 }
