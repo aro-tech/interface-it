@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Unit tests for StatisticProvidingClassCodeGenerator
  * @author aro_tech
  *
  */
@@ -37,11 +38,8 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 	@Test
 	public void should_provide_statistics() {
 		String result = underTest.generateDelegateClassCode("org.whatever", "MyMath", Math.class, defaultNameSource, 5);
-		GenerationStatistics stats = underTest.getStatistics();
 		assertThat(countOccurrencesInString(result, "default ")).isEqualTo(NUMBER_OF_STATIC_METHODS_IN_MATH_CLASS);
-		assertThat(stats.getConstantCount()).isEqualTo(2);
-		assertThat(stats.getMethodCount()).isEqualTo(NUMBER_OF_STATIC_METHODS_IN_MATH_CLASS);
-
+		verifyConstantAndMethodCounts(2, NUMBER_OF_STATIC_METHODS_IN_MATH_CLASS);
 	}
 
 	private int countOccurrencesInString(String src, String target) {
@@ -91,9 +89,13 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 	@Test
 	public void generating_constant_should_increment_statistics() throws NoSuchFieldException, SecurityException {
 		callAndVerifyGenerateConstant();
+		verifyConstantAndMethodCounts(1, 0);
+	}
+
+	private void verifyConstantAndMethodCounts(int expectedConstantCount, int expectedMethodCount) {
 		GenerationStatistics stats = underTest.getStatistics();
-		assertThat(stats.getConstantCount()).isEqualTo(1);
-		assertThat(stats.getMethodCount()).isEqualTo(0);
+		assertThat(stats.getConstantCount()).isEqualTo(expectedConstantCount);
+		assertThat(stats.getMethodCount()).isEqualTo(expectedMethodCount);
 	}
 
 
@@ -108,12 +110,8 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 	public void can_reset_statistics() throws NoSuchFieldException, SecurityException {
 		callAndVerifyGenerateConstant();
 		callAndVerifyMakeDelegateMethod();
-		GenerationStatistics stats = underTest.getStatistics();
-		assertThat(stats.getConstantCount()).isEqualTo(1);
-		assertThat(stats.getMethodCount()).isEqualTo(1);
+		verifyConstantAndMethodCounts(1, 1);
 		underTest.resetStatistics();
-		stats = underTest.getStatistics();
-		assertThat(stats.getConstantCount()).isEqualTo(0);
-		assertThat(stats.getMethodCount()).isEqualTo(0);
+		verifyConstantAndMethodCounts(0, 0);
 	}
 }
