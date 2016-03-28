@@ -75,12 +75,12 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 ###v1.0.0
 
  * Remove redundant methods in DelegateMethodGenerator<sup>*</sup> (done)
- * Provide statistics on generated code (number of methods and constants, etc.)<sup>*</sup> 
+ * Provide statistics on generated code (number of methods and constants, etc.) (done) 
  * Emit warning message if no source code is found in source archive or file (done)
- * Create output directory if it doesn't exist
+ * Create output directory if it doesn't exist (done)
  * Expand and abstract formatting to allow control not just of indentation but also comments and maybe more in the future.<sup>*</sup> ???
  
- <sup>*</sup> = POTENTIAL BREAKING CHANGE FOR CLIENT CODE
+ <sup>*</sup> = potential minor breaking change for client code
  
 ###future
 

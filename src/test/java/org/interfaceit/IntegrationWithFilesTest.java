@@ -44,7 +44,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 	public static void setUp() throws Exception {
 		tmpDir = new File("./tmp");
 		examplesDir = new File("./examples");
-		tmpDir.mkdirs();
+		// tmpDir.mkdirs();
 		// imports = new HashSet<>();
 	}
 
@@ -53,7 +53,10 @@ public class IntegrationWithFilesTest implements AssertJ {
 		for (File f : tmpDir.listFiles()) {
 			f.delete();
 		}
-		tmpDir.delete();
+		if (!tmpDir.delete()) {
+			System.out.println("In post-test clean-up, unable to delete file: " + tmpDir.getCanonicalPath()
+					+ " - Please delete it manually.");
+		}
 	}
 
 	/**
@@ -66,7 +69,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 		File resultFile = underTest.generateClassToFile(tmpDir, "MockitoEnabled", Mockito.class, "org.interfaceit.test",
 				new ArgumentNameSource() {
 				}, 5);
-		
+
 		URL expectedURL = this.getClass().getResource("/MockitoEnabled.txt");
 		File expected = new File(expectedURL.getPath());
 		System.out.println(resultFile.getAbsolutePath());
@@ -115,9 +118,11 @@ public class IntegrationWithFilesTest implements AssertJ {
 
 			generateClassFromCommandLineMainAndVerify(packageName, "java.lang.Math", "Math", examplesSourceZip);
 
-			generateClassFromCommandLineMainAndVerify(packageName, "java.net.URLEncoder", "URLEncoding", getExampleSourceFile());
+			generateClassFromCommandLineMainAndVerify(packageName, "java.net.URLEncoder", "URLEncoding",
+					getExampleSourceFile());
 
-			generateClassFromCommandLineMainAndVerify(packageName, "org.junit.Assert", "JUnitAssert", getExampleSourceFile());
+			generateClassFromCommandLineMainAndVerify(packageName, "org.junit.Assert", "JUnitAssert",
+					getExampleSourceFile());
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -135,7 +140,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 		File file = new File(url.getPath());
 		return file;
 	}
-	
+
 	private File getExamplesZipFile() {
 		return getResourceFile("/examples.zip");
 	}

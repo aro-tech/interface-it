@@ -3,9 +3,7 @@
  */
 package org.interfaceit;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -21,6 +19,8 @@ import java.util.stream.Collectors;
 
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.util.ClassNameUtils;
+import org.interfaceit.util.FileSystem;
+import org.interfaceit.util.FileUtils;
 
 /**
  * Generates an interface with default methods that delegate to static methods
@@ -31,6 +31,26 @@ import org.interfaceit.util.ClassNameUtils;
 public class DelegateMethodGenerator implements ClassCodeGenerator {
 
 	private static final String NEWLINE = System.lineSeparator();
+	
+	private final FileSystem fileSystem;
+
+	
+	/**
+	 * Constructor using default FileSystem
+	 */
+	public DelegateMethodGenerator() {
+		super();
+		this.fileSystem = new FileUtils();
+	}
+	
+	/**
+	 * Constructor
+	 * @param fileSystem
+	 */
+	public DelegateMethodGenerator(FileSystem fileSystem) {
+		super();
+		this.fileSystem = fileSystem;
+	}
 
 	/**
 	 * Get all static methods for a class
@@ -438,20 +458,16 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	@Override
 	public File generateClassToFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass,
 			String targetPackageName, ArgumentNameSource argumentNameSource, int indentationSpaces) throws IOException {
-		return writeFile(saveDirectory, this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass,
-				argumentNameSource, indentationSpaces), interfaceNameToFileName(targetInterfaceName));
+		return writeClassFile(saveDirectory, this.generateDelegateClassCode(targetPackageName, targetInterfaceName,
+				delegateClass, argumentNameSource, indentationSpaces), interfaceNameToFileName(targetInterfaceName));
 	}
 
 	private String interfaceNameToFileName(String targetInterfaceName) {
 		return targetInterfaceName + ".java";
 	}
 
-	private File writeFile(File dir, String content, String fileName) throws IOException {
-		File fileToWrite = new File(dir, fileName);
-		try (BufferedWriter w = new BufferedWriter(new FileWriter(fileToWrite))) {
-			w.write(content);
-		}
-		return fileToWrite;
+	private File writeClassFile(File dir, String content, String fileName) throws IOException {
+		fileSystem.makeOutputDirectoryIfAbsent(dir);
+		return fileSystem.writeFile(dir, fileName, content);
 	}
-
 }

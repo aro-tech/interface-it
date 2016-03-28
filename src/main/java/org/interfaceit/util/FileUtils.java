@@ -4,7 +4,9 @@
 package org.interfaceit.util;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
@@ -21,7 +23,7 @@ import java.util.zip.ZipFile;
  * @author aro_tech
  *
  */
-public class FileUtils implements SourceFileReader {
+public class FileUtils implements SourceFileReader, FileSystem {
 
 	/* (non-Javadoc)
 	 * @see org.interfaceit.util.SourceFileReader#readFilesInZipArchive(java.io.File, java.lang.String)
@@ -70,4 +72,27 @@ public class FileUtils implements SourceFileReader {
 			}
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.interfaceit.FileSystem#writeFile(java.io.File, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public File writeFile(File dir, String fileName, String content) throws IOException {
+		File fileToWrite = new File(dir, fileName);
+		try (BufferedWriter w = new BufferedWriter(new FileWriter(fileToWrite))) {
+			w.write(content);
+		}
+		return fileToWrite;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.interfaceit.FileSystem#makeOutputDirectoryIfAbsent(java.io.File)
+	 */
+	@Override
+	public void makeOutputDirectoryIfAbsent(File dir) {
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+	}
+
 }
