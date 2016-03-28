@@ -111,17 +111,32 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
 			ArgumentNameSource argumentNameSource, String indentationUnit) {
 		StringBuilder buf = new StringBuilder();
-		buf.append(indentationUnit).append("/**").append(NEWLINE).append(indentationUnit).append(" * Delegate call to ")
-				.append(method.toGenericString()).append(NEWLINE).append(indentationUnit).append(" * ")
-				.append("{@link ").append(method.getDeclaringClass().getTypeName()).append('#').append(method.getName())
-				.append("(").append(generateParamsForJavadocLink(method)).append(")}").append(NEWLINE)
-				.append(indentationUnit).append(" */").append(NEWLINE)
+		appendMethodComment(method, indentationUnit, buf).append(NEWLINE)
 				.append(this.makeMethodSignature(method, importsOut, argumentNameSource, indentationUnit)).append(" {")
 				.append(NEWLINE).append(indentationUnit).append(indentationUnit)
 				.append(this.makeDelegateCall(method, targetInterfaceName, importsOut, argumentNameSource))
 				.append(NEWLINE).append(indentationUnit).append("}").append(NEWLINE);
 
 		return buf.toString();
+	}
+
+	/**
+	 * Add a javadoc comment for the generated method
+	 * 
+	 * @param method
+	 *            The delegate method
+	 * @param indentationUnit
+	 *            Blank spaces for indentation
+	 * @param buf
+	 *            The StringBuilder for appending
+	 * @return buf
+	 */
+	protected StringBuilder appendMethodComment(Method method, String indentationUnit, StringBuilder buf) {
+		return buf.append(indentationUnit).append("/**").append(NEWLINE).append(indentationUnit)
+				.append(" * Delegate call to ").append(method.toGenericString()).append(NEWLINE).append(indentationUnit)
+				.append(" * ").append("{@link ").append(method.getDeclaringClass().getTypeName()).append('#')
+				.append(method.getName()).append("(").append(generateParamsForJavadocLink(method)).append(")}")
+				.append(NEWLINE).append(indentationUnit).append(" */");
 	}
 
 	private String generateParamsForJavadocLink(Method method) {
@@ -317,12 +332,31 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	protected void generateConstant(Field field, Class<?> fieldClass, Set<String> imports, StringBuilder buf,
 			String targetInterfaceName, String indentationUnit) {
 		String type = extractShortNameAndUpdateImports(imports, getTypeNameFromFieldForConstant(field));
-		buf.append(NEWLINE).append(indentationUnit).append("/** ").append("{@link ").append(fieldClass.getTypeName())
-				.append('#').append(field.getName()).append("} */").append(NEWLINE);
+		buf.append(NEWLINE);
+		appendCommentForConstant(field, fieldClass, buf, indentationUnit);
+		appendConstantDeclaration(field, fieldClass, buf, targetInterfaceName, indentationUnit, type);
+	}
+
+	private void appendConstantDeclaration(Field field, Class<?> fieldClass, StringBuilder buf,
+			String targetInterfaceName, String indentationUnit, String type) {
 		buf.append(indentationUnit).append("public static final ").append(type).append(' ').append(field.getName())
 				.append(" = ")
 				.append(ClassNameUtils.getDelegateClassNameWithoutPackageIfNoConflict(fieldClass, targetInterfaceName))
 				.append('.').append(field.getName()).append(";").append(NEWLINE);
+	}
+
+	/**
+	 * Append a javadoc comment for a generated constant
+	 * 
+	 * @param field
+	 * @param fieldClass
+	 * @param buf
+	 * @param indentationUnit
+	 */
+	protected void appendCommentForConstant(Field field, Class<?> fieldClass, StringBuilder buf,
+			String indentationUnit) {
+		buf.append(indentationUnit).append("/** ").append("{@link ").append(fieldClass.getTypeName()).append('#')
+				.append(field.getName()).append("} */").append(NEWLINE);
 	}
 
 	private String getTypeNameFromFieldForConstant(Field field) {
@@ -389,14 +423,53 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	private void appendInterfaceBody(String targetInterfaceName, Class<?> delegateClass, int indentationSpaces,
 			StringBuilder buf, String constants, String methods) {
 		String indentationUnit = makeIndentationUnit(indentationSpaces);
-		buf.append(NEWLINE).append("/** ").append(NEWLINE).append(" * Wrapper of static elements in ")
+		appendClassComment(delegateClass, buf);
+		buf.append("public interface ").append(targetInterfaceName);
+		buf.append(" {").append(NEWLINE).append(NEWLINE).append(NEWLINE);
+		appendCommentBeforeConstants(buf, indentationUnit).append(constants).append(NEWLINE).append(NEWLINE);
+		appendCommentBeforeMethods(buf, indentationUnit).append(methods).append(NEWLINE).append("}");
+	}
+
+	/**
+	 * Append a comment to start the zone of methods
+	 * 
+	 * @param buf
+	 *            target for append
+	 * @param indentationUnit
+	 *            Blank spaces for indentation
+	 * @return buf
+	 */
+	protected StringBuilder appendCommentBeforeMethods(StringBuilder buf, String indentationUnit) {
+		return buf.append(indentationUnit).append("// DELEGATE METHODS: ").append(NEWLINE);
+	}
+
+	/**
+	 * Append a comment to start the zone of constants
+	 * 
+	 * @param buf
+	 *            target for append
+	 * @param indentationUnit
+	 *            Blank spaces for indentation
+	 * @return buf
+	 */
+	protected StringBuilder appendCommentBeforeConstants(StringBuilder buf, String indentationUnit) {
+		return buf.append(indentationUnit).append("// CONSTANTS: ").append(NEWLINE);
+	}
+
+	/**
+	 * Append a javadoc comment for the class
+	 * 
+	 * @param delegateClass
+	 * @param buf
+	 *            target for append
+	 * @return buf
+	 */
+	protected StringBuilder appendClassComment(Class<?> delegateClass, StringBuilder buf) {
+		return buf.append(NEWLINE).append("/** ").append(NEWLINE).append(" * Wrapper of static elements in ")
 				.append(delegateClass.getTypeName()).append(NEWLINE)
 				.append(" * Generated by Interface-It: https://github.com/aro-tech/interface-it").append(NEWLINE)
 				.append(" * {@link ").append(delegateClass.getTypeName()).append("}").append(NEWLINE).append(" */")
-				.append(NEWLINE).append("public interface ").append(targetInterfaceName).append(" {").append(NEWLINE)
-				.append(NEWLINE).append(NEWLINE).append(indentationUnit).append("// CONSTANTS: ").append(NEWLINE)
-				.append(constants).append(NEWLINE).append(NEWLINE).append(indentationUnit)
-				.append("// DELEGATE METHODS: ").append(NEWLINE).append(methods).append(NEWLINE).append("}");
+				.append(NEWLINE);
 	}
 
 	private String makeIndentationUnit(int indentationSpaces) {
