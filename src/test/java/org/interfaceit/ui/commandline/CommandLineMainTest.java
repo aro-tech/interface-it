@@ -139,6 +139,14 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		verify(out).println(contains("Error creating output directory"));
 	}
 
+	@Test
+	public void execute_can_handle_error_with_null_output_directory() throws ClassNotFoundException, IOException {
+		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
+		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+				any())).thenThrow(new UnableToCreateOutputDirectory(null));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, null);
+		verify(out).println(contains("<NULL>"));
+	}
 	
 	
 	@Test

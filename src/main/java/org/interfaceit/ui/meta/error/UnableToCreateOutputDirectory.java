@@ -24,15 +24,8 @@ public class UnableToCreateOutputDirectory extends IOException {
 	 *            The directory for which creation failed
 	 */
 	public UnableToCreateOutputDirectory(File targetDirectory) {
-		super("Unable to create directory: " + targetDirectory.getAbsolutePath());
+		super("Unable to create directory: " + safeGetPath(targetDirectory));
 		this.targetDirectory = targetDirectory;
-	}
-
-	/**
-	 * @return the targetDirectory
-	 */
-	public File getTargetDirectory() {
-		return targetDirectory;
 	}
 
 	/**
@@ -41,10 +34,14 @@ public class UnableToCreateOutputDirectory extends IOException {
 	 *         if it's null.
 	 */
 	public String getTargetDirectoryPath() {
-		if (null == targetDirectory) {
+		return safeGetPath(targetDirectory);
+	}
+
+	private static String safeGetPath(File file) {
+		if (null == file) {
 			return "<NULL>";
 		}
-		return targetDirectory.getAbsolutePath();
+		return file.getAbsolutePath();
 	}
 
 }

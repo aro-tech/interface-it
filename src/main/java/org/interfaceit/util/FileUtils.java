@@ -105,9 +105,13 @@ public class FileUtils implements SourceFileReader, FileSystem {
 	@Override
 	public void makeOutputDirectoryIfAbsent(File dir) throws UnableToCreateOutputDirectory {
 		if (!dir.exists()) {
-			if (!dir.mkdirs()) {
-				throw new UnableToCreateOutputDirectory(dir);
-			}
+			makeAbsentDirectory(dir);
+		}
+	}
+
+	private void makeAbsentDirectory(File dir) throws UnableToCreateOutputDirectory {
+		if (!dir.mkdirs()) {
+			throw new UnableToCreateOutputDirectory(dir);
 		}
 	}
 
