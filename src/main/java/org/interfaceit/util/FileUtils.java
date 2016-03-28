@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
+
 /**
  * Class for reading source files
  * 
@@ -25,12 +27,15 @@ import java.util.zip.ZipFile;
  */
 public class FileUtils implements SourceFileReader, FileSystem {
 
-	/* (non-Javadoc)
-	 * @see org.interfaceit.util.SourceFileReader#readFilesInZipArchive(java.io.File, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.interfaceit.util.SourceFileReader#readFilesInZipArchive(java.io.File,
+	 * java.lang.String)
 	 */
 	@Override
-	public List<String> readFilesInZipArchive(File zipFile, String... filePathsWithinZipStructure)
-			throws IOException {
+	public List<String> readFilesInZipArchive(File zipFile, String... filePathsWithinZipStructure) throws IOException {
 		List<String> lines = new ArrayList<>();
 		try (ZipFile zf = new ZipFile(zipFile)) {
 			for (String filePathWithinZipStructure : filePathsWithinZipStructure) {
@@ -40,8 +45,12 @@ public class FileUtils implements SourceFileReader, FileSystem {
 		return lines;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.interfaceit.util.SourceFileReader#readTrimmedLinesFromFilePath(java.nio.file.Path)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.interfaceit.util.SourceFileReader#readTrimmedLinesFromFilePath(java.
+	 * nio.file.Path)
 	 */
 	@Override
 	public List<String> readTrimmedLinesFromFilePath(Path path) {
@@ -72,9 +81,12 @@ public class FileUtils implements SourceFileReader, FileSystem {
 			}
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.interfaceit.FileSystem#writeFile(java.io.File, java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.interfaceit.FileSystem#writeFile(java.io.File, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public File writeFile(File dir, String fileName, String content) throws IOException {
@@ -85,13 +97,17 @@ public class FileUtils implements SourceFileReader, FileSystem {
 		return fileToWrite;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.interfaceit.FileSystem#makeOutputDirectoryIfAbsent(java.io.File)
 	 */
 	@Override
-	public void makeOutputDirectoryIfAbsent(File dir) {
+	public void makeOutputDirectoryIfAbsent(File dir) throws UnableToCreateOutputDirectory {
 		if (!dir.exists()) {
-			dir.mkdirs();
+			if (!dir.mkdirs()) {
+				throw new UnableToCreateOutputDirectory(dir);
+			}
 		}
 	}
 

@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.interfaceit.meta.arguments.ArgumentNameSource;
+import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
 import org.interfaceit.util.ClassNameUtils;
 import org.interfaceit.util.FileSystem;
 import org.interfaceit.util.FileUtils;
@@ -31,10 +32,9 @@ import org.interfaceit.util.FileUtils;
 public class DelegateMethodGenerator implements ClassCodeGenerator {
 
 	private static final String NEWLINE = System.lineSeparator();
-	
+
 	private final FileSystem fileSystem;
 
-	
 	/**
 	 * Constructor using default FileSystem
 	 */
@@ -42,9 +42,10 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		super();
 		this.fileSystem = new FileUtils();
 	}
-	
+
 	/**
 	 * Constructor
+	 * 
 	 * @param fileSystem
 	 */
 	public DelegateMethodGenerator(FileSystem fileSystem) {
@@ -466,7 +467,8 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		return targetInterfaceName + ".java";
 	}
 
-	private File writeClassFile(File dir, String content, String fileName) throws IOException {
+	private File writeClassFile(File dir, String content, String fileName)
+			throws IOException, UnableToCreateOutputDirectory {
 		fileSystem.makeOutputDirectoryIfAbsent(dir);
 		return fileSystem.writeFile(dir, fileName, content);
 	}

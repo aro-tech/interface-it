@@ -21,6 +21,7 @@ import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader;
 import org.interfaceit.statistics.GenerationStatistics;
 import org.interfaceit.statistics.StatisticsProvider;
 import org.interfaceit.ui.meta.error.EmptySource;
+import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
 import org.interfaceit.ui.meta.error.UnableToReadSource;
 import org.interfaceit.util.FileUtils;
 import org.interfaceit.util.SourceFileReader;
@@ -122,6 +123,8 @@ public class CommandLineMain {
 		} catch (UnableToReadSource err) {
 			printErrorFeedback(out, err.getCause(),
 					"Error reading specified source file: " + argParser.getSourceFlagText());
+		} catch (UnableToCreateOutputDirectory err) {
+			printErrorFeedback(out, err, "Error creating output directory: " + err.getTargetDirectoryPath());
 		} catch (Exception e) {
 			printErrorFeedback(out, e, "Error writing output.");
 		}
@@ -139,7 +142,7 @@ public class CommandLineMain {
 		return argSource;
 	}
 
-	private static void printErrorFeedback(PrintStream out, Exception e, String message) {
+	private static void printErrorFeedback(PrintStream out, Throwable e, String message) {
 		out.println(message);
 		e.printStackTrace(out);
 	}

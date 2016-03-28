@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import org.interfaceit.ClassCodeGenerator;
 import org.interfaceit.statistics.GenerationStatistics;
 import org.interfaceit.statistics.StatisticsProvider;
+import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
 import org.interfaceit.util.SourceFileReader;
 import org.interfaceit.util.mixin.AssertJ;
 import org.interfaceit.util.mixin.Mockito;
@@ -129,6 +130,17 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		verify(out).println(contains("Error writing output"));
 	}
 
+	@Test
+	public void execute_prints_error_message_on_failure_to_create_output_directory() throws ClassNotFoundException, IOException {
+		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
+		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+				any())).thenThrow(new UnableToCreateOutputDirectory(new File(".")));
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, null);
+		verify(out).println(contains("Error creating output directory"));
+	}
+
+	
+	
 	@Test
 	public void execute_prints_error_message_source_jar_read_error() throws ClassNotFoundException, IOException {
 		String sourceFile = "bogus.jar";

@@ -3,12 +3,16 @@
  */
 package org.interfaceit;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
@@ -44,8 +48,6 @@ public class IntegrationWithFilesTest implements AssertJ {
 	public static void setUp() throws Exception {
 		tmpDir = new File("./tmp");
 		examplesDir = new File("./examples");
-		// tmpDir.mkdirs();
-		// imports = new HashSet<>();
 	}
 
 	@AfterClass
@@ -54,7 +56,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 			f.delete();
 		}
 		if (!tmpDir.delete()) {
-			System.out.println("In post-test clean-up, unable to delete file: " + tmpDir.getCanonicalPath()
+			System.out.println("In post-test clean-up, unable to delete directory: " + tmpDir.getCanonicalPath()
 					+ " - Please delete it manually.");
 		}
 	}
@@ -74,8 +76,9 @@ public class IntegrationWithFilesTest implements AssertJ {
 		File expected = new File(expectedURL.getPath());
 		System.out.println(resultFile.getAbsolutePath());
 		Assertions.assertThat(resultFile).exists().canRead();
-		List<String> resultLines = sourceReader.readTrimmedLinesFromFilePath(resultFile.toPath());
-		List<String> expectedLines = sourceReader.readTrimmedLinesFromFilePath(expected.toPath());
+		List<String> resultLines = readFileLines(resultFile);
+		List<String> expectedLines = readFileLines(expected);
+
 		Assertions.assertThat(resultLines).hasSameSizeAs(expectedLines).containsAll(expectedLines);
 	}
 
@@ -166,15 +169,27 @@ public class IntegrationWithFilesTest implements AssertJ {
 	}
 
 	private void verifyCountOccurences(File resultFile, int expectedOcurrenceCount, final String expected) {
-		Path path = FileSystems.getDefault().getPath(resultFile.getAbsolutePath());
 		long count = 0;
 		try {
-			count = Files.lines(path).filter(str -> str.contains(expected)).count();
+			count = readFileLines(resultFile).stream().filter(str -> str.contains(expected)).count();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		assertThat(count).as("Occurrence count of " + expectedOcurrenceCount + " for expected line: " + expected)
 				.isEqualTo(expectedOcurrenceCount);
+	}
+
+	private static List<String> readFileLines(File file) throws FileNotFoundException, IOException {
+		String line = null;
+		List<String> lines = new ArrayList<>();
+		try (InputStream fis = new FileInputStream(file);
+				InputStreamReader isr = new InputStreamReader(fis);
+				BufferedReader br = new BufferedReader(isr);) {
+			while ((line = br.readLine()) != null) {
+				lines.add(line);
+			}
+		}
+		return lines;
 	}
 
 	private LookupArgumentNameSource loadArgumentNames(File examplesZipFile) throws IOException {

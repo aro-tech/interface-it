@@ -3,6 +3,8 @@ package org.interfaceit.util;
 import java.io.File;
 import java.io.IOException;
 
+import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
+
 public interface FileSystem {
 
 	/**
@@ -20,7 +22,8 @@ public interface FileSystem {
 	 * 
 	 * @param dir
 	 *            The target directory
+	 * @throws UnableToCreateOutputDirectory
 	 */
-	void makeOutputDirectoryIfAbsent(File dir);
+	void makeOutputDirectoryIfAbsent(File dir) throws UnableToCreateOutputDirectory;
 
 }
