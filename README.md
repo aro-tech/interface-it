@@ -49,7 +49,7 @@ Anywhere that you use static imports, you might want to consider generating a mi
 Many of you may just need to copy and paste a source file from the [examples](https://github.com/aro-tech/interface-it/examples "examples")
  and adjust it to the needs of your project.  There are delegate interfaces for [AssertJ](https://github.com/aro-tech/interface-it/blob/master/examples/AssertJ.java "AssertJ"), [Mockito](https://github.com/aro-tech/interface-it/blob/master/examples/Mockito.java "Mockito"), and [JUnit Assert](https://github.com/aro-tech/interface-it/blob/master/examples/Assert.java "JUnit Assert") which you can use in your own unit tests.  A unit test class which implements some of these is [DelegateMethodGeneratorTest](https://github.com/aro-tech/interface-it/blob/master/src/test/java/org/interfaceit/DelegateMethodGeneratorTest.java "DelegateMethodGeneratorTest.java source").
 
-If you want to generate mix-ins which wrap other static classes, such as in your own legacy code, you need to build the jar file using `mvn clean package`. 
+If you want to generate mix-ins which wrap other static classes, such as in your own legacy code, you can build the jar file from source using `mvn clean package` or you can just download it or use a dependency manager to fetch it for you. 
 
 Once you have the binary, you run the jar file, providing a classpath which allows loading the class you want to wrap (and any classes it needs to load for its method signatures) and the appropriate command-line arguments. [An example .bat file](https://github.com/aro-tech/interface-it/blob/master/examples/mockitoComandLineExample.bat "Example .bat file: mockitoComandLineExample.bat") is provided to show how this is done.   
 
@@ -79,7 +79,7 @@ Once you have the binary, you run the jar file, providing a classpath which allo
  * Emit warning message if no source code is found in source archive or file (done)
  * Create output directory if it doesn't exist (done)
  * Expose protected methods in DelegateMethodGenerator to allow overriding of comment generation. (done)
- * Allow a policy for handling deprecated methods - propagate deprecation, do not deprecate wrapped methods, or ignore deprecated methods. (in progress)
+ * Allow a policy for handling deprecated methods - propagate deprecation, do not deprecate wrapped methods, or ignore deprecated methods. (done, except for command-line flag)
  
  <sup>*</sup> = potential minor breaking change for low-level client code
  
