@@ -34,6 +34,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	private static final String NEWLINE = System.lineSeparator();
 
 	private final FileSystem fileSystem;
+	private final DeprecationPolicy deprecationPolicy;
 
 	/**
 	 * Constructor using default FileSystem
@@ -41,16 +42,19 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	public DelegateMethodGenerator() {
 		super();
 		this.fileSystem = new FileUtils();
+		this.deprecationPolicy = DeprecationPolicy.PROPAGATE_DEPRECATION;
 	}
 
 	/**
 	 * Constructor
 	 * 
 	 * @param fileSystem
+	 * @param deprecationPolicy
 	 */
-	public DelegateMethodGenerator(FileSystem fileSystem) {
+	public DelegateMethodGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy) {
 		super();
 		this.fileSystem = fileSystem;
+		this.deprecationPolicy = deprecationPolicy;
 	}
 
 	/**
@@ -167,7 +171,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	protected String makeMethodSignature(Method method, Set<String> importNamesOut,
 			ArgumentNameSource argumentNameSource, String indentationUnit) {
 		StringBuilder buf = new StringBuilder();
-		if (isDeprecated(method)) {
+		if (shouldDeprecate(method)) {
 			buf.append(indentationUnit).append("@Deprecated").append(NEWLINE);
 		}
 		buf.append(indentationUnit).append("default ")
@@ -178,6 +182,10 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		buf.append(')');
 		addThrowsClauseToSignatureUpdatingImports(method, importNamesOut, buf);
 		return buf.toString();
+	}
+
+	private boolean shouldDeprecate(Method method) {
+		return isDeprecated(method) && this.deprecationPolicy == DeprecationPolicy.PROPAGATE_DEPRECATION;
 	}
 
 	private boolean isDeprecated(Method method) {
@@ -517,10 +525,22 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		String indentationUnit = makeIndentationUnit(indentationSpaces);
 
 		for (Method cur : this.listStaticMethodsForClass(delegateClass)) {
-			buf.append(NEWLINE).append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated,
-					argumentNameSource, indentationUnit)).append(NEWLINE).append(NEWLINE);
+			if (deprecationPolicyDoesNotForbid(cur)) {
+				buf.append(NEWLINE).append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated,
+						argumentNameSource, indentationUnit)).append(NEWLINE).append(NEWLINE);
+			}
 		}
 		return buf.toString();
+	}
+
+	/**
+	 * Apply the deprecation policy to the method
+	 * @param method
+	 * @return true if the handling of the method is not blocked by the
+	 *         deprecation policy, false if blocked
+	 */
+	protected boolean deprecationPolicyDoesNotForbid(Method method) {
+		return !isDeprecated(method) || this.deprecationPolicy != DeprecationPolicy.IGNORE_DEPRECATED_METHODS;
 	}
 
 	/*

@@ -258,7 +258,8 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(whenMethod.isPresent());
 
-		String delegateMethod = underTest.makeDelegateMethod("MyMockito", whenMethod.get(), imports, defaultNameSource, DEFAULT_INDENTATION_UNIT);
+		String delegateMethod = underTest.makeDelegateMethod("MyMockito", whenMethod.get(), imports, defaultNameSource,
+				DEFAULT_INDENTATION_UNIT);
 		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + whenMethod.get().toGenericString())
 				.contains("{@link org.mockito.Mockito#when(java.lang.Object)}").contains("*/")
 				.contains("default <T> OngoingStubbing<T> when(T arg0) {").contains("return Mockito.when(arg0);")
@@ -497,13 +498,38 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 	@Test
 	public void should_propagate_deprecation() {
-		Optional<Method> deprecatedMethod = underTest.listStaticMethodsForClass(java.net.URLEncoder.class).stream()
-				.filter((Method m) -> m.getDeclaredAnnotationsByType(Deprecated.class).length > 0).findFirst();
-
-		assertTrue(deprecatedMethod.isPresent());
+		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
 
 		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "   "))
 				.startsWith("   @Deprecated" + System.lineSeparator() + "   default");
+	}
+
+	private Optional<Method> getAndVerifyDeprecatedMethod() {
+		Optional<Method> deprecatedMethod = underTest.listStaticMethodsForClass(java.net.URLEncoder.class).stream()
+				.filter((Method m) -> m.getDeclaredAnnotationsByType(Deprecated.class).length > 0).findFirst();
+		assertTrue(deprecatedMethod.isPresent());
+		return deprecatedMethod;
+	}
+
+	@Test
+	public void should_not_propagate_deprecation_if_propagation_disabled() {
+		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
+		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.WRAP_WITHOUT_DEPRECATING);
+		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "   "))
+				.startsWith("   default");
+	}
+
+	@Test
+	public void should_ignore_deprecated_method8following_policy() {
+		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
+		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS);
+		String allMethods = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(),
+				4, "MyURLEncoder", new ArgumentNameSource() {
+				});
+		assertThat(allMethods)
+				.doesNotContain(
+						underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "    "))
+				.contains("encode");
 	}
 
 }

@@ -10,6 +10,7 @@ import java.util.Set;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.statistics.GenerationStatistics;
 import org.interfaceit.statistics.StatisticsProvider;
+import org.interfaceit.util.FileSystem;
 
 /**
  * Implementation of ClassCodeGenerator which provides statistics about the generated code
@@ -17,8 +18,26 @@ import org.interfaceit.statistics.StatisticsProvider;
  *
  */
 public class StatisticProvidingClassCodeGenerator extends DelegateMethodGenerator implements ClassCodeGenerator, StatisticsProvider {
-	private GenerationStatistics generationStatistics = new GenerationStatistics();
+	private GenerationStatistics generationStatistics = new GenerationStatistics();	
 	
+	/**
+	 * 
+	 * Constructor
+	 */
+	public StatisticProvidingClassCodeGenerator() {
+		super();
+	}
+
+	/**
+	 * 
+	 * Constructor
+	 * @param fileSystem
+	 * @param deprecationPolicy
+	 */
+	public StatisticProvidingClassCodeGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy) {
+		super(fileSystem, deprecationPolicy);
+	}
+
 	/* (non-Javadoc)
 	 * @see org.interfaceit.StatisticsProvider#getStatistics()
 	 */
