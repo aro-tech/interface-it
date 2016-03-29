@@ -188,7 +188,12 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		return isDeprecated(method) && this.deprecationPolicy == DeprecationPolicy.PROPAGATE_DEPRECATION;
 	}
 
-	private boolean isDeprecated(Method method) {
+	/**
+	 * Check whether method is deprecated
+	 * @param method
+	 * @return true if deprecated, false if not
+	 */
+	protected boolean isDeprecated(Method method) {
 		return method.getDeclaredAnnotationsByType(Deprecated.class).length > 0;
 	}
 

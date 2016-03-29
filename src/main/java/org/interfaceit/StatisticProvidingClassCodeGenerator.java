@@ -53,7 +53,28 @@ public class StatisticProvidingClassCodeGenerator extends DelegateMethodGenerato
 	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
 			ArgumentNameSource argumentNameSource, String indentationUnit) {
 		this.generationStatistics.incrementMethodCount();
+		if(isDeprecated(method)) {
+			this.generationStatistics.incrementDeprecationCount();
+		}
 		return super.makeDelegateMethod(targetInterfaceName, method, importsOut, argumentNameSource, indentationUnit);
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see org.interfaceit.DelegateMethodGenerator#deprecationPolicyDoesNotForbid(java.lang.reflect.Method)
+	 */
+	@Override
+	protected boolean deprecationPolicyDoesNotForbid(Method method) {
+		boolean notBlocked = super.deprecationPolicyDoesNotForbid(method);
+		incrementSkippedCountIfBlocked(notBlocked);
+		return notBlocked;
+	}
+
+	private void incrementSkippedCountIfBlocked(boolean notBlocked) {
+		if(!notBlocked) {
+			this.generationStatistics.incrementSkippedCount();
+		}
 	}
 
 	/* (non-Javadoc)

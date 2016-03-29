@@ -16,6 +16,7 @@ import org.junit.Test;
 
 /**
  * Unit tests for StatisticProvidingClassCodeGenerator
+ * 
  * @author aro_tech
  *
  */
@@ -73,6 +74,7 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 		GenerationStatistics stats = underTest.getStatistics();
 		assertThat(stats.getConstantCount()).isEqualTo(0);
 		assertThat(stats.getMethodCount()).isEqualTo(1);
+		assertThat(stats.getDeprecationCount()).isEqualTo(0);
 	}
 
 	private void callAndVerifyMakeDelegateMethod() {
@@ -98,7 +100,6 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 		assertThat(stats.getMethodCount()).isEqualTo(expectedMethodCount);
 	}
 
-
 	private void callAndVerifyGenerateConstant() throws NoSuchFieldException {
 		StringBuilder buf = new StringBuilder();
 		underTest.generateConstant(Math.class.getDeclaredField("PI"), Math.class, new HashSet<String>(), buf, "MyMath",
@@ -112,6 +113,43 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 		callAndVerifyMakeDelegateMethod();
 		verifyConstantAndMethodCounts(1, 1);
 		underTest.resetStatistics();
+		verifyAllCountsAreZero();
+
+	}
+
+	private void verifyAllCountsAreZero() {
 		verifyConstantAndMethodCounts(0, 0);
+		assertThat(underTest.getStatistics().getDeprecationCount()).isEqualTo(0);
+		assertThat(underTest.getStatistics().getSkippedCount()).isEqualTo(0);
+	}
+
+	@Test
+	public void can_track_deprecations() {
+		callAndVerifyDeprecatedMethod();
+		assertThat(underTest.getStatistics().getDeprecationCount()).isEqualTo(1);
+	}
+
+	@Test
+	public void can_track_skipped_deprecated_methods() {
+		underTest = new StatisticProvidingClassCodeGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS);
+		String result = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(), 4,
+				"Enc", new ArgumentNameSource() {
+				});
+		assertThat(underTest.getStatistics().getSkippedCount()).isEqualTo(1);
+		assertThat(result)
+				.contains("default String encode(String arg0, String arg1) throws UnsupportedEncodingException {");
+	}
+
+	private void callAndVerifyDeprecatedMethod() {
+		Method depMethod = getAndVerifyDeprecatedMethod().get();
+		assertThat(underTest.makeDelegateMethod("Enc", depMethod, new HashSet<>(), new ArgumentNameSource() {
+		}, "    ")).contains(depMethod.getName());
+	}
+
+	private Optional<Method> getAndVerifyDeprecatedMethod() {
+		Optional<Method> deprecatedMethod = underTest.listStaticMethodsForClass(java.net.URLEncoder.class).stream()
+				.filter((Method m) -> m.getDeclaredAnnotationsByType(Deprecated.class).length > 0).findFirst();
+		assertTrue(deprecatedMethod.isPresent());
+		return deprecatedMethod;
 	}
 }
