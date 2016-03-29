@@ -109,5 +109,6 @@ I thought that using mockito-java8 would be a good idea, but mockito-java8 was n
 ##Press
 [![The Green Bar](https://img.shields.io/badge/Mentioned in:-SD Times-blue.svg)](http://sdtimes.com/microsoft-is-working-on-a-chrome-extension-porting-tool-a-css-tutorial-and-searchkit-0-8-sd-times-news-digest-march-21-2016/2/)
 
-
+##Disclaimer
+Not affiliated in any way with the Australian company interfaceit.com
 
