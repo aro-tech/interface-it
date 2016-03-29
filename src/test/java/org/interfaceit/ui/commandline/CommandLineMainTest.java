@@ -49,7 +49,115 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
 		
 		verify(out).println(contains(result.getAbsolutePath()));
-		verify(out).println(contains("2 methods"));
+		verify(out).println(contains("Generated 1 constant and 2 methods"));
+		verifyNoMoreInteractions(out);
+	}
+
+	@Test
+	public void execute_prints_result_file_path_and_stats_handling_plurals_and_singular() throws ClassNotFoundException, IOException {
+		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
+		File result = new File(".");
+		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+				any())).thenReturn(result);
+		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith1MethodAnd2Constants());
+		
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
+		
+		verify(out).println(contains(result.getAbsolutePath()));
+		verify(out).println(contains("Generated 2 constants and 1 method"));
+		verifyNoMoreInteractions(out);
+	}
+	
+	private GenerationStatistics setUpStatsWith1MethodAnd2Constants() {
+		GenerationStatistics stats = new GenerationStatistics();
+		stats.incrementConstantCount();
+		stats.incrementConstantCount();
+		stats.incrementMethodCount();
+		return stats;
+	}
+
+	@Test
+	public void execute_prints_result_file_path_and_skipped_count_1() throws ClassNotFoundException, IOException {
+		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
+		File result = new File(".");
+		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+				any())).thenReturn(result);
+		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(1));
+		
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
+		
+		verify(out).println(contains(result.getAbsolutePath()));
+		verify(out).println(contains("22 methods"));
+		verify(out).println(contains("Skipped 1 static method because of deprecation policy"));
+	}
+
+	@Test
+	public void execute_prints_result_file_path_and_skipped_count_3() throws ClassNotFoundException, IOException {
+		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
+		File result = new File(".");
+		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+				any())).thenReturn(result);
+		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(3));
+		
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
+		
+		verify(out).println(contains(result.getAbsolutePath()));
+		verify(out).println(contains("22 methods"));
+		verify(out).println(contains("Skipped 3 static methods because of deprecation policy"));
+	}
+
+	@Test
+	public void execute_prints_result_file_path_and_deprecated_count_1() throws ClassNotFoundException, IOException {
+		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
+		File result = new File(".");
+		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+				any())).thenReturn(result);
+		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(1));
+		
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
+		
+		verify(out).println(contains(result.getAbsolutePath()));
+		verify(out).println(contains("7 methods"));
+		verify(out).println(contains("1 generated method is deprecated"));
+	}
+
+	@Test
+	public void execute_prints_result_file_path_and_deprecated_count_5() throws ClassNotFoundException, IOException {
+		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
+		File result = new File(".");
+		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+				any())).thenReturn(result);
+		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(5));
+		
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
+		
+		verify(out).println(contains(result.getAbsolutePath()));
+		verify(out).println(contains("7 methods"));
+		verify(out).println(contains("5 generated methods are deprecated"));
+	}
+	
+	private GenerationStatistics setUpStatsWith7MethodsAnd1ConstantAndDeprecated(int deprecated) {
+		final GenerationStatistics stats = new GenerationStatistics();
+		stats.incrementConstantCount();
+		for(int i=0; i < 7; i++) {
+			stats.incrementMethodCount();			
+		}
+		for(int i=0; i < deprecated; i++) {
+			stats.incrementDeprecationCount();
+		}
+		return stats;
+	}
+
+	private GenerationStatistics setUpStatsWith22MethodsAnd1ConstantAndSkipped(int skippedCount) {
+		final GenerationStatistics stats = new GenerationStatistics();
+		stats.incrementConstantCount();
+		for(int i=0; i < 22; i++) {
+			stats.incrementMethodCount();			
+		}
+		for(int i=0; i < skippedCount; i++) {
+			stats.incrementSkippedCount();
+		}
+		return stats;
 	}
 
 	private GenerationStatistics setUpStatsWith2MethodsAnd1Constant() {

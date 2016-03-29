@@ -202,10 +202,35 @@ public class CommandLineMain {
 	private static void printSuccessFeedback(File result, PrintStream out, StatisticsProvider statsProvider) {
 		out.println("Wrote file: " + result.getAbsolutePath());
 		if (null != statsProvider) {
-			GenerationStatistics stats = statsProvider.getStatistics();
-			out.println(
-					"Generated " + stats.getConstantCount() + " constants and " + stats.getMethodCount() + " methods.");
+			summarizeStatistics(out, statsProvider.getStatistics());
 		}
+	}
+
+	private static void summarizeStatistics(PrintStream out, GenerationStatistics stats) {
+		out.println("Generated " + stats.getConstantCount() + " constant" + makePluralText(stats.getConstantCount()) + " and "
+				+ stats.getMethodCount() + " method" + makePluralText(stats.getMethodCount()) + ".");
+		summarizeDeprecationPolicyResults(out, stats);
+	}
+
+	private static void summarizeDeprecationPolicyResults(PrintStream out, GenerationStatistics stats) {
+		if (stats.getDeprecationCount() > 0) {
+			if (stats.getDeprecationCount() > 1) {
+				out.println(stats.getDeprecationCount() + " generated methods are deprecated.");
+			} else {
+				out.println("1 generated method is deprecated.");
+			}
+		} else if (stats.getSkippedCount() == 1) {
+			out.println("Skipped 1 static method because of deprecation policy.");
+		} else if (stats.getSkippedCount() > 1) {
+			out.println("Skipped " + stats.getSkippedCount() + " static methods because of deprecation policy.");
+		}
+	}
+
+	private static String makePluralText(int count) {
+		if (count == 1) {
+			return "";
+		}
+		return "s";
 	}
 
 }
