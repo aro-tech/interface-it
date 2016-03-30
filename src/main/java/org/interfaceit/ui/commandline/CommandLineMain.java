@@ -23,6 +23,7 @@ import org.interfaceit.statistics.StatisticsProvider;
 import org.interfaceit.ui.meta.error.EmptySource;
 import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
 import org.interfaceit.ui.meta.error.UnableToReadSource;
+import org.interfaceit.util.FileSystem;
 import org.interfaceit.util.FileUtils;
 import org.interfaceit.util.SourceFileReader;
 
@@ -46,8 +47,19 @@ public class CommandLineMain {
 	 */
 	public static void main(String[] args) {
 		ArgumentParser argParser = new ArgumentParser(args);
-		StatisticProvidingClassCodeGenerator methodGenerator = new StatisticProvidingClassCodeGenerator();
+		StatisticProvidingClassCodeGenerator methodGenerator = buildGenerator(argParser, new FileUtils());
 		execute(args, System.out, methodGenerator, argParser, new FileUtils(), methodGenerator);
+	}
+
+	/**
+	 * Create the code generator to use
+	 * @param argParser
+	 * @param fileSystem
+	 * @return The generator created
+	 */
+	static StatisticProvidingClassCodeGenerator buildGenerator(ArgumentParser argParser, FileSystem fileSystem) {
+		return new StatisticProvidingClassCodeGenerator(fileSystem,
+				argParser.getDeprecationPolicy());
 	}
 
 	/**
@@ -77,18 +89,24 @@ public class CommandLineMain {
 	}
 
 	private static void warnIfUsingJarAndClasspathFlags(PrintStream out, ArgumentParser argParser) {
-		Map<String, String> flagMap = argParser.getFlagMap();
-		String cp = getClasspathFromArgs(flagMap);
-		if (null != cp) {
-			String flags = flagMap.entrySet().stream()
-					.filter(e -> !"-cp".equals(e.getKey()) && !"-classpath".equals(e.getKey()))
-					.map(e -> String.join(" ", e.getKey(), e.getValue())).collect(Collectors.joining(" "));
-			out.println(
-					"IMPORTANT: If you run this application using the \"-jar\" flag, the classpath in the commandline is ignored by Java.  "
-							+ "\nTry adding this jar to the classpath, eliminate the -jar flag, and add the main class: "
-							+ "java -cp <the path of this jar>;" + cp
-							+ " org.interfaceit.ui.commandline.CommandLineMain " + flags.toString());
+		if (argParser.hasMisplacedClassPathFlag()) {
+			Map<String, String> flagMap = argParser.getFlagMap();
+			String cp = getClasspathFromArgs(flagMap);
+			if (null != cp) {
+				writeWarningAboutJarAndClasspathFlags(out, flagMap, cp);
+			}
 		}
+	}
+
+	private static void writeWarningAboutJarAndClasspathFlags(PrintStream out, Map<String, String> flagMap, String cp) {
+		String flags = flagMap.entrySet().stream()
+				.filter(e -> !"-cp".equals(e.getKey()) && !"-classpath".equals(e.getKey()))
+				.map(e -> String.join(" ", e.getKey(), e.getValue())).collect(Collectors.joining(" "));
+		out.println(
+				"IMPORTANT: If you run this application using the \"-jar\" flag, the classpath in the commandline is ignored by Java.  "
+						+ "\nTry adding this jar to the classpath, eliminate the -jar flag, and add the main class: "
+						+ "java -cp <the path of this jar>;" + cp + " org.interfaceit.ui.commandline.CommandLineMain "
+						+ flags.toString());
 	}
 
 	private static String getClasspathFromArgs(Map<String, String> flagMap) {
@@ -207,8 +225,8 @@ public class CommandLineMain {
 	}
 
 	private static void summarizeStatistics(PrintStream out, GenerationStatistics stats) {
-		out.println("Generated " + stats.getConstantCount() + " constant" + makePluralText(stats.getConstantCount()) + " and "
-				+ stats.getMethodCount() + " method" + makePluralText(stats.getMethodCount()) + ".");
+		out.println("Generated " + stats.getConstantCount() + " constant" + makePluralText(stats.getConstantCount())
+				+ " and " + stats.getMethodCount() + " method" + makePluralText(stats.getMethodCount()) + ".");
 		summarizeDeprecationPolicyResults(out, stats);
 	}
 

@@ -7,11 +7,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.interfaceit.ClassCodeGenerator;
+import org.interfaceit.StatisticProvidingClassCodeGenerator;
+import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.statistics.GenerationStatistics;
 import org.interfaceit.statistics.StatisticsProvider;
 import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
+import org.interfaceit.util.FileSystem;
 import org.interfaceit.util.SourceFileReader;
 import org.interfaceit.util.mixin.AssertJ;
 import org.interfaceit.util.mixin.Mockito;
@@ -45,29 +49,30 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith2MethodsAnd1Constant());
-		
+
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
-		
+
 		verify(out).println(contains(result.getAbsolutePath()));
 		verify(out).println(contains("Generated 1 constant and 2 methods"));
 		verifyNoMoreInteractions(out);
 	}
 
 	@Test
-	public void execute_prints_result_file_path_and_stats_handling_plurals_and_singular() throws ClassNotFoundException, IOException {
+	public void execute_prints_result_file_path_and_stats_handling_plurals_and_singular()
+			throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
 		File result = new File(".");
 		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith1MethodAnd2Constants());
-		
+
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
-		
+
 		verify(out).println(contains(result.getAbsolutePath()));
 		verify(out).println(contains("Generated 2 constants and 1 method"));
 		verifyNoMoreInteractions(out);
 	}
-	
+
 	private GenerationStatistics setUpStatsWith1MethodAnd2Constants() {
 		GenerationStatistics stats = new GenerationStatistics();
 		stats.incrementConstantCount();
@@ -83,9 +88,9 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(1));
-		
+
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
-		
+
 		verify(out).println(contains(result.getAbsolutePath()));
 		verify(out).println(contains("22 methods"));
 		verify(out).println(contains("Skipped 1 static method because of deprecation policy"));
@@ -98,9 +103,9 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(3));
-		
+
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
-		
+
 		verify(out).println(contains(result.getAbsolutePath()));
 		verify(out).println(contains("22 methods"));
 		verify(out).println(contains("Skipped 3 static methods because of deprecation policy"));
@@ -113,9 +118,9 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(1));
-		
+
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
-		
+
 		verify(out).println(contains(result.getAbsolutePath()));
 		verify(out).println(contains("7 methods"));
 		verify(out).println(contains("1 generated method is deprecated"));
@@ -128,21 +133,21 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(5));
-		
+
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
-		
+
 		verify(out).println(contains(result.getAbsolutePath()));
 		verify(out).println(contains("7 methods"));
 		verify(out).println(contains("5 generated methods are deprecated"));
 	}
-	
+
 	private GenerationStatistics setUpStatsWith7MethodsAnd1ConstantAndDeprecated(int deprecated) {
 		final GenerationStatistics stats = new GenerationStatistics();
 		stats.incrementConstantCount();
-		for(int i=0; i < 7; i++) {
-			stats.incrementMethodCount();			
+		for (int i = 0; i < 7; i++) {
+			stats.incrementMethodCount();
 		}
-		for(int i=0; i < deprecated; i++) {
+		for (int i = 0; i < deprecated; i++) {
 			stats.incrementDeprecationCount();
 		}
 		return stats;
@@ -151,10 +156,10 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	private GenerationStatistics setUpStatsWith22MethodsAnd1ConstantAndSkipped(int skippedCount) {
 		final GenerationStatistics stats = new GenerationStatistics();
 		stats.incrementConstantCount();
-		for(int i=0; i < 22; i++) {
-			stats.incrementMethodCount();			
+		for (int i = 0; i < 22; i++) {
+			stats.incrementMethodCount();
 		}
-		for(int i=0; i < skippedCount; i++) {
+		for (int i = 0; i < skippedCount; i++) {
 			stats.incrementSkippedCount();
 		}
 		return stats;
@@ -239,7 +244,8 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	}
 
 	@Test
-	public void execute_prints_error_message_on_failure_to_create_output_directory() throws ClassNotFoundException, IOException {
+	public void execute_prints_error_message_on_failure_to_create_output_directory()
+			throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
 		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenThrow(new UnableToCreateOutputDirectory(new File(".")));
@@ -255,8 +261,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, null);
 		verify(out).println(contains("<NULL>"));
 	}
-	
-	
+
 	@Test
 	public void execute_prints_error_message_source_jar_read_error() throws ClassNotFoundException, IOException {
 		String sourceFile = "bogus.jar";
@@ -305,5 +310,31 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		verify(out).println(contains("Incorrect or unspecified"));
 		verify(out).println(contains("Class not found: org.whoosit.Whazzit"));
 		verifyNoMoreInteractions(out);
+	}
+
+	@Test
+	public void can_build_generator_which_ignores_deprecated() {
+		String[] args = { "-d", ".", "-n", "Enc", "-c", "java.net.URLEncoder", "-p", "org.example", "-i" };
+		String wrapperCode = buildCodeGeneratorAndGenerateCodeForClassWithDeprecatedMethod(args);
+		assertThat(wrapperCode).doesNotContain("default String encode(String arg0)")
+				.doesNotContain("return URLEncoder.encode(arg0);").contains("return URLEncoder.encode(arg0, arg1);");
+	}
+
+	String buildCodeGeneratorAndGenerateCodeForClassWithDeprecatedMethod(String[] args) {
+		StatisticProvidingClassCodeGenerator built = CommandLineMain.buildGenerator(new ArgumentParser(args),
+				null);
+		assertThat(built).isNotNull();
+		String wrapperCode = built.generateDelegateClassCode("org.example", "Enc", java.net.URLEncoder.class,
+				new ArgumentNameSource() {
+				}, 4);
+		return wrapperCode;
+	}
+
+	@Test
+	public void can_build_generator_which_propagates_deprecated() {
+		String[] args = { "-d", ".", "-n", "Enc", "-c", "java.net.URLEncoder", "-p", "org.example" };
+		String wrapperCode = buildCodeGeneratorAndGenerateCodeForClassWithDeprecatedMethod(args);
+		assertThat(wrapperCode).contains("default String encode(String arg0)")
+				.contains("return URLEncoder.encode(arg0);").contains("return URLEncoder.encode(arg0, arg1);");
 	}
 }

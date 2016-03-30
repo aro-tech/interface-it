@@ -79,7 +79,7 @@ Once you have the binary, you run the jar file, providing a classpath which allo
  * Emit warning message if no source code is found in source archive or file (done)
  * Create output directory if it doesn't exist (done)
  * Expose protected methods in DelegateMethodGenerator to allow overriding of comment generation. (done)
- * Allow a policy for handling deprecated methods - propagate deprecation, do not deprecate wrapped methods, or ignore deprecated methods. (done, except for command-line flag)
+ * Allow a policy for handling deprecated methods - propagate deprecation, do not deprecate wrapped methods, or ignore deprecated methods. (done)
  
  <sup>*</sup> = potential minor breaking change for low-level client code
  

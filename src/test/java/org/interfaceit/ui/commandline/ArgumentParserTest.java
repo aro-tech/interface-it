@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+import org.interfaceit.DeprecationPolicy;
 import org.interfaceit.util.mixin.AssertJ;
 import org.junit.Before;
 import org.junit.Test;
@@ -193,4 +194,17 @@ public class ArgumentParserTest implements AssertJ {
 
 		assertThat(map).isNotEmpty().containsEntry("-c", "org.mockito.Mockito").containsEntry("-n", "MyTestMockito");
 	}
+
+	@Test
+	public void can_get_default_deprecation_policy() {
+		ArgumentParser argParser = makeArgumentParser();
+		assertThat(argParser.getDeprecationPolicy()).isEqualTo(DeprecationPolicy.PROPAGATE_DEPRECATION);
+	}
+	
+	@Test
+	public void can_override_default_deprecation_policy() {
+		ArgumentParser argParser = makeArgumentParser("-i");
+		assertThat(argParser.getDeprecationPolicy()).isEqualTo(DeprecationPolicy.IGNORE_DEPRECATED_METHODS);
+	}
+
 }

@@ -520,7 +520,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	}
 
 	@Test
-	public void should_ignore_deprecated_method8following_policy() {
+	public void should_ignore_deprecated_method_following_policy() {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
 		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS);
 		String allMethods = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(),

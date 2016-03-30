@@ -4,9 +4,13 @@
 package org.interfaceit.ui.commandline;
 
 import java.io.File;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+
+import org.interfaceit.DeprecationPolicy;
 
 /**
  * Class for parsing command-line arguments for interface-it
@@ -17,28 +21,37 @@ import java.util.Optional;
 public class ArgumentParser {
 	private final String[] args;
 	private Map<String, String> flagMap = new HashMap<>();
+	private Set<Flag> allFlags = EnumSet.noneOf(Flag.class);
 
 	static enum Flag {
-		VERSION("v", "Write version number."),
-		TARGET_INTERFACE_NAME("n", "Name of the target interface (ex: \"MyMixin\")"),
-		WRITE_DIRECTORY("d", "Directory which will contain the generated file (default value is \".\")"),
-		DELEGATE_CLASS("c", "Fully qualified delegate class name (ex: \"java.lang.Math\")"),
-		TARGET_PACKAGE("p", "The package name for the target interface (ex: \"org.example\")"),
+		VERSION("v", "Write version number.", false),
+		TARGET_INTERFACE_NAME("n", "Name of the target interface (ex: \"MyMixin\")", true),
+		WRITE_DIRECTORY("d", "Directory which will contain the generated file (default value is \".\")", true),
+		DELEGATE_CLASS("c", "Fully qualified delegate class name (ex: \"java.lang.Math\")", true),
+		TARGET_PACKAGE("p", "The package name for the target interface (ex: \"org.example\")", true),
 		SOURCE_PATH("s",
-				"File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation");
+				"File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation",
+				true),
+		IGNORE_DEPRECATED_METHODS("i",
+				"Ignore all deprecated methods. Default behavior is to wrap each deprecated method and deprecate the wrapping method.",
+				false),
+		MISPLACED_CLASSPATH_FLAG_SHORT("cp", null, true),
+		MISPLACED_CLASSPATH_FLAG_LONG("classpath", null, true);
 
 		private final String flag;
 		private final String helpMessage;
+		private boolean expectsValue;
 
-		Flag(String letter, String helpText) {
+		Flag(String letter, String helpText, boolean expectsVal) {
 			this.flag = "-" + letter;
 			this.helpMessage = helpText;
+			this.expectsValue = expectsVal;
 		}
 
 		/**
 		 * @return the flag
 		 */
-		public String getFlag() {
+		public String getFlagText() {
 			return flag;
 		}
 
@@ -47,6 +60,41 @@ public class ArgumentParser {
 		 */
 		public String getHelpMessage() {
 			return helpMessage;
+		}
+
+		/**
+		 * @return true if a value is to follow the flag, false otherwise
+		 */
+		public boolean expectsValue() {
+			return expectsValue;
+		}
+
+		/**
+		 * @param expectsValue
+		 *            true if a value is to follow the flag, false otherwise
+		 */
+		public void setExpectsValue(boolean expectsValue) {
+			this.expectsValue = expectsValue;
+		}
+
+		/**
+		 * 
+		 * @return true if this flag should be mentioned in help messages, false
+		 *         otherwise
+		 */
+		public boolean includeInHelpMessage() {
+			return this.helpMessage != null;
+		}
+
+		static Optional<Flag> fromString(String flagText) {
+			if (flagText.length() > 1 && flagText.startsWith("-")) {
+				for (Flag cur : Flag.values()) {
+					if (cur.getFlagText().equals(flagText)) {
+						return Optional.ofNullable(cur);
+					}
+				}
+			}
+			return Optional.empty();
 		}
 	}
 
@@ -59,12 +107,19 @@ public class ArgumentParser {
 	public ArgumentParser(String[] args) {
 		super();
 		this.args = args;
-		String currentFlag = null;
-		for(String currentWord: args) {
-			if(null == currentFlag && currentWord.startsWith("-")) {
-				currentFlag = currentWord;
-			} else {
-				flagMap.put(currentFlag, currentWord);
+		Flag currentFlag = null;
+		for (String currentWord : args) {
+			Optional<Flag> current = Flag.fromString(currentWord);
+			if (current.isPresent()) {
+				currentFlag = current.get();
+				if (!currentFlag.expectsValue()) {
+					flagMap.put(currentFlag.getFlagText(), currentWord);
+					allFlags.add(currentFlag);
+					currentFlag = null;
+				}
+			} else if (null != currentFlag) {
+				flagMap.put(currentFlag.getFlagText(), currentWord);
+				allFlags.add(currentFlag);
 				currentFlag = null;
 			}
 		}
@@ -85,8 +140,8 @@ public class ArgumentParser {
 	}
 
 	private String findValueAfterFlag(Flag flag, String defaultValue) {
-		String value = flagMap.get(flag.getFlag());
-		if(null == value) {
+		String value = flagMap.get(flag.getFlagText());
+		if (null == value) {
 			value = defaultValue;
 		}
 		return value;
@@ -112,7 +167,7 @@ public class ArgumentParser {
 	 *         request
 	 */
 	public boolean isVersionRequest() {
-		return args.length == 1 && args[0].equals(Flag.VERSION.getFlag());
+		return allFlags.size() == 1 && allFlags.contains(Flag.VERSION);
 	}
 
 	/**
@@ -122,7 +177,9 @@ public class ArgumentParser {
 		StringBuilder buf = new StringBuilder();
 		buf.append("Possible argument flags:").append(System.lineSeparator());
 		for (Flag f : Flag.values()) {
-			buf.append(f.getFlag()).append(" > ").append(f.getHelpMessage()).append(System.lineSeparator());
+			if (f.includeInHelpMessage()) {
+				buf.append(f.getFlagText()).append(" > ").append(f.getHelpMessage()).append(System.lineSeparator());
+			}
 		}
 		return buf.toString();
 	}
@@ -192,6 +249,27 @@ public class ArgumentParser {
 	 */
 	public Map<String, String> getFlagMap() {
 		return flagMap;
+	}
+
+	/**
+	 * 
+	 * @return The deprecation policy specified
+	 */
+	public DeprecationPolicy getDeprecationPolicy() {
+		if (allFlags.contains(Flag.IGNORE_DEPRECATED_METHODS)) {
+			return DeprecationPolicy.IGNORE_DEPRECATED_METHODS;
+		}
+		return DeprecationPolicy.PROPAGATE_DEPRECATION;
+	}
+
+	/**
+	 * 
+	 * @return true if the arguments contain -cp or -classpath, indicating that
+	 *         Java ignored the flag
+	 */
+	public boolean hasMisplacedClassPathFlag() {
+		return allFlags.contains(Flag.MISPLACED_CLASSPATH_FLAG_SHORT)
+				|| allFlags.contains(Flag.MISPLACED_CLASSPATH_FLAG_LONG);
 	}
 
 }
