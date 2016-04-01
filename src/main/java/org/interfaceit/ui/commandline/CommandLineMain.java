@@ -53,13 +53,13 @@ public class CommandLineMain {
 
 	/**
 	 * Create the code generator to use
+	 * 
 	 * @param argParser
 	 * @param fileSystem
 	 * @return The generator created
 	 */
 	static StatisticProvidingClassCodeGenerator buildGenerator(ArgumentParser argParser, FileSystem fileSystem) {
-		return new StatisticProvidingClassCodeGenerator(fileSystem,
-				argParser.getDeprecationPolicy());
+		return new StatisticProvidingClassCodeGenerator(fileSystem, argParser.getDeprecationPolicy());
 	}
 
 	/**
@@ -77,14 +77,19 @@ public class CommandLineMain {
 		} else if (argParser.isHelpRequest() || argParser.hasInsufficientArguments()) {
 			printArgFeedbackAndHelp(args, out);
 		} else {
-			try {
-				generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader, statsProvider);
-			} catch (ClassNotFoundException cnfe) {
-				String argsStr = String.join("\n>", Arrays.asList(args));
-				out.println("Incorrect or unspecified class name in arguments: \n>" + argsStr);
-				out.println("Class not found: " + cnfe.getMessage());
-				warnIfUsingJarAndClasspathFlags(out, argParser);
-			}
+			executeMixinGeneration(args, out, generator, argParser, sourceReader, statsProvider);
+		}
+	}
+
+	private static void executeMixinGeneration(String[] args, PrintStream out, ClassCodeGenerator generator,
+			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider) {
+		try {
+			generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader, statsProvider);
+		} catch (ClassNotFoundException cnfe) {
+			String argsStr = String.join("\n>", Arrays.asList(args));
+			out.println("Incorrect or unspecified class name in arguments: \n>" + argsStr);
+			out.println("Class not found: " + cnfe.getMessage());
+			warnIfUsingJarAndClasspathFlags(out, argParser);
 		}
 	}
 
@@ -99,14 +104,18 @@ public class CommandLineMain {
 	}
 
 	private static void writeWarningAboutJarAndClasspathFlags(PrintStream out, Map<String, String> flagMap, String cp) {
-		String flags = flagMap.entrySet().stream()
-				.filter(e -> !"-cp".equals(e.getKey()) && !"-classpath".equals(e.getKey()))
-				.map(e -> String.join(" ", e.getKey(), e.getValue())).collect(Collectors.joining(" "));
 		out.println(
 				"IMPORTANT: If you run this application using the \"-jar\" flag, the classpath in the commandline is ignored by Java.  "
 						+ "\nTry adding this jar to the classpath, eliminate the -jar flag, and add the main class: "
 						+ "java -cp <the path of this jar>;" + cp + " org.interfaceit.ui.commandline.CommandLineMain "
-						+ flags.toString());
+						+ reconstructCommandlineFlagsWithoutClasspath(flagMap));
+	}
+
+	private static String reconstructCommandlineFlagsWithoutClasspath(Map<String, String> flagMap) {
+		String flags = flagMap.entrySet().stream()
+				.filter(e -> !"-cp".equals(e.getKey()) && !"-classpath".equals(e.getKey()))
+				.map(e -> String.join(" ", e.getKey(), e.getValue())).collect(Collectors.joining(" "));
+		return flags;
 	}
 
 	private static String getClasspathFromArgs(Map<String, String> flagMap) {
@@ -167,23 +176,10 @@ public class CommandLineMain {
 
 	private static ArgumentNameSource makeArgumentNameSource(ArgumentParser argParser, Class<?> delegateClass,
 			SourceFileReader sourceReader, PrintStream out) throws UnableToReadSource, EmptySource {
-		List<String> sourceLines;
-		try {
-			sourceLines = getSourceCodeLines(delegateClass, argParser, sourceReader);
-		} catch (IOException e) {
-			throw new UnableToReadSource(e);
-		}
-		if (sourceLines.isEmpty() && !argParser.getSourceFlagText().isEmpty()) {
-			String msg = "file " + argParser.getSourceFlagText();
-			if (argParser.getSourceZipOrJarFileObjectOption().isPresent()) {
-				try {
-					msg += " with paths " + classToPaths(argParser.getDelegateClass());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace(out);
-				}
-			}
-			throw new EmptySource(msg);
-		}
+		return makeArgumentNameSourceBasedOnSourceLines(readSourceLines(argParser, delegateClass, sourceReader, out));
+	}
+
+	private static ArgumentNameSource makeArgumentNameSourceBasedOnSourceLines(List<String> sourceLines) {
 		ArgumentNameSource argSource = new ArgumentNameSource() {
 		};
 		if (null != sourceLines) {
@@ -191,6 +187,38 @@ public class CommandLineMain {
 			new SourceLineReadingArgumentNameLoader().parseAndLoad(sourceLines, (LookupArgumentNameSource) argSource);
 		}
 		return argSource;
+	}
+
+	private static List<String> readSourceLines(ArgumentParser argParser, Class<?> delegateClass,
+			SourceFileReader sourceReader, PrintStream out) throws UnableToReadSource, EmptySource {
+		List<String> sourceLines = tryReadingSourceFile(argParser, delegateClass, sourceReader);
+		if (sourceLines.isEmpty() && !argParser.getSourceFlagText().isEmpty()) {
+			throwEmptySource(argParser, out);
+		}
+		return sourceLines;
+	}
+
+	private static List<String> tryReadingSourceFile(ArgumentParser argParser, Class<?> delegateClass,
+			SourceFileReader sourceReader) throws UnableToReadSource {
+		List<String> sourceLines;
+		try {
+			sourceLines = getSourceCodeLines(delegateClass, argParser, sourceReader);
+		} catch (IOException e) {
+			throw new UnableToReadSource(e);
+		}
+		return sourceLines;
+	}
+
+	private static void throwEmptySource(ArgumentParser argParser, PrintStream out) throws EmptySource {
+		String msg = "file " + argParser.getSourceFlagText();
+		if (argParser.getSourceZipOrJarFileObjectOption().isPresent()) {
+			try {
+				msg += " with paths " + classToPaths(argParser.getDelegateClass());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace(out);
+			}
+		}
+		throw new EmptySource(msg);
 	}
 
 	private static List<String> getSourceCodeLines(Class<?> delegateClass, ArgumentParser argParser,
@@ -231,13 +259,23 @@ public class CommandLineMain {
 	}
 
 	private static void summarizeDeprecationPolicyResults(PrintStream out, GenerationStatistics stats) {
+		writeDeprecationCountIfNonZero(out, stats);
+		writeSkippedCountIfNonZero(out, stats);
+
+	}
+
+	private static void writeDeprecationCountIfNonZero(PrintStream out, GenerationStatistics stats) {
 		if (stats.getDeprecationCount() > 0) {
 			if (stats.getDeprecationCount() > 1) {
 				out.println(stats.getDeprecationCount() + " generated methods are deprecated.");
 			} else {
 				out.println("1 generated method is deprecated.");
 			}
-		} else if (stats.getSkippedCount() == 1) {
+		}
+	}
+
+	private static void writeSkippedCountIfNonZero(PrintStream out, GenerationStatistics stats) {
+		if (stats.getSkippedCount() == 1) {
 			out.println("Skipped 1 static method because of deprecation policy.");
 		} else if (stats.getSkippedCount() > 1) {
 			out.println("Skipped " + stats.getSkippedCount() + " static methods because of deprecation policy.");
