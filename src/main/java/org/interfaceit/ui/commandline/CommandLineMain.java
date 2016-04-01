@@ -84,7 +84,8 @@ public class CommandLineMain {
 	private static void executeMixinGeneration(String[] args, PrintStream out, ClassCodeGenerator generator,
 			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider) {
 		try {
-			generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader, statsProvider);
+			generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader, statsProvider,
+					argParser.getDelegateClass());
 		} catch (ClassNotFoundException cnfe) {
 			String argsStr = String.join("\n>", Arrays.asList(args));
 			out.println("Incorrect or unspecified class name in arguments: \n>" + argsStr);
@@ -138,10 +139,8 @@ public class CommandLineMain {
 	}
 
 	private static void generateClassFileAndPrintFeedback(PrintStream out, ClassCodeGenerator generator,
-			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider)
-					throws ClassNotFoundException {
-		Class<?> delegateClass = argParser.getDelegateClass();
-
+			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider,
+			Class<?> delegateClass) throws ClassNotFoundException {
 		try {
 			File result = generator.generateClassToFile(argParser.getWriteDirectoryPath(),
 					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
