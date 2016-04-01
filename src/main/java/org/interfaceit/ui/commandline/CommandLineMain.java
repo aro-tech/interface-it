@@ -140,7 +140,7 @@ public class CommandLineMain {
 
 	private static void generateClassFileAndPrintFeedback(PrintStream out, ClassCodeGenerator generator,
 			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider,
-			Class<?> delegateClass) throws ClassNotFoundException {
+			Class<?> delegateClass) {
 		try {
 			File result = generator.generateClassToFile(argParser.getWriteDirectoryPath(),
 					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
