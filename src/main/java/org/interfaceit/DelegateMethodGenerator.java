@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.interfaceit.format.CodeFormatter;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
 import org.interfaceit.util.ClassNameUtils;
@@ -31,10 +32,9 @@ import org.interfaceit.util.FileUtils;
  */
 public class DelegateMethodGenerator implements ClassCodeGenerator {
 
-	private static final String NEWLINE = System.lineSeparator();
-
 	private final FileSystem fileSystem;
 	private final DeprecationPolicy deprecationPolicy;
+	private final CodeFormatter formatter;
 
 	/**
 	 * Constructor using default FileSystem
@@ -43,6 +43,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		super();
 		this.fileSystem = new FileUtils();
 		this.deprecationPolicy = DeprecationPolicy.PROPAGATE_DEPRECATION;
+		this.formatter = CodeFormatter.getDefault();
 	}
 
 	/**
@@ -50,11 +51,14 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * 
 	 * @param fileSystem
 	 * @param deprecationPolicy
+	 * @param formatter
 	 */
-	public DelegateMethodGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy) {
+	public DelegateMethodGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy,
+			CodeFormatter formatter) {
 		super();
 		this.fileSystem = fileSystem;
 		this.deprecationPolicy = deprecationPolicy;
+		this.formatter = formatter;
 	}
 
 	/**
@@ -107,40 +111,28 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 *            required
 	 * @param argumentNameSource
 	 *            Provider of argument name information lost during compilation
-	 * @param indentationUnit
-	 *            spaces to be inserted n times at the beginning of lines based
-	 *            on block depth
 	 * @return the code for the method delegation
 	 */
 	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
-			ArgumentNameSource argumentNameSource, String indentationUnit) {
+			ArgumentNameSource argumentNameSource) {
 		StringBuilder buf = new StringBuilder();
-		appendMethodComment(method, indentationUnit, buf).append(NEWLINE)
-				.append(this.makeMethodSignature(method, importsOut, argumentNameSource, indentationUnit)).append(" {")
-				.append(NEWLINE).append(indentationUnit).append(indentationUnit)
+		String genericStringForMethod = method.toGenericString();
+		String declaringClassTypeName = method.getDeclaringClass().getTypeName();
+		String methodName = method.getName();
+
+		formatter
+				.appendMethodComment(buf, methodName, genericStringForMethod, declaringClassTypeName,
+						generateParamsForJavadocLink(method))
+				.append(lineBreak(0)).append(this.makeMethodSignature(method, importsOut, argumentNameSource))
+				.append(" {").append(lineBreak(2))
 				.append(this.makeDelegateCall(method, targetInterfaceName, importsOut, argumentNameSource))
-				.append(NEWLINE).append(indentationUnit).append("}").append(NEWLINE);
+				.append(lineBreak(1)).append("}").append(lineBreak(0));
 
 		return buf.toString();
 	}
 
-	/**
-	 * Add a javadoc comment for the generated method
-	 * 
-	 * @param method
-	 *            The delegate method
-	 * @param indentationUnit
-	 *            Blank spaces for indentation
-	 * @param buf
-	 *            The StringBuilder for appending
-	 * @return buf
-	 */
-	protected StringBuilder appendMethodComment(Method method, String indentationUnit, StringBuilder buf) {
-		return buf.append(indentationUnit).append("/**").append(NEWLINE).append(indentationUnit)
-				.append(" * Delegate call to ").append(method.toGenericString()).append(NEWLINE).append(indentationUnit)
-				.append(" * ").append("{@link ").append(method.getDeclaringClass().getTypeName()).append('#')
-				.append(method.getName()).append("(").append(generateParamsForJavadocLink(method)).append(")}")
-				.append(NEWLINE).append(indentationUnit).append(" */");
+	private String lineBreak(int indentations) {
+		return formatter.newlineWithIndentations(indentations);
 	}
 
 	private String generateParamsForJavadocLink(Method method) {
@@ -169,10 +161,11 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @return The signature
 	 */
 	protected String makeMethodSignature(Method method, Set<String> importNamesOut,
-			ArgumentNameSource argumentNameSource, String indentationUnit) {
+			ArgumentNameSource argumentNameSource) {
+		String indentationUnit = formatter.getIndentationUnit();
 		StringBuilder buf = new StringBuilder();
 		if (shouldDeprecate(method)) {
-			buf.append(indentationUnit).append("@Deprecated").append(NEWLINE);
+			buf.append(indentationUnit).append("@Deprecated").append(lineBreak(0));
 		}
 		buf.append(indentationUnit).append("default ")
 				.append(makeGenericMarkerAndUpdateImports(method, importNamesOut));
@@ -190,6 +183,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 
 	/**
 	 * Check whether method is deprecated
+	 * 
 	 * @param method
 	 * @return true if deprecated, false if not
 	 */
@@ -345,7 +339,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	protected void generateConstant(Field field, Class<?> fieldClass, Set<String> imports, StringBuilder buf,
 			String targetInterfaceName, String indentationUnit) {
 		String type = extractShortNameAndUpdateImports(imports, getTypeNameFromFieldForConstant(field));
-		buf.append(NEWLINE);
+		buf.append(lineBreak(0));
 		appendCommentForConstant(field, fieldClass, buf, indentationUnit);
 		appendConstantDeclaration(field, fieldClass, buf, targetInterfaceName, indentationUnit, type);
 	}
@@ -355,7 +349,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		buf.append(indentationUnit).append("public static final ").append(type).append(' ').append(field.getName())
 				.append(" = ")
 				.append(ClassNameUtils.getDelegateClassNameWithoutPackageIfNoConflict(fieldClass, targetInterfaceName))
-				.append('.').append(field.getName()).append(";").append(NEWLINE);
+				.append('.').append(field.getName()).append(";").append(lineBreak(0));
 	}
 
 	/**
@@ -369,7 +363,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	protected void appendCommentForConstant(Field field, Class<?> fieldClass, StringBuilder buf,
 			String indentationUnit) {
 		buf.append(indentationUnit).append("/** ").append("{@link ").append(fieldClass.getTypeName()).append('#')
-				.append(field.getName()).append("} */").append(NEWLINE);
+				.append(field.getName()).append("} */").append(lineBreak(0));
 	}
 
 	private String getTypeNameFromFieldForConstant(Field field) {
@@ -396,8 +390,8 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 *         wrapper interface
 	 */
 	protected String generateConstantsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
-			int indentationSpaces, String targetInterfaceName) {
-		String indentationUnit = makeIndentationUnit(indentationSpaces);
+			String targetInterfaceName) {
+		String indentationUnit = formatter.getIndentationUnit();
 
 		StringBuilder buf = new StringBuilder();
 		this.listConstantsForClass(delegateClass).stream().forEach(field -> {
@@ -420,83 +414,33 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @return Generated code
 	 */
 	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
-			Class<?> delegateClass, ArgumentNameSource argumentNameSource, int indentationSpaces) {
+			Class<?> delegateClass, ArgumentNameSource argumentNameSource) {
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
-		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, indentationSpaces,
-				targetInterfaceName);
-		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, indentationSpaces,
-				targetInterfaceName, argumentNameSource);
+		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName);
+		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, targetInterfaceName,
+				argumentNameSource);
 		appendPackage(targetPackageName, result);
 		appendSortedImports(result, imports, targetInterfaceName);
-		appendInterfaceBody(targetInterfaceName, delegateClass, indentationSpaces, result, constants, methods);
+		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods);
 		return result.toString();
 	}
 
-	private void appendInterfaceBody(String targetInterfaceName, Class<?> delegateClass, int indentationSpaces,
-			StringBuilder buf, String constants, String methods) {
-		String indentationUnit = makeIndentationUnit(indentationSpaces);
-		appendClassComment(delegateClass, buf);
+	private void appendInterfaceBody(String targetInterfaceName, Class<?> delegateClass, StringBuilder buf,
+			String constants, String methods) {
+		formatter.appendClassComment(delegateClass, buf);
 		buf.append("public interface ").append(targetInterfaceName);
-		buf.append(" {").append(NEWLINE).append(NEWLINE).append(NEWLINE);
-		appendCommentBeforeConstants(buf, indentationUnit).append(constants).append(NEWLINE).append(NEWLINE);
-		appendCommentBeforeMethods(buf, indentationUnit).append(methods).append(NEWLINE).append("}");
-	}
-
-	/**
-	 * Append a comment to start the zone of methods
-	 * 
-	 * @param buf
-	 *            target for append
-	 * @param indentationUnit
-	 *            Blank spaces for indentation
-	 * @return buf
-	 */
-	protected StringBuilder appendCommentBeforeMethods(StringBuilder buf, String indentationUnit) {
-		return buf.append(indentationUnit).append("// DELEGATE METHODS: ").append(NEWLINE);
-	}
-
-	/**
-	 * Append a comment to start the zone of constants
-	 * 
-	 * @param buf
-	 *            target for append
-	 * @param indentationUnit
-	 *            Blank spaces for indentation
-	 * @return buf
-	 */
-	protected StringBuilder appendCommentBeforeConstants(StringBuilder buf, String indentationUnit) {
-		return buf.append(indentationUnit).append("// CONSTANTS: ").append(NEWLINE);
-	}
-
-	/**
-	 * Append a javadoc comment for the class
-	 * 
-	 * @param delegateClass
-	 * @param buf
-	 *            target for append
-	 * @return buf
-	 */
-	protected StringBuilder appendClassComment(Class<?> delegateClass, StringBuilder buf) {
-		return buf.append(NEWLINE).append("/** ").append(NEWLINE).append(" * Wrapper of static elements in ")
-				.append(delegateClass.getTypeName()).append(NEWLINE)
-				.append(" * Generated by Interface-It: https://github.com/aro-tech/interface-it").append(NEWLINE)
-				.append(" * {@link ").append(delegateClass.getTypeName()).append("}").append(NEWLINE).append(" */")
-				.append(NEWLINE);
-	}
-
-	private String makeIndentationUnit(int indentationSpaces) {
-		StringBuilder indentation = new StringBuilder();
-		for (int i = 0; i < indentationSpaces; i++) {
-			indentation.append(' ');
+		buf.append(" {");
+		for(int i=0; i < 3; i++) {
+			buf.append(lineBreak(0));
 		}
-		String indentationUnit = indentation.toString();
-		return indentationUnit;
+		formatter.appendCommentBeforeConstants(buf).append(constants).append(lineBreak(0)).append(lineBreak(0));
+		formatter.appendCommentBeforeMethods(buf).append(methods).append(lineBreak(0)).append("}");
 	}
 
 	private void appendPackage(String targetPackageName, StringBuilder buf) {
 		if (null != targetPackageName && !targetPackageName.isEmpty()) {
-			buf.append("package ").append(targetPackageName).append(";").append(NEWLINE).append(NEWLINE);
+			buf.append("package ").append(targetPackageName).append(";").append(lineBreak(0)).append(lineBreak(0));
 		}
 	}
 
@@ -505,7 +449,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		Arrays.sort(sortedImports);
 		for (String cur : sortedImports) {
 			if (hasNoConflict(targetInterfaceName, cur)) {
-				buf.append("import ").append(cur).append("; ").append(NEWLINE);
+				buf.append("import ").append(cur).append("; ").append(lineBreak(0));
 			}
 		}
 	}
@@ -525,14 +469,14 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @return code
 	 */
 	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
-			int indentationSpaces, String targetInterfaceName, ArgumentNameSource argumentNameSource) {
+			String targetInterfaceName, ArgumentNameSource argumentNameSource) {
 		StringBuilder buf = new StringBuilder();
-		String indentationUnit = makeIndentationUnit(indentationSpaces);
 
 		for (Method cur : this.listStaticMethodsForClass(delegateClass)) {
 			if (deprecationPolicyDoesNotForbid(cur)) {
-				buf.append(NEWLINE).append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated,
-						argumentNameSource, indentationUnit)).append(NEWLINE).append(NEWLINE);
+				buf.append(lineBreak(0))
+						.append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated, argumentNameSource))
+						.append(lineBreak(0)).append(lineBreak(0));
 			}
 		}
 		return buf.toString();
@@ -540,6 +484,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 
 	/**
 	 * Apply the deprecation policy to the method
+	 * 
 	 * @param method
 	 * @return true if the handling of the method is not blocked by the
 	 *         deprecation policy, false if blocked
@@ -552,13 +497,13 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.interfaceit.ClassCodeGenerator#generateClassToFile(java.io.File,
-	 * java.lang.String, java.lang.Class, java.lang.String, int)
+	 * java.lang.String, java.lang.Class, java.lang.String)
 	 */
 	@Override
 	public File generateClassToFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass,
-			String targetPackageName, ArgumentNameSource argumentNameSource, int indentationSpaces) throws IOException {
+			String targetPackageName, ArgumentNameSource argumentNameSource) throws IOException {
 		return writeClassFile(saveDirectory, this.generateDelegateClassCode(targetPackageName, targetInterfaceName,
-				delegateClass, argumentNameSource, indentationSpaces), interfaceNameToFileName(targetInterfaceName));
+				delegateClass, argumentNameSource), interfaceNameToFileName(targetInterfaceName));
 	}
 
 	private String interfaceNameToFileName(String targetInterfaceName) {

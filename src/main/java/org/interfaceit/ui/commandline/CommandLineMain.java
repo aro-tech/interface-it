@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.interfaceit.ClassCodeGenerator;
 import org.interfaceit.StatisticProvidingClassCodeGenerator;
+import org.interfaceit.format.CodeFormatter;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.meta.arguments.LookupArgumentNameSource;
 import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader;
@@ -59,7 +60,8 @@ public class CommandLineMain {
 	 * @return The generator created
 	 */
 	static StatisticProvidingClassCodeGenerator buildGenerator(ArgumentParser argParser, FileSystem fileSystem) {
-		return new StatisticProvidingClassCodeGenerator(fileSystem, argParser.getDeprecationPolicy());
+		return new StatisticProvidingClassCodeGenerator(fileSystem, argParser.getDeprecationPolicy(),
+				CodeFormatter.getDefault());
 	}
 
 	/**

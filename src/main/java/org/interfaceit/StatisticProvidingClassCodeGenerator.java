@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import org.interfaceit.format.CodeFormatter;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.statistics.GenerationStatistics;
 import org.interfaceit.statistics.StatisticsProvider;
@@ -28,15 +29,20 @@ public class StatisticProvidingClassCodeGenerator extends DelegateMethodGenerato
 		super();
 	}
 
+
 	/**
 	 * 
 	 * Constructor
 	 * @param fileSystem
 	 * @param deprecationPolicy
+	 * @param formatter
 	 */
-	public StatisticProvidingClassCodeGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy) {
-		super(fileSystem, deprecationPolicy);
+	public StatisticProvidingClassCodeGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy,
+			CodeFormatter formatter) {
+		super(fileSystem, deprecationPolicy, formatter);
 	}
+
+
 
 	/* (non-Javadoc)
 	 * @see org.interfaceit.StatisticsProvider#getStatistics()
@@ -51,12 +57,12 @@ public class StatisticProvidingClassCodeGenerator extends DelegateMethodGenerato
 	 */
 	@Override
 	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
-			ArgumentNameSource argumentNameSource, String indentationUnit) {
+			ArgumentNameSource argumentNameSource) {
 		this.generationStatistics.incrementMethodCount();
 		if(isDeprecated(method)) {
 			this.generationStatistics.incrementDeprecationCount();
 		}
-		return super.makeDelegateMethod(targetInterfaceName, method, importsOut, argumentNameSource, indentationUnit);
+		return super.makeDelegateMethod(targetInterfaceName, method, importsOut, argumentNameSource);
 	}
 	
 	

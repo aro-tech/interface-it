@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Optional;
 
+import org.interfaceit.format.CodeFormatter;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.statistics.GenerationStatistics;
 import org.interfaceit.util.mixin.AllAssertions;
@@ -38,7 +39,7 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 
 	@Test
 	public void should_provide_statistics() {
-		String result = underTest.generateDelegateClassCode("org.whatever", "MyMath", Math.class, defaultNameSource, 5);
+		String result = underTest.generateDelegateClassCode("org.whatever", "MyMath", Math.class, defaultNameSource);
 		assertThat(countOccurrencesInString(result, "default ")).isEqualTo(NUMBER_OF_STATIC_METHODS_IN_MATH_CLASS);
 		verifyConstantAndMethodCounts(2, NUMBER_OF_STATIC_METHODS_IN_MATH_CLASS);
 	}
@@ -83,7 +84,7 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 
 		assertTrue(verifyMethod.isPresent());
 		String result = underTest.makeDelegateMethod("whatever", verifyMethod.get(), new HashSet<String>(),
-				defaultNameSource, " ");
+				defaultNameSource);
 		assertThat(result).contains("default <T> T verify(T arg0, VerificationMode arg1) {")
 				.contains("return Mockito.verify(arg0, arg1);");
 	}
@@ -131,8 +132,9 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 
 	@Test
 	public void can_track_skipped_deprecated_methods() {
-		underTest = new StatisticProvidingClassCodeGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS);
-		String result = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(), 4,
+		underTest = new StatisticProvidingClassCodeGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS,
+				CodeFormatter.getDefault());
+		String result = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(),
 				"Enc", new ArgumentNameSource() {
 				});
 		assertThat(underTest.getStatistics().getSkippedCount()).isEqualTo(1);
@@ -143,7 +145,7 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 	private void callAndVerifyDeprecatedMethod() {
 		Method depMethod = getAndVerifyDeprecatedMethod().get();
 		assertThat(underTest.makeDelegateMethod("Enc", depMethod, new HashSet<>(), new ArgumentNameSource() {
-		}, "    ")).contains(depMethod.getName());
+		})).contains(depMethod.getName());
 	}
 
 	private Optional<Method> getAndVerifyDeprecatedMethod() {

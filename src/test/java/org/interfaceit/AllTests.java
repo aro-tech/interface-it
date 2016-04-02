@@ -1,5 +1,6 @@
 package org.interfaceit;
 
+import org.interfaceit.format.CodeFormatterTest;
 import org.interfaceit.meta.arguments.LookupArgumentNameSourceTest;
 import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoaderTest;
 import org.interfaceit.ui.commandline.ArgumentParserTest;
@@ -18,7 +19,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ DelegateMethodGeneratorTest.class, IntegrationWithFilesTest.class, ClassNameUtilsTest.class,
 		ArgumentParserTest.class, CommandLineMainTest.class, LookupArgumentNameSourceTest.class,
-		SourceLineReadingArgumentNameLoaderTest.class, StatisticProvidingClassCodeGeneratorTest.class })
+		SourceLineReadingArgumentNameLoaderTest.class, StatisticProvidingClassCodeGeneratorTest.class,
+		CodeFormatterTest.class })
 public class AllTests {
 
 }

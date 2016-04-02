@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.assertj.core.api.Assertions;
+import org.interfaceit.format.CodeFormatter;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.util.mixin.AllAssertions;
 import org.interfaceit.util.mixin.Mockito;
@@ -62,7 +63,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	public void can_generate_constants_code() {
 		Set<String> imports = new HashSet<>();
 		String result = underTest.generateConstantsForClassUpdatingImports(org.mockito.Mockito.class, imports,
-				ClassCodeGenerator.DEFAULT_INDENTATION_SPACES, "MyMockito");
+				"MyMockito");
 		assertThat(result).contains("{@link org.mockito.Mockito#RETURNS_DEFAULTS}",
 				"public static final Answer<Object> RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;",
 				"{@link org.mockito.Mockito#RETURNS_SMART_NULLS}",
@@ -79,8 +80,8 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(when.isPresent());
 
-		assertThat(underTest.makeMethodSignature(when.get(), this.imports, defaultNameSource, ""))
-				.startsWith("default <T> OngoingStubbing<T> when(T");
+		assertThat(underTest.makeMethodSignature(when.get(), this.imports, defaultNameSource))
+				.startsWith("    default <T> OngoingStubbing<T> when(T");
 
 		assertThat(this.imports).contains("org.mockito.stubbing.OngoingStubbing");
 	}
@@ -92,8 +93,8 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(verifyMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, defaultNameSource, ""))
-				.startsWith("default <T> T verify(T").contains(", VerificationMode").endsWith(")");
+		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, defaultNameSource))
+				.startsWith("    default <T> T verify(T").contains(", VerificationMode").endsWith(")");
 
 		assertThat(this.imports).contains("org.mockito.verification.VerificationMode");
 	}
@@ -105,7 +106,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(doubleThatMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), imports, defaultNameSource, "").trim())
+		assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), imports, defaultNameSource).trim())
 				.startsWith("default double doubleThat(ArgumentMatcher<Double> ").endsWith(")");
 
 		assertThat(this.imports).contains("org.mockito.ArgumentMatcher");
@@ -119,7 +120,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(method.isPresent());
 
-		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource, "").trim())
+		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource).trim())
 				.startsWith("default Throwable catchThrowable(ThrowableAssert.ThrowingCallable ").endsWith(")");
 
 		assertThat(this.imports).contains("org.assertj.core.api.ThrowableAssert");
@@ -134,7 +135,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(method.isPresent());
 
-		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource, "").trim())
+		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource).trim())
 				.startsWith("default <T extends AssertDelegateTarget> T assertThat(T ").endsWith(")");
 
 		assertThat(this.imports).contains("org.assertj.core.api.AssertDelegateTarget");
@@ -148,7 +149,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(entryMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(entryMethod.get(), imports, defaultNameSource, ""))
+		assertThat(underTest.makeMethodSignature(entryMethod.get(), imports, defaultNameSource))
 				.isEqualToIgnoringWhitespace("default <K,V> MapEntry<K, V> entry(K arg0, V arg1)");
 
 		assertThat(this.imports).contains("org.assertj.core.data.MapEntry");
@@ -164,7 +165,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(assertMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(assertMethod.get(), imports, defaultNameSource, ""))
+		assertThat(underTest.makeMethodSignature(assertMethod.get(), imports, defaultNameSource))
 				.isEqualToIgnoringWhitespace(
 						"default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0)");
 
@@ -178,7 +179,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(tupleMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(tupleMethod.get(), imports, defaultNameSource, ""))
+		assertThat(underTest.makeMethodSignature(tupleMethod.get(), imports, defaultNameSource))
 				.isEqualToIgnoringWhitespace("default Tuple tuple(Object... arg0)");
 
 		assertThat(this.imports).contains("org.assertj.core.groups.Tuple");
@@ -225,7 +226,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 		assertTrue(verifyMethod.isPresent());
 
 		String delegateMethod = underTest.makeDelegateMethod("MyMockito", verifyMethod.get(), imports,
-				defaultNameSource, DEFAULT_INDENTATION_UNIT);
+				defaultNameSource);
 		assertThat(delegateMethod).contains("/**")
 				.contains("* Delegate call to " + verifyMethod.get().toGenericString())
 				.contains(
@@ -242,8 +243,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(method.isPresent());
 
-		String delegateMethod = underTest.makeDelegateMethod("Mockito", method.get(), imports, defaultNameSource,
-				DEFAULT_INDENTATION_UNIT);
+		String delegateMethod = underTest.makeDelegateMethod("Mockito", method.get(), imports, defaultNameSource);
 		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + method.get().toGenericString())
 				.contains("* {@link org.mockito.Matchers#anyDouble()}").contains("*/")
 				.contains("default double anyDouble() {").contains("return Matchers.anyDouble();")
@@ -258,8 +258,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(whenMethod.isPresent());
 
-		String delegateMethod = underTest.makeDelegateMethod("MyMockito", whenMethod.get(), imports, defaultNameSource,
-				DEFAULT_INDENTATION_UNIT);
+		String delegateMethod = underTest.makeDelegateMethod("MyMockito", whenMethod.get(), imports, defaultNameSource);
 		assertThat(delegateMethod).contains("/**").contains("* Delegate call to " + whenMethod.get().toGenericString())
 				.contains("{@link org.mockito.Mockito#when(java.lang.Object)}").contains("*/")
 				.contains("default <T> OngoingStubbing<T> when(T arg0) {").contains("return Mockito.when(arg0);")
@@ -271,7 +270,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	public void signature_includes_throws() throws NoSuchMethodException, SecurityException {
 		HashSet<String> importNamesOut = new HashSet<String>();
 		String signature = underTest.makeMethodSignature(Thread.class.getMethod("sleep", long.class), importNamesOut,
-				defaultNameSource, "");
+				defaultNameSource);
 
 		assertThat(signature).contains(" throws InterruptedException");
 		assertThat(importNamesOut).contains("java.lang.InterruptedException");
@@ -283,7 +282,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 		String targetInterfaceName = "Mockito";
 		Class<org.mockito.Mockito> delegateClass = org.mockito.Mockito.class;
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, targetInterfaceName, delegateClass,
-				defaultNameSource, ClassCodeGenerator.DEFAULT_INDENTATION_SPACES);
+				defaultNameSource);
 		assertThat(classText)
 				.startsWith("package org.interfaceit.results;" + System.lineSeparator() + System.lineSeparator())
 				.doesNotContain("import org.mockito.Mockito").doesNotContain("import java.lang.Class<").contains("/**")
@@ -296,9 +295,15 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 	@Test
 	public void verify_indentation() {
-		final int indentationSpaces = 5;
-		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, "MyMath", Math.class, defaultNameSource,
-				indentationSpaces);
+		for (int i = 0; i < 10; i++) {
+			testWithIndentation(i);
+		}
+	}
+
+	private void testWithIndentation(final int indentationSpaces) {
+		String classText = new DelegateMethodGenerator(null, DeprecationPolicy.PROPAGATE_DEPRECATION,
+				new CodeFormatter(indentationSpaces)).generateDelegateClassCode(TARGET_PACKAGE, "MyMath", Math.class,
+						defaultNameSource);
 		String[] lines = classText.split("\n");
 		IndentationContext indentation = new IndentationContext();
 		for (int lineNum = 0; lineNum < lines.length; lineNum++) {
@@ -488,7 +493,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 		when(this.mockArgNameSource.getArgumentNameFor(verifyMethod.get(), 0)).thenReturn("mock");
 		when(this.mockArgNameSource.getArgumentNameFor(verifyMethod.get(), 1)).thenReturn("mode");
 
-		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, mockArgNameSource, ""))
+		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, mockArgNameSource))
 				.isEqualToIgnoringWhitespace("default <T> T verify(T mock, VerificationMode mode)");
 
 		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "Mockito", imports, mockArgNameSource))
@@ -500,8 +505,8 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	public void should_propagate_deprecation() {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
 
-		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "   "))
-				.startsWith("   @Deprecated" + System.lineSeparator() + "   default");
+		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource))
+				.startsWith("    @Deprecated" + System.lineSeparator() + "    default");
 	}
 
 	private Optional<Method> getAndVerifyDeprecatedMethod() {
@@ -514,21 +519,23 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	@Test
 	public void should_not_propagate_deprecation_if_propagation_disabled() {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
-		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.WRAP_WITHOUT_DEPRECATING);
-		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "   "))
-				.startsWith("   default");
+		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.WRAP_WITHOUT_DEPRECATING,
+				CodeFormatter.getDefault());
+		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource))
+				.startsWith("    default");
 	}
 
 	@Test
 	public void should_ignore_deprecated_method_following_policy() {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
-		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS);
+		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS,
+				CodeFormatter.getDefault());
 		String allMethods = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(),
-				4, "MyURLEncoder", new ArgumentNameSource() {
+				"MyURLEncoder", new ArgumentNameSource() {
 				});
 		assertThat(allMethods)
 				.doesNotContain(
-						underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "    "))
+						underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource))
 				.contains("encode");
 	}
 

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.assertj.core.api.Assertions;
+import org.interfaceit.format.CodeFormatter;
 import org.interfaceit.meta.arguments.ArgumentNameSource;
 import org.interfaceit.meta.arguments.LookupArgumentNameSource;
 import org.interfaceit.meta.arguments.SourceLineReadingArgumentNameLoader;
@@ -67,9 +68,10 @@ public class IntegrationWithFilesTest implements AssertJ {
 	 */
 	@Test
 	public void can_write_mockito_to_file() throws IOException {
-		File resultFile = underTest.generateClassToFile(tmpDir, "MockitoEnabled", Mockito.class, "org.interfaceit.test",
-				new ArgumentNameSource() {
-				}, 5);
+		File resultFile = new DelegateMethodGenerator(new FileUtils(), DeprecationPolicy.PROPAGATE_DEPRECATION,
+				new CodeFormatter(5)).generateClassToFile(tmpDir, "MockitoEnabled", Mockito.class,
+						"org.interfaceit.test", new ArgumentNameSource() {
+						});
 
 		URL expectedURL = this.getClass().getResource("/MockitoEnabled.txt");
 		File expected = new File(expectedURL.getPath());
@@ -113,7 +115,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 			buildAndVerifyMockito(nameSource, packageName);
 
 			resultFile = underTest.generateClassToFile(examplesDir, "AssertJ", org.assertj.core.api.Assertions.class,
-					packageName, nameSource, 4);
+					packageName, nameSource);
 			Assertions.assertThat(resultFile).exists().canRead();
 			verifyCountOccurences(resultFile, 0, "arg0)");
 			verifyCountOccurences(resultFile, 52, "        return Assertions.assertThat(actual);");
@@ -162,7 +164,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 			throws IOException {
 		File resultFile;
 		resultFile = underTest.generateClassToFile(examplesDir, "Mockito", org.mockito.Mockito.class, packageName,
-				nameSource, 4);
+				nameSource);
 		Assertions.assertThat(resultFile).exists().canRead();
 		verifyCountOccurences(resultFile, 0, "arg0)");
 	}

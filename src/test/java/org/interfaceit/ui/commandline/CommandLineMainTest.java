@@ -326,7 +326,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		assertThat(built).isNotNull();
 		String wrapperCode = built.generateDelegateClassCode("org.example", "Enc", java.net.URLEncoder.class,
 				new ArgumentNameSource() {
-				}, 4);
+				});
 		return wrapperCode;
 	}
 
