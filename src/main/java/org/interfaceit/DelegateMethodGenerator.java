@@ -213,32 +213,46 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		StringBuilder buf = new StringBuilder();
 		TypeVariable<Method>[] typeParameters = method.getTypeParameters();
 		for (TypeVariable<Method> cur : typeParameters) {
-			if (buf.length() > 0) {
-				buf.append(",");
-			} else {
-				buf.append('<');
-			}
+			appendOpeningOrDelimiter(buf);
 			buf.append(cur.getName());
 			Type[] bounds = cur.getBounds();
-			if (bounds.length > 0
-					&& Arrays.stream(bounds).noneMatch(t -> t.getTypeName().endsWith("java.lang.Object"))) {
-				buf.append(" extends ");
-				for (int i = 0; i < bounds.length; i++) {
-					if (i > 0) {
-						buf.append(",");
-					}
-					String typeName = bounds[i].getTypeName();
-					buf.append(ClassNameUtils.extractSimpleName(typeName));
-					importNamesOut.addAll(ClassNameUtils.makeImports(typeName));
-				}
+			if (hasSuperclassBound(bounds)) {
+				appendAndImportExtendedType(importNamesOut, buf, bounds);
 			}
-
 		}
+		appendClosingIfOpened(buf);
+		return buf.toString();
+	}
+
+	private void appendClosingIfOpened(StringBuilder buf) {
 		if (buf.length() > 0) {
 			buf.append('>').append(' ');
 		}
+	}
 
-		return buf.toString();
+	private void appendOpeningOrDelimiter(StringBuilder buf) {
+		if (buf.length() > 0) {
+			buf.append(",");
+		} else {
+			buf.append('<');
+		}
+	}
+
+	private boolean hasSuperclassBound(Type[] bounds) {
+		return bounds.length > 0
+				&& Arrays.stream(bounds).noneMatch(t -> t.getTypeName().endsWith("java.lang.Object"));
+	}
+
+	private void appendAndImportExtendedType(Set<String> importNamesOut, StringBuilder buf, Type[] bounds) {
+		buf.append(" extends ");
+		for (int i = 0; i < bounds.length; i++) {
+			if (i > 0) {
+				buf.append(",");
+			}
+			String typeName = bounds[i].getTypeName();
+			buf.append(ClassNameUtils.extractSimpleName(typeName));
+			importNamesOut.addAll(ClassNameUtils.makeImports(typeName));
+		}
 	}
 
 	private void appendMethodArgumentsInSignature(Method method, Set<String> importNamesOut, StringBuilder buf,
@@ -248,13 +262,24 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 			if (i > 0) {
 				buf.append(", ");
 			}
-			String fullTypeName = types[i].getTypeName();
-			String shortTypeName = extractShortNameAndUpdateImports(importNamesOut, fullTypeName);
-			if (isVarargsParameter(method, types, i)) {
-				shortTypeName = ClassNameUtils.convertToVarArgs(shortTypeName);
-			}
-			buf.append(shortTypeName).append(' ').append(argumentNameSource.getArgumentNameFor(method, i));
+			appendOneArgument(method, importNamesOut, buf, argumentNameSource, types, i);
 		}
+	}
+
+	private void appendOneArgument(Method method, Set<String> importNamesOut, StringBuilder buf,
+			ArgumentNameSource argumentNameSource, Type[] types, int i) {
+		String fullTypeName = types[i].getTypeName();
+		buf.append(extractAndProcessShortTypeName(method, importNamesOut, types, i, fullTypeName)).append(' ')
+				.append(argumentNameSource.getArgumentNameFor(method, i));
+	}
+
+	private String extractAndProcessShortTypeName(Method method, Set<String> importNamesOut, Type[] types, int i,
+			String fullTypeName) {
+		String shortTypeName = extractShortNameAndUpdateImports(importNamesOut, fullTypeName);
+		if (isVarargsParameter(method, types, i)) {
+			shortTypeName = ClassNameUtils.convertToVarArgs(shortTypeName);
+		}
+		return shortTypeName;
 	}
 
 	private boolean isVarargsParameter(Method method, Type[] types, int i) {
@@ -284,16 +309,36 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	public String makeDelegateCall(Method method, String targetInterfaceName, Set<String> importsOut,
 			ArgumentNameSource argumentNameSource) {
 		StringBuilder buf = new StringBuilder();
-		if (!"void".equals(method.getReturnType().getTypeName())) {
-			buf.append("return ");
-		}
+		appendReturnIfNotVoid(method, buf);
 		Class<?> declaringClass = method.getDeclaringClass();
 		String delegateClassName = ClassNameUtils.getDelegateClassNameWithoutPackageIfNoConflict(declaringClass,
 				targetInterfaceName);
+		addImportIfNeeded(importsOut, declaringClass, delegateClassName);
+		appendStaticCall(method, argumentNameSource, buf, delegateClassName);
+		return buf.toString();
+	}
+
+	private void addImportIfNeeded(Set<String> importsOut, Class<?> declaringClass, String delegateClassName) {
 		if (needToImport(delegateClassName)) {
 			importsOut.add(declaringClass.getCanonicalName());
 		}
+	}
+
+	private void appendStaticCall(Method method, ArgumentNameSource argumentNameSource, StringBuilder buf,
+			String delegateClassName) {
 		buf.append(delegateClassName).append(".").append(method.getName()).append("(");
+		appendArgumentsInDelegateCall(method, argumentNameSource, buf);
+		buf.append(");");
+	}
+
+	private void appendReturnIfNotVoid(Method method, StringBuilder buf) {
+		if (!"void".equals(method.getReturnType().getTypeName())) {
+			buf.append("return ");
+		}
+	}
+
+	private void appendArgumentsInDelegateCall(Method method, ArgumentNameSource argumentNameSource,
+			StringBuilder buf) {
 		int parameterCount = method.getParameterCount();
 		for (int i = 0; i < parameterCount; i++) {
 			if (i > 0) {
@@ -301,8 +346,6 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 			}
 			buf.append(argumentNameSource.getArgumentNameFor(method, i));
 		}
-		buf.append(");");
-		return buf.toString();
 	}
 
 	/**
@@ -431,7 +474,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 		formatter.appendClassComment(delegateClass, buf);
 		buf.append("public interface ").append(targetInterfaceName);
 		buf.append(" {");
-		for(int i=0; i < 3; i++) {
+		for (int i = 0; i < 3; i++) {
 			buf.append(lineBreak(0));
 		}
 		formatter.appendCommentBeforeConstants(buf).append(constants).append(lineBreak(0)).append(lineBreak(0));
