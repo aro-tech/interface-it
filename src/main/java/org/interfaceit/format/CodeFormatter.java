@@ -3,8 +3,6 @@
  */
 package org.interfaceit.format;
 
-import java.lang.reflect.Method;
-
 /**
  * @author aro_tech
  *
