@@ -41,7 +41,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 */
 	public DelegateMethodGenerator() {
 		super();
-		this.fileSystem = new FileUtils();
+		this.fileSystem = FileUtils.getDefaultFileSystem();
 		this.deprecationPolicy = DeprecationPolicy.PROPAGATE_DEPRECATION;
 		this.formatter = CodeFormatter.getDefault();
 	}

@@ -48,8 +48,9 @@ public class CommandLineMain {
 	 */
 	public static void main(String[] args) {
 		ArgumentParser argParser = new ArgumentParser(args);
-		StatisticProvidingClassCodeGenerator methodGenerator = buildGenerator(argParser, new FileUtils());
-		execute(args, System.out, methodGenerator, argParser, new FileUtils(), methodGenerator);
+		StatisticProvidingClassCodeGenerator methodGenerator = buildGenerator(argParser,
+				FileUtils.getDefaultFileSystem());
+		execute(args, System.out, methodGenerator, argParser, FileUtils.getDefaultSourceFileReader(), methodGenerator);
 	}
 
 	/**

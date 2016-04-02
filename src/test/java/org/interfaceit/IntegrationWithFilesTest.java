@@ -39,7 +39,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 	private ClassCodeGenerator underTest = new DelegateMethodGenerator();
 	private static File tmpDir;
 	private static File examplesDir;
-	private SourceFileReader sourceReader = new FileUtils();
+	private SourceFileReader sourceReader = FileUtils.getDefaultSourceFileReader();
 
 	/**
 	 * @throws java.lang.Exception
@@ -68,9 +68,9 @@ public class IntegrationWithFilesTest implements AssertJ {
 	 */
 	@Test
 	public void can_write_mockito_to_file() throws IOException {
-		File resultFile = new DelegateMethodGenerator(new FileUtils(), DeprecationPolicy.PROPAGATE_DEPRECATION,
-				new CodeFormatter(5)).generateClassToFile(tmpDir, "MockitoEnabled", Mockito.class,
-						"org.interfaceit.test", new ArgumentNameSource() {
+		File resultFile = new DelegateMethodGenerator(FileUtils.getDefaultFileSystem(),
+				DeprecationPolicy.PROPAGATE_DEPRECATION, new CodeFormatter(5)).generateClassToFile(tmpDir,
+						"MockitoEnabled", Mockito.class, "org.interfaceit.test", new ArgumentNameSource() {
 						});
 
 		URL expectedURL = this.getClass().getResource("/MockitoEnabled.txt");

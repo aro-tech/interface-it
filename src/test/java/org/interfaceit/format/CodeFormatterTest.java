@@ -50,4 +50,8 @@ public class CodeFormatterTest implements AllAssertions {
 		assertThat(buf.toString()).contains("/**", " * Delegate call to void foo()", " * {@link MyDelegate#foo(String)}", " */");
 	}
 
+	@Test
+	public void should_generate_newline_with_spaces() {
+		assertEquals(System.lineSeparator() + "        ", underTest.newlineWithIndentations(2));
+	}
 }

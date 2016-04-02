@@ -26,6 +26,31 @@ import org.interfaceit.ui.meta.error.UnableToCreateOutputDirectory;
  *
  */
 public class FileUtils implements SourceFileReader, FileSystem {
+	
+	/**
+	 * Static factory method
+	 * @return The default FileSystem
+	 */
+	public static FileSystem getDefaultFileSystem() {
+		return new FileUtils();
+	}
+
+	/**
+	 * Static factory method
+	 * @return The default SourceFileReader
+	 */
+	public static SourceFileReader getDefaultSourceFileReader() {
+		return new FileUtils();
+	}
+	
+	
+	/**
+	 * 
+	 * Constructor
+	 */
+	protected FileUtils() {
+		super();
+	}
 
 	/*
 	 * (non-Javadoc)
