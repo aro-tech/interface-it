@@ -3,11 +3,11 @@ Java-8 mix-in interface code generator
 
 
 ##Latest release
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aro-tech/interface-it/badge.svg)](http://search.maven.org/#artifactdetails|com.github.aro-tech|interface-it|0.8.0|jar)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aro-tech/interface-it/badge.svg)](http://search.maven.org/#artifactdetails|com.github.aro-tech|interface-it|1.0.0|jar)
 
 [Release notes on github] (https://github.com/aro-tech/interface-it/releases/tag/v1.0.0) 
 
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.github.aro-tech/interface-it/badge.svg)](http://www.javadoc.io/doc/com.github.aro-tech/interface-it/0.8.0)
+[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.github.aro-tech/interface-it/badge.svg)](http://www.javadoc.io/doc/com.github.aro-tech/interface-it/1.0.0)
 
 In Maven:
 
@@ -15,7 +15,7 @@ In Maven:
 <dependency>
   <groupId>com.github.aro-tech</groupId>
   <artifactId>interface-it</artifactId>
-  <version>0.8.0</version>
+  <version>1.0.0</version>
 </dependency>
 ```
 
@@ -68,29 +68,11 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 -p > The package name for the target interface (ex: "org.example")
 -s > File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation 
 ```
-
-
-##Roadmap and future directions:
-
-###v1.0.0
-
- * Remove redundant methods in DelegateMethodGenerator<sup>*</sup> (done)
- * Provide statistics on generated code (number of methods and constants, etc.) (done) 
- * Emit warning message if no source code is found in source archive or file (done)
- * Create output directory if it doesn't exist (done)
- * Expose protected methods in DelegateMethodGenerator to allow overriding of comment generation. (done)
- * Allow a policy for handling deprecated methods - propagate deprecation, do not deprecate wrapped methods, or ignore deprecated methods. (done)
- * Improve Java API <sup>*</sup>
- * Rename top package from org.interfaceit to com.github.aro_tech.interface_it to correspond to the actual interface and the groupId in the Central Repository <sup>*</sup>
  
- <sup>*</sup> = BREAKING CHANGE for client code
- 
-
 ###Complementary project(s)
  
  * [Custom ANT task](https://github.com/aro-tech/interface-it-ant "Custom ANT task") 
  
-
 
 ##Acknowledgments 
 Inspired by the following articles:
