@@ -1,4 +1,4 @@
-package org.interfaceit.util.mixin;
+package com.github.aro_tech.interface_it.util.mixin;
 
 
 /** 

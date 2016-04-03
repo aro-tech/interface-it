@@ -141,7 +141,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>org.interfaceit.ui.commandline.CommandLineMain</mainClass>
+							<mainClass>com.github.aro_tech.interface_it.ui.commandline.CommandLineMain</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Built-By>aro-tech</Built-By>

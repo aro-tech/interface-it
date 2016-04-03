@@ -1,33 +1,22 @@
 package com.github.aro_tech.interface_it.util.mixin;
 
-import java.lang.Boolean; 
-import java.lang.Byte; 
-import java.lang.Character; 
-import java.lang.Class; 
-import java.lang.Double; 
-import java.lang.Float; 
-import java.lang.Integer; 
-import java.lang.Long; 
-import java.lang.Object; 
-import java.lang.Short; 
-import java.lang.String; 
-import java.lang.Throwable; 
-import java.util.Collection; 
-import java.util.List; 
-import java.util.Map; 
-import java.util.Set; 
-import org.mockito.ArgumentMatcher; 
-import org.mockito.InOrder; 
-import org.mockito.Matchers; 
-import org.mockito.MockSettings; 
-import org.mockito.MockingDetails; 
-import org.mockito.stubbing.Answer; 
-import org.mockito.stubbing.DeprecatedOngoingStubbing; 
-import org.mockito.stubbing.OngoingStubbing; 
-import org.mockito.stubbing.Stubber; 
-import org.mockito.stubbing.VoidMethodStubbable; 
-import org.mockito.verification.VerificationAfterDelay; 
-import org.mockito.verification.VerificationMode; 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.mockito.ArgumentMatcher;
+import org.mockito.InOrder;
+import org.mockito.Matchers;
+import org.mockito.MockSettings;
+import org.mockito.MockingDetails;
+import org.mockito.stubbing.Answer;
+import org.mockito.stubbing.DeprecatedOngoingStubbing;
+import org.mockito.stubbing.OngoingStubbing;
+import org.mockito.stubbing.Stubber;
+import org.mockito.stubbing.VoidMethodStubbable;
+import org.mockito.verification.VerificationAfterDelay;
+import org.mockito.verification.VerificationMode;
 import org.mockito.verification.VerificationWithTimeout; 
 
 /** 
@@ -41,22 +30,22 @@ public interface Mockito {
     // CONSTANTS: 
 
     /** {@link org.mockito.Mockito#CALLS_REAL_METHODS} */
-    public static final Answer<Object> CALLS_REAL_METHODS = org.mockito.Mockito.CALLS_REAL_METHODS;
+    public static final Answer CALLS_REAL_METHODS = org.mockito.Mockito.CALLS_REAL_METHODS;
 
     /** {@link org.mockito.Mockito#RETURNS_DEEP_STUBS} */
-    public static final Answer<Object> RETURNS_DEEP_STUBS = org.mockito.Mockito.RETURNS_DEEP_STUBS;
+    public static final Answer RETURNS_DEEP_STUBS = org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
     /** {@link org.mockito.Mockito#RETURNS_DEFAULTS} */
-    public static final Answer<Object> RETURNS_DEFAULTS = org.mockito.Mockito.RETURNS_DEFAULTS;
+    public static final Answer RETURNS_DEFAULTS = org.mockito.Mockito.RETURNS_DEFAULTS;
 
     /** {@link org.mockito.Mockito#RETURNS_MOCKS} */
-    public static final Answer<Object> RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;
+    public static final Answer RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;
 
     /** {@link org.mockito.Mockito#RETURNS_SELF} */
-    public static final Answer<Object> RETURNS_SELF = org.mockito.Mockito.RETURNS_SELF;
+    public static final Answer RETURNS_SELF = org.mockito.Mockito.RETURNS_SELF;
 
     /** {@link org.mockito.Mockito#RETURNS_SMART_NULLS} */
-    public static final Answer<Object> RETURNS_SMART_NULLS = org.mockito.Mockito.RETURNS_SMART_NULLS;
+    public static final Answer RETURNS_SMART_NULLS = org.mockito.Mockito.RETURNS_SMART_NULLS;
 
 
     // DELEGATE METHODS: 

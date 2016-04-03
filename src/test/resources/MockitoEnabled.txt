@@ -1,4 +1,4 @@
-package org.interfaceit.test;
+package com.github.aro_tech.interface_it.test;
 
 import java.lang.Boolean; 
 import java.lang.Byte; 
