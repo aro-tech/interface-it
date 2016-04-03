@@ -80,16 +80,15 @@ Once you have the binary, you run the jar file, providing a classpath which allo
  * Create output directory if it doesn't exist (done)
  * Expose protected methods in DelegateMethodGenerator to allow overriding of comment generation. (done)
  * Allow a policy for handling deprecated methods - propagate deprecation, do not deprecate wrapped methods, or ignore deprecated methods. (done)
- * Improve Java API <sup>*</sup> ??
+ * Improve Java API <sup>*</sup>
+ * Rename top package from org.interfaceit to com.github.aro_tech.interface_it to correspond to the actual interface and the groupId in the Central Repository <sup>*</sup>
  
- <sup>*</sup> = potential minor breaking change for low-level client code
+ <sup>*</sup> = BREAKING CHANGE for client code
  
 
-###Possible complementary projects
+###Complementary project(s)
  
- * Maven plugin 
- 
- * Eclipse plugin 
+ * [Custom ANT task](https://github.com/aro-tech/interface-it-ant "Custom ANT task") 
  
 
 
