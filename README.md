@@ -66,7 +66,8 @@ Once you have the binary, you run the jar file, providing a classpath which allo
 -d > Directory which will contain the generated file (default value is ".")
 -c > Fully qualified delegate class name (ex: "java.lang.Math")
 -p > The package name for the target interface (ex: "org.example")
--s > File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation 
+-s > File path of either a .jar or .zip file or a single source file ending in .java or .txt containing source code to be used to recover argument names lost during compilation
+-i > Ignore all deprecated methods. Default behavior is to wrap each deprecated method and deprecate the wrapping method.
 ```
  
 ###Complementary project(s)
