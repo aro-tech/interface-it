@@ -12,11 +12,11 @@ import java.util.HashSet;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.ClassCodeGenerator;
-import com.github.aro_tech.interface_it.StatisticProvidingClassCodeGenerator;
+import com.github.aro_tech.interface_it.api.MixinCodeGenerator;
+import com.github.aro_tech.interface_it.api.StatisticProvidingMixinGenerator;
+import com.github.aro_tech.interface_it.api.StatisticsProvider;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.statistics.GenerationStatistics;
-import com.github.aro_tech.interface_it.statistics.StatisticsProvider;
 import com.github.aro_tech.interface_it.ui.commandline.ArgumentParser;
 import com.github.aro_tech.interface_it.ui.commandline.CommandLineMain;
 import com.github.aro_tech.interface_it.ui.meta.error.UnableToCreateOutputDirectory;
@@ -33,14 +33,14 @@ import com.github.aro_tech.interface_it.util.mixin.Mockito;
  */
 public class CommandLineMainTest implements AssertJ, Mockito {
 	private PrintStream out;
-	private ClassCodeGenerator generator;
+	private MixinCodeGenerator generator;
 	private SourceFileReader reader;
 	private StatisticsProvider statsProvider;
 
 	@Before
 	public void setUp() throws Exception {
 		out = mock(PrintStream.class);
-		generator = mock(ClassCodeGenerator.class);
+		generator = mock(MixinCodeGenerator.class);
 		reader = mock(SourceFileReader.class);
 		statsProvider = mock(StatisticsProvider.class);
 	}
@@ -49,7 +49,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	public void execute_prints_result_file_path_and_stats() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
 		File result = new File(".");
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith2MethodsAnd1Constant());
 
@@ -65,7 +65,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 			throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
 		File result = new File(".");
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith1MethodAnd2Constants());
 
@@ -88,7 +88,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	public void execute_prints_result_file_path_and_skipped_count_1() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
 		File result = new File(".");
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(1));
 
@@ -103,7 +103,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	public void execute_prints_result_file_path_and_skipped_count_3() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
 		File result = new File(".");
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(3));
 
@@ -118,7 +118,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	public void execute_prints_result_file_path_and_deprecated_count_1() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
 		File result = new File(".");
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(1));
 
@@ -133,7 +133,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	public void execute_prints_result_file_path_and_deprecated_count_5() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
 		File result = new File(".");
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(5));
 
@@ -181,7 +181,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example", "-s", "emptyFile.txt" };
 		File result = new File(".");
 		when(reader.readFilesInZipArchive(any(), any())).thenReturn(new ArrayList<String>());
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenReturn(result);
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, null);
 		verify(out).println(contains("Warning: No source code was found"));
@@ -192,7 +192,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	public void execute_prints_version_if_flag() {
 		String[] args = { "-v" };
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, null);
-		verify(out).println(contains(ClassCodeGenerator.PRODUCT_VERSION));
+		verify(out).println(contains(MixinCodeGenerator.PRODUCT_VERSION));
 		verifyNoMoreInteractions(out);
 		verifyZeroInteractions(generator);
 	}
@@ -240,7 +240,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	@Test
 	public void execute_prints_error_message_on_generation_error() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenThrow(new IOException());
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, null);
 		verify(out).println(contains("Error writing output"));
@@ -250,7 +250,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	public void execute_prints_error_message_on_failure_to_create_output_directory()
 			throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenThrow(new UnableToCreateOutputDirectory(new File(".")));
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, null);
 		verify(out).println(contains("Error creating output directory"));
@@ -259,7 +259,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	@Test
 	public void execute_can_handle_error_with_null_output_directory() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
-		when(generator.generateClassToFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
+		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])), eq(args[7]),
 				any())).thenThrow(new UnableToCreateOutputDirectory(null));
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, null);
 		verify(out).println(contains("<NULL>"));
@@ -324,7 +324,7 @@ public class CommandLineMainTest implements AssertJ, Mockito {
 	}
 
 	String buildCodeGeneratorAndGenerateCodeForClassWithDeprecatedMethod(String[] args) {
-		StatisticProvidingClassCodeGenerator built = CommandLineMain.buildGenerator(new ArgumentParser(args),
+		StatisticProvidingMixinGenerator built = CommandLineMain.buildGenerator(new ArgumentParser(args),
 				null);
 		assertThat(built).isNotNull();
 		String wrapperCode = built.generateDelegateClassCode("org.example", "Enc", java.net.URLEncoder.class,

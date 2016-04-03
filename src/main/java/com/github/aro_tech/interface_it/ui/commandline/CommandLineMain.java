@@ -13,14 +13,14 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.github.aro_tech.interface_it.ClassCodeGenerator;
-import com.github.aro_tech.interface_it.StatisticProvidingClassCodeGenerator;
+import com.github.aro_tech.interface_it.api.MixinCodeGenerator;
+import com.github.aro_tech.interface_it.api.StatisticProvidingMixinGenerator;
+import com.github.aro_tech.interface_it.api.StatisticsProvider;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSource;
 import com.github.aro_tech.interface_it.meta.arguments.SourceLineReadingArgumentNameLoader;
 import com.github.aro_tech.interface_it.statistics.GenerationStatistics;
-import com.github.aro_tech.interface_it.statistics.StatisticsProvider;
 import com.github.aro_tech.interface_it.ui.meta.error.EmptySource;
 import com.github.aro_tech.interface_it.ui.meta.error.UnableToCreateOutputDirectory;
 import com.github.aro_tech.interface_it.ui.meta.error.UnableToReadSource;
@@ -48,7 +48,7 @@ public class CommandLineMain {
 	 */
 	public static void main(String[] args) {
 		ArgumentParser argParser = new ArgumentParser(args);
-		StatisticProvidingClassCodeGenerator methodGenerator = buildGenerator(argParser,
+		StatisticProvidingMixinGenerator methodGenerator = buildGenerator(argParser,
 				FileUtils.getDefaultFileSystem());
 		execute(args, System.out, methodGenerator, argParser, FileUtils.getDefaultSourceFileReader(), methodGenerator);
 	}
@@ -60,8 +60,8 @@ public class CommandLineMain {
 	 * @param fileSystem
 	 * @return The generator created
 	 */
-	static StatisticProvidingClassCodeGenerator buildGenerator(ArgumentParser argParser, FileSystem fileSystem) {
-		return new StatisticProvidingClassCodeGenerator(fileSystem, argParser.getDeprecationPolicy(),
+	static StatisticProvidingMixinGenerator buildGenerator(ArgumentParser argParser, FileSystem fileSystem) {
+		return new StatisticProvidingMixinGenerator(fileSystem, argParser.getDeprecationPolicy(),
 				CodeFormatter.getDefault());
 	}
 
@@ -73,7 +73,7 @@ public class CommandLineMain {
 	 * @param sourceReader
 	 * @param statsProvider
 	 */
-	static void execute(String[] args, PrintStream out, ClassCodeGenerator generator, ArgumentParser argParser,
+	static void execute(String[] args, PrintStream out, MixinCodeGenerator generator, ArgumentParser argParser,
 			SourceFileReader sourceReader, StatisticsProvider statsProvider) {
 		if (argParser.isVersionRequest()) {
 			printVersion(out);
@@ -84,7 +84,7 @@ public class CommandLineMain {
 		}
 	}
 
-	private static void executeMixinGeneration(String[] args, PrintStream out, ClassCodeGenerator generator,
+	private static void executeMixinGeneration(String[] args, PrintStream out, MixinCodeGenerator generator,
 			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider) {
 		try {
 			generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader, statsProvider,
@@ -131,7 +131,7 @@ public class CommandLineMain {
 	}
 
 	private static void printVersion(PrintStream out) {
-		out.println("InterfaceIt Version " + ClassCodeGenerator.PRODUCT_VERSION);
+		out.println("InterfaceIt Version " + MixinCodeGenerator.PRODUCT_VERSION);
 	}
 
 	private static void printArgFeedbackAndHelp(String[] args, PrintStream out) {
@@ -141,11 +141,11 @@ public class CommandLineMain {
 		out.println(ArgumentParser.getHelpText());
 	}
 
-	private static void generateClassFileAndPrintFeedback(PrintStream out, ClassCodeGenerator generator,
+	private static void generateClassFileAndPrintFeedback(PrintStream out, MixinCodeGenerator generator,
 			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider,
 			Class<?> delegateClass) {
 		try {
-			File result = generator.generateClassToFile(argParser.getWriteDirectoryPath(),
+			File result = generator.generateMixinJavaFile(argParser.getWriteDirectoryPath(),
 					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
 					makeArgumentSource(argParser, sourceReader, delegateClass, out));
 			printSuccessFeedback(result, out, statsProvider);

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.github.aro_tech.interface_it;
+package com.github.aro_tech.interface_it.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
+import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.ui.meta.error.UnableToCreateOutputDirectory;
 import com.github.aro_tech.interface_it.util.ClassNameUtils;
 import com.github.aro_tech.interface_it.util.FileSystem;
@@ -30,7 +31,7 @@ import com.github.aro_tech.interface_it.util.FileUtils;
  * @author aro_tech
  *
  */
-public class DelegateMethodGenerator implements ClassCodeGenerator {
+public class CoreMixinGenerator implements MixinCodeGenerator {
 
 	private final FileSystem fileSystem;
 	private final DeprecationPolicy deprecationPolicy;
@@ -39,7 +40,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	/**
 	 * Constructor using default FileSystem
 	 */
-	public DelegateMethodGenerator() {
+	public CoreMixinGenerator() {
 		super();
 		this.fileSystem = FileUtils.getDefaultFileSystem();
 		this.deprecationPolicy = DeprecationPolicy.PROPAGATE_DEPRECATION;
@@ -53,7 +54,7 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	 * @param deprecationPolicy
 	 * @param formatter
 	 */
-	public DelegateMethodGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy,
+	public CoreMixinGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy,
 			CodeFormatter formatter) {
 		super();
 		this.fileSystem = fileSystem;
@@ -539,11 +540,11 @@ public class DelegateMethodGenerator implements ClassCodeGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.github.aro_tech.interface_it.ClassCodeGenerator#generateClassToFile(java.io.File,
+	 * @see com.github.aro_tech.interface_it.MixinCodeGenerator#generateClassToFile(java.io.File,
 	 * java.lang.String, java.lang.Class, java.lang.String)
 	 */
 	@Override
-	public File generateClassToFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass,
+	public File generateMixinJavaFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass,
 			String targetPackageName, ArgumentNameSource argumentNameSource) throws IOException {
 		return writeClassFile(saveDirectory, this.generateDelegateClassCode(targetPackageName, targetInterfaceName,
 				delegateClass, argumentNameSource), interfaceNameToFileName(targetInterfaceName));

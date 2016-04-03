@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.github.aro_tech.interface_it;
+package com.github.aro_tech.interface_it.api;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -10,24 +10,24 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.DeprecationPolicy;
-import com.github.aro_tech.interface_it.StatisticProvidingClassCodeGenerator;
+import com.github.aro_tech.interface_it.api.StatisticProvidingMixinGenerator;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
+import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.statistics.GenerationStatistics;
 import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
 import com.github.aro_tech.interface_it.util.mixin.Mockito;
 
 /**
- * Unit tests for StatisticProvidingClassCodeGenerator
+ * Unit tests for StatisticProvidingMixinGenerator
  * 
  * @author aro_tech
  *
  */
-public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, Mockito {
+public class StatisticProvidingMixinGeneratorTest implements AllAssertions, Mockito {
 	private static final int NUMBER_OF_STATIC_METHODS_IN_MATH_CLASS = 73;
 
-	private StatisticProvidingClassCodeGenerator underTest;
+	private StatisticProvidingMixinGenerator underTest;
 
 	private ArgumentNameSource defaultNameSource = new ArgumentNameSource() {
 	};
@@ -37,7 +37,7 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 	 */
 	@Before
 	public void setUp() throws Exception {
-		underTest = new StatisticProvidingClassCodeGenerator();
+		underTest = new StatisticProvidingMixinGenerator();
 	}
 
 	@Test
@@ -135,7 +135,7 @@ public class StatisticProvidingClassCodeGeneratorTest implements AllAssertions, 
 
 	@Test
 	public void can_track_skipped_deprecated_methods() {
-		underTest = new StatisticProvidingClassCodeGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS,
+		underTest = new StatisticProvidingMixinGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS,
 				CodeFormatter.getDefault());
 		String result = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(),
 				"Enc", new ArgumentNameSource() {

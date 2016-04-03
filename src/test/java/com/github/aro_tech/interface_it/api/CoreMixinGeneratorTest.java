@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.github.aro_tech.interface_it;
+package com.github.aro_tech.interface_it.api;
 
 import java.io.Writer;
 import java.lang.reflect.Field;
@@ -15,10 +15,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.DelegateMethodGenerator;
-import com.github.aro_tech.interface_it.DeprecationPolicy;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
+import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
 import com.github.aro_tech.interface_it.util.mixin.Mockito;
 
@@ -28,9 +27,9 @@ import com.github.aro_tech.interface_it.util.mixin.Mockito;
  * @author aro_tech
  *
  */
-public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
+public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 	private static final String TARGET_PACKAGE = "com.github.aro_tech.interface_it.results";
-	private DelegateMethodGenerator underTest = new DelegateMethodGenerator();
+	private CoreMixinGenerator underTest = new CoreMixinGenerator();
 	private Set<String> imports;
 	private ArgumentNameSource mockArgNameSource = mock(ArgumentNameSource.class);
 	private ArgumentNameSource defaultNameSource = new ArgumentNameSource() {
@@ -47,7 +46,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 
 	/**
 	 * Test method for
-	 * {@link com.github.aro_tech.interface_it.DelegateMethodGenerator#listStaticMethodsForClass(java.lang.Class)}
+	 * {@link com.github.aro_tech.interface_it.api.CoreMixinGenerator#listStaticMethodsForClass(java.lang.Class)}
 	 * .
 	 */
 	@Test
@@ -304,7 +303,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	}
 
 	private void testWithIndentation(final int indentationSpaces) {
-		String classText = new DelegateMethodGenerator(null, DeprecationPolicy.PROPAGATE_DEPRECATION,
+		String classText = new CoreMixinGenerator(null, DeprecationPolicy.PROPAGATE_DEPRECATION,
 				new CodeFormatter(indentationSpaces)).generateDelegateClassCode(TARGET_PACKAGE, "MyMath", Math.class,
 						defaultNameSource);
 		String[] lines = classText.split("\n");
@@ -522,7 +521,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	@Test
 	public void should_not_propagate_deprecation_if_propagation_disabled() {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
-		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.WRAP_WITHOUT_DEPRECATING,
+		underTest = new CoreMixinGenerator(null, DeprecationPolicy.WRAP_WITHOUT_DEPRECATING,
 				CodeFormatter.getDefault());
 		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource))
 				.startsWith("    default");
@@ -531,7 +530,7 @@ public class DelegateMethodGeneratorTest implements AllAssertions, Mockito {
 	@Test
 	public void should_ignore_deprecated_method_following_policy() {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
-		underTest = new DelegateMethodGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS,
+		underTest = new CoreMixinGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS,
 				CodeFormatter.getDefault());
 		String allMethods = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(),
 				"MyURLEncoder", new ArgumentNameSource() {

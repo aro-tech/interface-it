@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import com.github.aro_tech.interface_it.DeprecationPolicy;
+import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 
 /**
  * Class for parsing command-line arguments for interface-it

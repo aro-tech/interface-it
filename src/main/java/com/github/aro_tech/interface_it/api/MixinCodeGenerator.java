@@ -1,4 +1,4 @@
-package com.github.aro_tech.interface_it;
+package com.github.aro_tech.interface_it.api;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,17 +6,17 @@ import java.io.IOException;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 
 /**
- * Interface which creates and saves to disk a wrapper class
+ * Interface which creates and saves to disk a wrapper interface
  * 
  * @author aro_tech
  *
  */
-public interface ClassCodeGenerator {
+public interface MixinCodeGenerator {
 
 	/**
 	 * The version to display
 	 */
-	String PRODUCT_VERSION = "1.0.0-SNAPSHOT";
+	String PRODUCT_VERSION = "1.0.0";
 
 	/**
 	 * Generate and write to file a delegate wrapping mix-in interface
@@ -36,7 +36,7 @@ public interface ClassCodeGenerator {
 	 * @return The .java file which was written
 	 * @throws IOException
 	 */
-	File generateClassToFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass, String targetPackageName,
+	File generateMixinJavaFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass, String targetPackageName,
 			ArgumentNameSource argumentNameSource) throws IOException;
 
 }

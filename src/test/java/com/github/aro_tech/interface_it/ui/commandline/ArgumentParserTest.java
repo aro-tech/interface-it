@@ -10,7 +10,7 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.DeprecationPolicy;
+import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.ui.commandline.ArgumentParser;
 import com.github.aro_tech.interface_it.ui.commandline.CommandLineMain;
 import com.github.aro_tech.interface_it.util.mixin.AssertJ;

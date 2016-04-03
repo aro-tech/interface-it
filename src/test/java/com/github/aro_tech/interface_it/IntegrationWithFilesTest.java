@@ -20,13 +20,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.github.aro_tech.interface_it.ClassCodeGenerator;
-import com.github.aro_tech.interface_it.DelegateMethodGenerator;
-import com.github.aro_tech.interface_it.DeprecationPolicy;
+import com.github.aro_tech.interface_it.api.CoreMixinGenerator;
+import com.github.aro_tech.interface_it.api.MixinCodeGenerator;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSource;
 import com.github.aro_tech.interface_it.meta.arguments.SourceLineReadingArgumentNameLoader;
+import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.ui.commandline.CommandLineMain;
 import com.github.aro_tech.interface_it.util.FileUtils;
 import com.github.aro_tech.interface_it.util.SourceFileReader;
@@ -40,7 +40,7 @@ import com.github.aro_tech.interface_it.util.mixin.AssertJ;
  */
 public class IntegrationWithFilesTest implements AssertJ {
 
-	private ClassCodeGenerator underTest = new DelegateMethodGenerator();
+	private MixinCodeGenerator underTest = new CoreMixinGenerator();
 	private static File tmpDir;
 	private static File examplesDir;
 	private SourceFileReader sourceReader = FileUtils.getDefaultSourceFileReader();
@@ -72,8 +72,8 @@ public class IntegrationWithFilesTest implements AssertJ {
 	 */
 	@Test
 	public void can_write_mockito_to_file() throws IOException {
-		File resultFile = new DelegateMethodGenerator(FileUtils.getDefaultFileSystem(),
-				DeprecationPolicy.PROPAGATE_DEPRECATION, new CodeFormatter(5)).generateClassToFile(tmpDir,
+		File resultFile = new CoreMixinGenerator(FileUtils.getDefaultFileSystem(),
+				DeprecationPolicy.PROPAGATE_DEPRECATION, new CodeFormatter(5)).generateMixinJavaFile(tmpDir,
 						"MockitoEnabled", Mockito.class, "com.github.aro_tech.interface_it.test", new ArgumentNameSource() {
 						});
 
@@ -118,7 +118,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 		try {
 			buildAndVerifyMockito(nameSource, packageName);
 
-			resultFile = underTest.generateClassToFile(examplesDir, "AssertJ", org.assertj.core.api.Assertions.class,
+			resultFile = underTest.generateMixinJavaFile(examplesDir, "AssertJ", org.assertj.core.api.Assertions.class,
 					packageName, nameSource);
 			Assertions.assertThat(resultFile).exists().canRead();
 			verifyCountOccurences(resultFile, 0, "arg0)");
@@ -167,7 +167,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 	private void buildAndVerifyMockito(LookupArgumentNameSource nameSource, final String packageName)
 			throws IOException {
 		File resultFile;
-		resultFile = underTest.generateClassToFile(examplesDir, "Mockito", org.mockito.Mockito.class, packageName,
+		resultFile = underTest.generateMixinJavaFile(examplesDir, "Mockito", org.mockito.Mockito.class, packageName,
 				nameSource);
 		Assertions.assertThat(resultFile).exists().canRead();
 		verifyCountOccurences(resultFile, 0, "arg0)");

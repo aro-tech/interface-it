@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.github.aro_tech.interface_it;
+package com.github.aro_tech.interface_it.policy;
 
 /**
  * Policy choice on how to handle a deprecated method
