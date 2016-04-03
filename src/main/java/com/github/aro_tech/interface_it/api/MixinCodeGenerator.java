@@ -16,7 +16,7 @@ public interface MixinCodeGenerator {
 	/**
 	 * The version to display
 	 */
-	String PRODUCT_VERSION = "1.0.0";
+	String PRODUCT_VERSION = "1.0.1-SNAPSHOT";
 
 	/**
 	 * Generate and write to file a delegate wrapping mix-in interface

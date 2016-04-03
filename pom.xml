@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.github.aro-tech</groupId>
 	<artifactId>interface-it</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Java code generator to create an interface which delegates to a class's static methods</description>
 	<url>https://github.com/aro-tech/interface-it</url>
