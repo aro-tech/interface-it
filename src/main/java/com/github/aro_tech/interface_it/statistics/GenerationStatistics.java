@@ -104,6 +104,7 @@ public class GenerationStatistics {
 
 	private void writeDeprecationCountIfNonZero(StringBuilder buf) {
 		if (getDeprecationCount() > 0) {
+			buf.append(System.lineSeparator());
 			if (getDeprecationCount() > 1) {
 				buf.append(getDeprecationCount() + " generated methods are deprecated.");
 			} else {
@@ -114,8 +115,10 @@ public class GenerationStatistics {
 
 	private void writeSkippedCountIfNonZero(StringBuilder buf) {
 		if (getSkippedCount() == 1) {
+			buf.append(System.lineSeparator());
 			buf.append("Skipped 1 static method because of deprecation policy.");
 		} else if (getSkippedCount() > 1) {
+			buf.append(System.lineSeparator());
 			buf.append("Skipped " + getSkippedCount() + " static methods because of deprecation policy.");
 		}
 	}

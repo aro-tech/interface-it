@@ -131,7 +131,7 @@ public class CommandLineMain {
 	}
 
 	private static void printVersion(PrintStream out) {
-		out.println("InterfaceIt Version " + MixinCodeGenerator.PRODUCT_VERSION);
+		out.println("interface-it version " + MixinCodeGenerator.PRODUCT_VERSION);
 	}
 
 	private static void printArgFeedbackAndHelp(String[] args, PrintStream out) {

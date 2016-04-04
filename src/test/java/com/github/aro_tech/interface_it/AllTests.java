@@ -9,6 +9,7 @@ import com.github.aro_tech.interface_it.api.StatisticProvidingMixinGeneratorTest
 import com.github.aro_tech.interface_it.format.CodeFormatterTest;
 import com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSourceTest;
 import com.github.aro_tech.interface_it.meta.arguments.SourceLineReadingArgumentNameLoaderTest;
+import com.github.aro_tech.interface_it.statistics.GenerationStatisticsTest;
 import com.github.aro_tech.interface_it.ui.commandline.ArgumentParserTest;
 import com.github.aro_tech.interface_it.ui.commandline.CommandLineMainTest;
 import com.github.aro_tech.interface_it.util.ClassNameUtilsTest;
@@ -23,7 +24,7 @@ import com.github.aro_tech.interface_it.util.ClassNameUtilsTest;
 @SuiteClasses({ CoreMixinGeneratorTest.class, IntegrationWithFilesTest.class, ClassNameUtilsTest.class,
 		ArgumentParserTest.class, CommandLineMainTest.class, LookupArgumentNameSourceTest.class,
 		SourceLineReadingArgumentNameLoaderTest.class, StatisticProvidingMixinGeneratorTest.class,
-		CodeFormatterTest.class })
+		CodeFormatterTest.class, GenerationStatisticsTest.class })
 public class AllTests {
 
 }
