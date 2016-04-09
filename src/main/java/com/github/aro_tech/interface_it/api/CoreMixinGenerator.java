@@ -12,13 +12,16 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import com.github.aro_tech.interface_it.api.options.SimpleSingleFileOutputOptions;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
@@ -517,11 +520,11 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
 		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName);
-		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, targetInterfaceName,
-				argumentNameSource);
+		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, argumentNameSource,
+				new SimpleSingleFileOutputOptions(targetInterfaceName, targetPackageName, null));
 		appendPackage(targetPackageName, result);
 		appendSortedImports(result, imports, targetInterfaceName);
-		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods);
+		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods, Collections.emptySet());
 		return result.toString();
 	}
 
@@ -542,24 +545,42 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
 		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName);
-		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, targetInterfaceName,
-				argumentNameSource);
+		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, argumentNameSource,
+				options);
 		appendPackage(options.getTargetPackageNameForDelegate(delegateClass), result);
 		appendSortedImports(result, imports, targetInterfaceName);
-		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods);
+		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods, options.getSuperTypes());
 		return result.toString();
 	}
 
 	private void appendInterfaceBody(String targetInterfaceName, Class<?> delegateClass, StringBuilder buf,
-			String constants, String methods) {
+			String constants, String methods, Set<String> superTypes) {
 		formatter.appendClassComment(delegateClass, buf);
-		buf.append("public interface ").append(targetInterfaceName);
+		appendInterfaceDeclaration(targetInterfaceName, buf, superTypes);
 		buf.append(" {");
 		for (int i = 0; i < 3; i++) {
 			buf.append(lineBreak(0));
 		}
 		formatter.appendCommentBeforeConstants(buf).append(constants).append(lineBreak(0)).append(lineBreak(0));
 		formatter.appendCommentBeforeMethods(buf).append(methods).append(lineBreak(0)).append("}");
+	}
+
+	private void appendInterfaceDeclaration(String targetInterfaceName, StringBuilder buf, Set<String> superTypes) {
+		buf.append("public interface ").append(targetInterfaceName);
+		appendAnySupertypeDeclarations(buf, superTypes);
+	}
+
+	private void appendAnySupertypeDeclarations(StringBuilder buf, Set<String> superTypes) {
+		if(null != superTypes && superTypes.size() > 0) {
+			buf.append(" extends ").append(makeCommaDelimitedSuperTypeList(superTypes));
+		}
+	}
+
+	private String makeCommaDelimitedSuperTypeList(Set<String> superTypes) {
+		StringJoiner joiner = new StringJoiner(", ");
+		superTypes.stream().sorted().forEachOrdered(str -> joiner.add(str));
+		final String superTypeList = joiner.toString();
+		return superTypeList;
 	}
 
 	private void appendPackage(String targetPackageName, StringBuilder buf) {
@@ -591,6 +612,21 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 * 
 	 * @param delegateClass
 	 * @param importsUpdated
+	 * @param argumentNameSource
+	 * @param options
+	 * @return code
+	 */
+	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
+			ArgumentNameSource argumentNameSource, MultiFileOutputOptions options) {
+		return generateMethodsForClassUpdatingImports(delegateClass, importsUpdated,
+				options.getTargetInterfaceNameForDelegate(delegateClass), argumentNameSource, options.getMethodFilter());
+	}
+
+	/**
+	 * Generate java code for all delegate methods
+	 * 
+	 * @param delegateClass
+	 * @param importsUpdated
 	 * @param indentationSpaces
 	 * @param targetInterfaceName
 	 * @param argumentNameSource
@@ -598,14 +634,31 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 */
 	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
 			String targetInterfaceName, ArgumentNameSource argumentNameSource) {
+		return generateMethodsForClassUpdatingImports(delegateClass, importsUpdated, targetInterfaceName,
+				argumentNameSource, m -> true);
+	}
+
+	/**
+	 * Generate java code for all delegate methods
+	 * 
+	 * @param delegateClass
+	 * @param importsUpdated
+	 * @param indentationSpaces
+	 * @param targetInterfaceName
+	 * @param argumentNameSource
+	 * @return code
+	 */
+	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
+			String targetInterfaceName, ArgumentNameSource argumentNameSource,
+			final Predicate<? super Method> extraMethodFilter) {
 		StringBuilder buf = new StringBuilder();
 
-		for (Method cur : this.listStaticMethodsForClass(delegateClass)) {
-			if (deprecationPolicyDoesNotForbid(cur)) {
-				buf.append(lineBreak(0))
-						.append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated, argumentNameSource))
-						.append(lineBreak(0)).append(lineBreak(0));
-			}
+		final Predicate<? super Method> methodFilter = STATIC_METHODS_ONLY
+				.and(m -> deprecationPolicyDoesNotForbid((Method) m)).and(m2 -> extraMethodFilter.test((Method) m2));
+		for (Method cur : this.listFilteredSortedMethodsForClass(delegateClass, methodFilter)) {
+			buf.append(lineBreak(0))
+					.append(this.makeDelegateMethod(targetInterfaceName, cur, importsUpdated, argumentNameSource))
+					.append(lineBreak(0)).append(lineBreak(0));
 		}
 		return buf.toString();
 	}
@@ -652,7 +705,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 			String targetInterfaceName = options.getTargetInterfaceNameForDelegate(delegate);
 			File current = writeClassFile(options.getMixinSaveDirectoryForDelegate(delegate),
 					this.generateDelegateClassCode(options.getTargetPackageNameForDelegate(delegate),
-							targetInterfaceName , delegate, argumentNameSource),
+							targetInterfaceName, delegate, argumentNameSource),
 					interfaceNameToFileName(targetInterfaceName));
 			results.add(current);
 		}

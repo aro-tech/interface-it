@@ -3,6 +3,7 @@
  */
 package com.github.aro_tech.interface_it.api;
 
+import java.io.File;
 import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,10 +11,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
@@ -34,7 +37,6 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 	private ArgumentNameSource mockArgNameSource = mock(ArgumentNameSource.class);
 	private ArgumentNameSource defaultNameSource = new ArgumentNameSource() {
 	};
-	private static final String DEFAULT_INDENTATION_UNIT = "    ";
 
 	/**
 	 * @throws java.lang.Exception
@@ -84,7 +86,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(when.isPresent());
 
-		assertThat(underTest.makeMethodSignature(when.get(), this.imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(when.get(), this.imports, defaultNameSource, ""))
 				.startsWith("    default <T> OngoingStubbing<T> when(T");
 
 		assertThat(this.imports).contains("org.mockito.stubbing.OngoingStubbing");
@@ -97,7 +99,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(verifyMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, defaultNameSource, ""))
 				.startsWith("    default <T> T verify(T").contains(", VerificationMode").endsWith(")");
 
 		assertThat(this.imports).contains("org.mockito.verification.VerificationMode");
@@ -110,7 +112,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(doubleThatMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), imports, defaultNameSource).trim())
+		assertThat(underTest.makeMethodSignature(doubleThatMethod.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default double doubleThat(ArgumentMatcher<Double> ").endsWith(")");
 
 		assertThat(this.imports).contains("org.mockito.ArgumentMatcher");
@@ -124,7 +126,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(method.isPresent());
 
-		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource).trim())
+		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default Throwable catchThrowable(ThrowableAssert.ThrowingCallable ").endsWith(")");
 
 		assertThat(this.imports).contains("org.assertj.core.api.ThrowableAssert");
@@ -139,7 +141,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(method.isPresent());
 
-		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource).trim())
+		assertThat(underTest.makeMethodSignature(method.get(), imports, defaultNameSource, "").trim())
 				.startsWith("default <T extends AssertDelegateTarget> T assertThat(T ").endsWith(")");
 
 		assertThat(this.imports).contains("org.assertj.core.api.AssertDelegateTarget");
@@ -153,7 +155,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(entryMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(entryMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(entryMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace("default <K,V> MapEntry<K, V> entry(K arg0, V arg1)");
 
 		assertThat(this.imports).contains("org.assertj.core.data.MapEntry");
@@ -169,7 +171,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(assertMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(assertMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(assertMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace(
 						"default AbstractCharSequenceAssert<?, ? extends CharSequence> assertThat(CharSequence arg0)");
 
@@ -183,7 +185,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 
 		assertTrue(tupleMethod.isPresent());
 
-		assertThat(underTest.makeMethodSignature(tupleMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(tupleMethod.get(), imports, defaultNameSource, ""))
 				.isEqualToIgnoringWhitespace("default Tuple tuple(Object... arg0)");
 
 		assertThat(this.imports).contains("org.assertj.core.groups.Tuple");
@@ -274,7 +276,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 	public void signature_includes_throws() throws NoSuchMethodException, SecurityException {
 		HashSet<String> importNamesOut = new HashSet<String>();
 		String signature = underTest.makeMethodSignature(Thread.class.getMethod("sleep", long.class), importNamesOut,
-				defaultNameSource);
+				defaultNameSource, "");
 
 		assertThat(signature).contains(" throws InterruptedException");
 		assertThat(importNamesOut).contains("java.lang.InterruptedException");
@@ -289,13 +291,94 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 				defaultNameSource);
 		assertThat(classText)
 				.startsWith("package com.github.aro_tech.interface_it.results;" + System.lineSeparator()
-						+ System.lineSeparator()).doesNotContain("import java.lang")
-				.doesNotContain("import org.mockito.Mockito").doesNotContain("import java.lang.Class<").contains("/**")
-				.contains("* Delegate call to ")
+						+ System.lineSeparator())
+				.doesNotContain("import java.lang").doesNotContain("import org.mockito.Mockito")
+				.doesNotContain("import java.lang.Class<").contains("/**").contains("* Delegate call to ")
 				.contains(
 						"* {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}")
 				.contains("*/").contains("default <T> T verify(T arg0, VerificationMode arg1) {")
-				.contains("return org.mockito.Mockito.verify(arg0, arg1);");
+				.contains("return org.mockito.Mockito.verify(arg0, arg1);").contains("return Matchers.");
+	}
+
+	@Test
+	public void can_filter_out_methods() {
+
+		Class<org.mockito.Mockito> delegateClass = org.mockito.Mockito.class;
+		MultiFileOutputOptions options = new MultiFileOutputOptions() {
+
+			@Override
+			public String getTargetPackageNameForDelegate(Class<?> delegateClass) {
+				return TARGET_PACKAGE;
+			}
+
+			@Override
+			public File getMixinSaveDirectoryForDelegate(Class<?> delegate) {
+				return null;
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see com.github.aro_tech.interface_it.api.MultiFileOutputOptions#
+			 * getMethodFilter()
+			 */
+			@Override
+			public Predicate<? super Method> getMethodFilter() {
+				return m -> false; // ignore all methods
+			}
+		};
+
+		String classText = underTest.generateDelegateClassCode(delegateClass, defaultNameSource, options);
+		assertThat(classText)
+				.startsWith("package com.github.aro_tech.interface_it.results;" + System.lineSeparator()
+						+ System.lineSeparator())
+				.contains("public interface MockitoMixin").doesNotContain("return ").doesNotContain("default ");
+	}
+
+	@Test
+	public void can_generate_mixin_with_supertype() {
+
+		Class<org.mockito.Mockito> delegateClass = org.mockito.Mockito.class;
+		MultiFileOutputOptions options = new MultiFileOutputOptions() {
+
+			@Override
+			public String getTargetPackageNameForDelegate(Class<?> delegateClass) {
+				return TARGET_PACKAGE;
+			}
+
+			@Override
+			public File getMixinSaveDirectoryForDelegate(Class<?> delegate) {
+				return null;
+			}
+
+			/*
+			 * (non-Javadoc)
+			 * 
+			 * @see com.github.aro_tech.interface_it.api.MultiFileOutputOptions#
+			 * getSuperTypes()
+			 */
+			@Override
+			public Set<String> getSuperTypes() {
+				return new HashSet<String>() {
+					{
+						add("TypeA");
+						add("TypeB");
+						add("TypeC");
+					}
+				};
+			}
+
+		};
+
+		String classText = underTest.generateDelegateClassCode(delegateClass, defaultNameSource, options);
+		assertThat(classText)
+				.startsWith("package com.github.aro_tech.interface_it.results;" + System.lineSeparator()
+						+ System.lineSeparator())
+				.contains("public interface MockitoMixin extends TypeA, TypeB, TypeC {")
+				.contains(
+						"* {@link org.mockito.Mockito#verify(java.lang.Object,org.mockito.verification.VerificationMode)}")
+				.contains("*/").contains("default <T> T verify(T arg0, VerificationMode arg1) {")
+				.contains("return Mockito.verify(arg0, arg1);");
 	}
 
 	@Test
@@ -498,7 +581,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 		when(this.mockArgNameSource.getArgumentNameFor(verifyMethod.get(), 0)).thenReturn("mock");
 		when(this.mockArgNameSource.getArgumentNameFor(verifyMethod.get(), 1)).thenReturn("mode");
 
-		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, mockArgNameSource))
+		assertThat(underTest.makeMethodSignature(verifyMethod.get(), imports, mockArgNameSource, ""))
 				.isEqualToIgnoringWhitespace("default <T> T verify(T mock, VerificationMode mode)");
 
 		assertThat(underTest.makeDelegateCall(verifyMethod.get(), "Mockito", imports, mockArgNameSource))
@@ -510,7 +593,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 	public void should_propagate_deprecation() {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
 
-		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource))
+		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, ""))
 				.startsWith("    @Deprecated" + System.lineSeparator() + "    default");
 	}
 
@@ -526,12 +609,35 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
 		underTest = new CoreMixinGenerator(null, DeprecationPolicy.WRAP_WITHOUT_DEPRECATING,
 				CodeFormatter.getDefault());
+		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, ""))
+				.startsWith("    default");
+	}
+
+	@Test
+	public void should_not_propagate_deprecation_if_propagation_disabled_LEGACY() {
+		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
+		underTest = new CoreMixinGenerator(null, DeprecationPolicy.WRAP_WITHOUT_DEPRECATING,
+				CodeFormatter.getDefault());
 		assertThat(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource))
 				.startsWith("    default");
 	}
 
 	@Test
 	public void should_ignore_deprecated_method_following_policy() {
+		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
+		underTest = new CoreMixinGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS,
+				CodeFormatter.getDefault());
+		String allMethods = underTest.generateMethodsForClassUpdatingImports(java.net.URLEncoder.class, new HashSet<>(),
+				"MyURLEncoder", new ArgumentNameSource() {
+				});
+		assertThat(allMethods)
+				.doesNotContain(
+						underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource, "URLEncoder"))
+				.contains("encode");
+	}
+
+	@Test
+	public void should_ignore_deprecated_method_following_policy_LEGACY() {
 		Optional<Method> deprecatedMethod = getAndVerifyDeprecatedMethod();
 		underTest = new CoreMixinGenerator(null, DeprecationPolicy.IGNORE_DEPRECATED_METHODS,
 				CodeFormatter.getDefault());

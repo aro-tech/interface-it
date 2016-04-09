@@ -1,6 +1,10 @@
 package com.github.aro_tech.interface_it.api;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Interface specifying preference information for the generation of multiple
@@ -18,7 +22,9 @@ public interface MultiFileOutputOptions {
 	 * @param delegateClass
 	 * @return The name of the mixin
 	 */
-	String getTargetInterfaceNameForDelegate(Class<?> delegateClass);
+	default String getTargetInterfaceNameForDelegate(Class<?> delegateClass) {
+		return delegateClass.getSimpleName() + "Mixin";
+	}
 
 	/**
 	 * Get the name of the package where the mixin interface will be generated
@@ -37,5 +43,23 @@ public interface MultiFileOutputOptions {
 	 * @return The output directory
 	 */
 	File getMixinSaveDirectoryForDelegate(Class<?> delegate);
+
+	/**
+	 * Predicate to do additional filtering of static methods to be processed
+	 * Does not affect filtering out of non-static methods or deprecated methods
+	 * 
+	 * @return Predicate to be applied
+	 */
+	default Predicate<? super Method> getMethodFilter() {
+		return m -> true; // by default, no additional filtering
+	}
+
+	/**
+	 * @return Set of all the supertypes to list in the "extends" clause of the
+	 *         generated mixin interface declaration
+	 */
+	default Set<String> getSuperTypes() {
+		return Collections.emptySet();
+	}
 
 }
