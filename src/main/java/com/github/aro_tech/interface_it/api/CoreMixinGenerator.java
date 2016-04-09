@@ -549,7 +549,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 				options);
 		appendPackage(options.getTargetPackageNameForDelegate(delegateClass), result);
 		appendSortedImports(result, imports, targetInterfaceName);
-		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods, options.getSuperTypes());
+		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods, options.getSuperTypes(delegateClass));
 		return result.toString();
 	}
 

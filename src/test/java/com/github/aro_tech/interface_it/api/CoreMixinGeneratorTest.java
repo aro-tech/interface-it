@@ -358,7 +358,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 			 * getSuperTypes()
 			 */
 			@Override
-			public Set<String> getSuperTypes() {
+			public Set<String> getSuperTypes(Class<?> clazz) {
 				return new HashSet<String>() {
 					{
 						add("TypeA");

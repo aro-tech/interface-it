@@ -55,10 +55,11 @@ public interface MultiFileOutputOptions {
 	}
 
 	/**
+	 * @param delegateClass 
 	 * @return Set of all the supertypes to list in the "extends" clause of the
 	 *         generated mixin interface declaration
 	 */
-	default Set<String> getSuperTypes() {
+	default Set<String> getSuperTypes(Class<?> delegateClass) {
 		return Collections.emptySet();
 	}
 
