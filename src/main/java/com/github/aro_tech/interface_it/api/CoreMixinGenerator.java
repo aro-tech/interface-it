@@ -54,8 +54,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 * @param deprecationPolicy
 	 * @param formatter
 	 */
-	public CoreMixinGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy,
-			CodeFormatter formatter) {
+	public CoreMixinGenerator(FileSystem fileSystem, DeprecationPolicy deprecationPolicy, CodeFormatter formatter) {
 		super();
 		this.fileSystem = fileSystem;
 		this.deprecationPolicy = deprecationPolicy;
@@ -124,7 +123,8 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		formatter
 				.appendMethodComment(buf, methodName, genericStringForMethod, declaringClassTypeName,
 						generateParamsForJavadocLink(method))
-				.append(lineBreak(0)).append(this.makeMethodSignature(method, importsOut, argumentNameSource))
+				.append(lineBreak(0))
+				.append(this.makeMethodSignature(method, importsOut, argumentNameSource, targetInterfaceName))
 				.append(" {").append(lineBreak(2))
 				.append(this.makeDelegateCall(method, targetInterfaceName, importsOut, argumentNameSource))
 				.append(lineBreak(1)).append("}").append(lineBreak(0));
@@ -156,13 +156,30 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 *            return type
 	 * @param argumentNameSource
 	 *            For naming arguments
-	 * @param indentationUnit
-	 *            spaces to be inserted n times at the beginning of lines based
-	 *            on block depth
+	 * @return The signature
+	 * @deprecated A new version of makeMethodSignature requires the name of the
+	 *             generated mixin interface.
+	 */
+	@Deprecated
+	protected String makeMethodSignature(Method method, Set<String> importNamesOut,
+			ArgumentNameSource argumentNameSource) {
+		return this.makeMethodSignature(method, importNamesOut, argumentNameSource, "");
+	}
+
+	/**
+	 * Generate the non-static signature of the method
+	 * 
+	 * @param method
+	 * @param importNamesOut
+	 *            collects any java imports required for the arguments and/or
+	 *            return type
+	 * @param argumentNameSource
+	 *            For naming arguments
+	 * @param
 	 * @return The signature
 	 */
 	protected String makeMethodSignature(Method method, Set<String> importNamesOut,
-			ArgumentNameSource argumentNameSource) {
+			ArgumentNameSource argumentNameSource, String targetInterfaceName) {
 		String indentationUnit = formatter.getIndentationUnit();
 		StringBuilder buf = new StringBuilder();
 		if (shouldDeprecate(method)) {
@@ -170,12 +187,39 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		}
 		buf.append(indentationUnit).append("default ")
 				.append(makeGenericMarkerAndUpdateImports(method, importNamesOut));
-		buf.append(extractShortNameAndUpdateImports(importNamesOut, method.getGenericReturnType().getTypeName()));
+		String extractedReturnTypeName = adjustTypeNameAndUpdateImportsIfAppropriate(importNamesOut,
+				targetInterfaceName, method.getGenericReturnType().getTypeName());
+		buf.append(extractedReturnTypeName);
 		buf.append(' ').append(method.getName()).append('(');
-		appendMethodArgumentsInSignature(method, importNamesOut, buf, argumentNameSource);
+		appendMethodArgumentsInSignature(method, importNamesOut, buf, argumentNameSource, targetInterfaceName);
 		buf.append(')');
 		addThrowsClauseToSignatureUpdatingImports(method, importNamesOut, buf);
 		return buf.toString();
+	}
+
+	private String adjustTypeNameAndUpdateImportsIfAppropriate(Set<String> importNamesOut, String targetInterfaceName,
+			String rawTypeName) {
+		String extractedTypeName = rawTypeName;
+		if (doNotNeedToQualifyTypeName(targetInterfaceName, rawTypeName)) {
+			extractedTypeName = extractShortNameAndUpdateImports(importNamesOut, rawTypeName);
+		}
+		return extractedTypeName.replace('$', '.');
+	}
+
+	private boolean doNotNeedToQualifyTypeName(String targetInterfaceName, String rawTypeName) {
+		return !hasTypeConflict(ClassNameUtils.extractSimpleName(rawTypeName), "" + targetInterfaceName);
+	}
+
+	private boolean hasTypeConflict(String simpleTypeName, String conflictingName) {
+		if (simpleTypeName.startsWith(conflictingName)) {
+			return isSameTypeOrNestedType(simpleTypeName, conflictingName);
+		}
+		return false;
+	}
+
+	private boolean isSameTypeOrNestedType(String simpleTypeName, String conflictingName) {
+		return simpleTypeName.length() == conflictingName.length()
+				|| simpleTypeName.charAt(conflictingName.length()) == '.';
 	}
 
 	private boolean shouldDeprecate(Method method) {
@@ -240,8 +284,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	}
 
 	private boolean hasSuperclassBound(Type[] bounds) {
-		return bounds.length > 0
-				&& Arrays.stream(bounds).noneMatch(t -> t.getTypeName().endsWith("java.lang.Object"));
+		return bounds.length > 0 && Arrays.stream(bounds).noneMatch(t -> t.getTypeName().endsWith("java.lang.Object"));
 	}
 
 	private void appendAndImportExtendedType(Set<String> importNamesOut, StringBuilder buf, Type[] bounds) {
@@ -257,26 +300,28 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	}
 
 	private void appendMethodArgumentsInSignature(Method method, Set<String> importNamesOut, StringBuilder buf,
-			ArgumentNameSource argumentNameSource) {
+			ArgumentNameSource argumentNameSource, String targetInterfaceName) {
 		Type[] types = method.getGenericParameterTypes();
 		for (int i = 0; i < types.length; i++) {
 			if (i > 0) {
 				buf.append(", ");
 			}
-			appendOneArgument(method, importNamesOut, buf, argumentNameSource, types, i);
+			appendOneArgument(method, importNamesOut, buf, argumentNameSource, types, i, targetInterfaceName);
 		}
 	}
 
 	private void appendOneArgument(Method method, Set<String> importNamesOut, StringBuilder buf,
-			ArgumentNameSource argumentNameSource, Type[] types, int i) {
+			ArgumentNameSource argumentNameSource, Type[] types, int i, String targetInterfaceName) {
 		String fullTypeName = types[i].getTypeName();
-		buf.append(extractAndProcessShortTypeName(method, importNamesOut, types, i, fullTypeName)).append(' ')
-				.append(argumentNameSource.getArgumentNameFor(method, i));
+		buf.append(extractAndProcessShortTypeName(method, importNamesOut, types, i, fullTypeName, targetInterfaceName))
+				.append(' ').append(argumentNameSource.getArgumentNameFor(method, i));
 	}
 
 	private String extractAndProcessShortTypeName(Method method, Set<String> importNamesOut, Type[] types, int i,
-			String fullTypeName) {
-		String shortTypeName = extractShortNameAndUpdateImports(importNamesOut, fullTypeName);
+			String fullTypeName, String targetInterfaceName) {
+		String shortTypeName = adjustTypeNameAndUpdateImportsIfAppropriate(importNamesOut, targetInterfaceName,
+				fullTypeName);
+		// extractShortNameAndUpdateImports(importNamesOut, fullTypeName);
 		if (isVarargsParameter(method, types, i)) {
 			shortTypeName = ClassNameUtils.convertToVarArgs(shortTypeName);
 		}
@@ -540,8 +585,9 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.github.aro_tech.interface_it.MixinCodeGenerator#generateClassToFile(java.io.File,
-	 * java.lang.String, java.lang.Class, java.lang.String)
+	 * @see
+	 * com.github.aro_tech.interface_it.MixinCodeGenerator#generateClassToFile(
+	 * java.io.File, java.lang.String, java.lang.Class, java.lang.String)
 	 */
 	@Override
 	public File generateMixinJavaFile(File saveDirectory, String targetInterfaceName, Class<?> delegateClass,

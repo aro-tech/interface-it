@@ -74,7 +74,8 @@ public class IntegrationWithFilesTest implements AssertJ {
 	public void can_write_mockito_to_file() throws IOException {
 		File resultFile = new CoreMixinGenerator(FileUtils.getDefaultFileSystem(),
 				DeprecationPolicy.PROPAGATE_DEPRECATION, new CodeFormatter(5)).generateMixinJavaFile(tmpDir,
-						"MockitoEnabled", Mockito.class, "com.github.aro_tech.interface_it.test", new ArgumentNameSource() {
+						"MockitoEnabled", Mockito.class, "com.github.aro_tech.interface_it.test",
+						new ArgumentNameSource() {
 						});
 
 		URL expectedURL = this.getClass().getResource("/MockitoEnabled.txt");

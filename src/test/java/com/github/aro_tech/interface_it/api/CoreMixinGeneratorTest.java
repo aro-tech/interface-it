@@ -286,7 +286,8 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 		String classText = underTest.generateDelegateClassCode(TARGET_PACKAGE, targetInterfaceName, delegateClass,
 				defaultNameSource);
 		assertThat(classText)
-				.startsWith("package com.github.aro_tech.interface_it.results;" + System.lineSeparator() + System.lineSeparator())
+				.startsWith("package com.github.aro_tech.interface_it.results;" + System.lineSeparator()
+						+ System.lineSeparator())
 				.doesNotContain("import org.mockito.Mockito").doesNotContain("import java.lang.Class<").contains("/**")
 				.contains("* Delegate call to ")
 				.contains(
@@ -536,9 +537,43 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 				"MyURLEncoder", new ArgumentNameSource() {
 				});
 		assertThat(allMethods)
-				.doesNotContain(
-						underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource))
+				.doesNotContain(underTest.makeMethodSignature(deprecatedMethod.get(), imports, defaultNameSource))
 				.contains("encode");
 	}
+
+	@Test
+	public void should_qualify_return_type_when_mixin_name_equals_delegate_name_and_return_type_is_delegate_type() {
+		Optional<Method> concatMethod = underTest.listStaticMethodsForClass(java.util.stream.IntStream.class).stream()
+				.filter((Method m) -> "concat".equals(m.getName()) && m.getParameters().length == 2).findFirst();
+
+		assertTrue(concatMethod.isPresent());
+
+		assertThat(underTest.makeMethodSignature(concatMethod.get(), this.imports, defaultNameSource, "IntStream"))
+				.startsWith("    default java.util.stream.IntStream concat(");
+	}
+	
+	@Test
+	public void should_qualify_argument_type_when_mixin_name_equals_delegate_name_and_return_type_is_delegate_type() {
+		Optional<Method> concatMethod = underTest.listStaticMethodsForClass(java.util.stream.IntStream.class).stream()
+				.filter((Method m) -> "concat".equals(m.getName()) && m.getParameters().length == 2).findFirst();
+
+		assertTrue(concatMethod.isPresent());
+
+		assertThat(underTest.makeMethodSignature(concatMethod.get(), this.imports, defaultNameSource, "IntStream"))
+				.contains("concat(java.util.stream.IntStream arg0, java.util.stream.IntStream arg1)");
+	}
+	
+	// default IntStream.Builder builder() {
+	@Test
+	public void should_qualify_return_type_when_mixin_name_equals_delegate_name_and_return_type_is_nested_type_of_delegate_type() {
+		Optional<Method> builderMethod = underTest.listStaticMethodsForClass(java.util.stream.IntStream.class).stream()
+				.filter((Method m) -> "builder".equals(m.getName()) && m.getParameters().length == 0).findFirst();
+
+		assertTrue(builderMethod.isPresent());
+
+		assertThat(underTest.makeMethodSignature(builderMethod.get(), this.imports, defaultNameSource, "IntStream"))
+				.startsWith("    default java.util.stream.IntStream.Builder builder()");
+	}
+
 
 }
