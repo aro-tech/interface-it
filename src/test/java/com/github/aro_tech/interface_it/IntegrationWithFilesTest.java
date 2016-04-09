@@ -22,6 +22,8 @@ import org.mockito.Mockito;
 
 import com.github.aro_tech.interface_it.api.CoreMixinGenerator;
 import com.github.aro_tech.interface_it.api.MixinCodeGenerator;
+import com.github.aro_tech.interface_it.api.MultiFileOutputOptions;
+import com.github.aro_tech.interface_it.api.options.SimpleSingleFileOutputOptions;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSource;
@@ -115,12 +117,15 @@ public class IntegrationWithFilesTest implements AssertJ {
 		LookupArgumentNameSource nameSource = loadArgumentNames(examplesSourceZip);
 
 		final String packageName = "com.github.aro_tech.interface_it.util.mixin";
-		File resultFile;
 		try {
 			buildAndVerifyMockito(nameSource, packageName);
 
-			resultFile = underTest.generateMixinJavaFile(examplesDir, "AssertJ", org.assertj.core.api.Assertions.class,
-					packageName, nameSource);
+			MultiFileOutputOptions options = new SimpleSingleFileOutputOptions("AssertJ", packageName, examplesDir);
+			List<File> resultFiles = underTest.generateMixinJavaFiles(options, nameSource,
+					org.assertj.core.api.Assertions.class);
+			Assertions.assertThat(resultFiles).hasSize(1);
+
+			File resultFile = resultFiles.get(0);
 			Assertions.assertThat(resultFile).exists().canRead();
 			verifyCountOccurences(resultFile, 0, "arg0)");
 			verifyCountOccurences(resultFile, 52, "        return Assertions.assertThat(actual);");

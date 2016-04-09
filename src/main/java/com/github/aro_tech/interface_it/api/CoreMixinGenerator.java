@@ -10,11 +10,13 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.github.aro_tech.interface_it.format.CodeFormatter;
@@ -36,6 +38,11 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	private final FileSystem fileSystem;
 	private final DeprecationPolicy deprecationPolicy;
 	private final CodeFormatter formatter;
+
+	/**
+	 * Predicate to filter out static methods
+	 */
+	final Predicate<? super Method> STATIC_METHODS_ONLY = m -> Modifier.isStatic(m.getModifiers());
 
 	/**
 	 * Constructor using default FileSystem
@@ -68,8 +75,12 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 * @return List of all static methods
 	 */
 	protected List<Method> listStaticMethodsForClass(Class<?> clazz) {
-		return Arrays.stream(clazz.getMethods()).filter(m -> Modifier.isStatic(m.getModifiers()))
-				.sorted(makeMethodSorter()).collect(Collectors.toList());
+		return listFilteredSortedMethodsForClass(clazz, STATIC_METHODS_ONLY);
+	}
+
+	private List<Method> listFilteredSortedMethodsForClass(Class<?> clazz, Predicate<? super Method> methodFilter) {
+		return Arrays.stream(clazz.getMethods()).filter(methodFilter).sorted(makeMethodSorter())
+				.collect(Collectors.toList());
 	}
 
 	private Comparator<? super Method> makeMethodSorter() {
@@ -499,7 +510,6 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 * @param targetInterfaceName
 	 * @param delegateClass
 	 * @param argumentNameSource
-	 * @param indentationSpaces
 	 * @return Generated code
 	 */
 	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
@@ -510,6 +520,31 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, targetInterfaceName,
 				argumentNameSource);
 		appendPackage(targetPackageName, result);
+		appendSortedImports(result, imports, targetInterfaceName);
+		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods);
+		return result.toString();
+	}
+
+	/**
+	 * Generate the code of a java interface file delegating to the target
+	 * class's static fields and methods
+	 * 
+	 * @param targetPackageName
+	 * @param targetInterfaceName
+	 * @param delegateClass
+	 * @param argumentNameSource
+	 * @param options
+	 * @return Generated code
+	 */
+	public String generateDelegateClassCode(Class<?> delegateClass, ArgumentNameSource argumentNameSource,
+			MultiFileOutputOptions options) {
+		final String targetInterfaceName = options.getTargetInterfaceNameForDelegate(delegateClass);
+		Set<String> imports = new HashSet<String>();
+		StringBuilder result = new StringBuilder();
+		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName);
+		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, targetInterfaceName,
+				argumentNameSource);
+		appendPackage(options.getTargetPackageNameForDelegate(delegateClass), result);
 		appendSortedImports(result, imports, targetInterfaceName);
 		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods);
 		return result.toString();
@@ -598,6 +633,30 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 			String targetPackageName, ArgumentNameSource argumentNameSource) throws IOException {
 		return writeClassFile(saveDirectory, this.generateDelegateClassCode(targetPackageName, targetInterfaceName,
 				delegateClass, argumentNameSource), interfaceNameToFileName(targetInterfaceName));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.aro_tech.interface_it.api.MixinCodeGenerator#
+	 * generateMixinJavaFiles(com.github.aro_tech.interface_it.api.
+	 * MultiFileOutputOptions,
+	 * com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource,
+	 * java.lang.Class[])
+	 */
+	@Override
+	public List<File> generateMixinJavaFiles(MultiFileOutputOptions options, ArgumentNameSource argumentNameSource,
+			Class<?>... delegateClasses) throws IOException {
+		List<File> results = new ArrayList<File>();
+		for (Class<?> delegate : delegateClasses) {
+			String targetInterfaceName = options.getTargetInterfaceNameForDelegate(delegate);
+			File current = writeClassFile(options.getMixinSaveDirectoryForDelegate(delegate),
+					this.generateDelegateClassCode(options.getTargetPackageNameForDelegate(delegate),
+							targetInterfaceName , delegate, argumentNameSource),
+					interfaceNameToFileName(targetInterfaceName));
+			results.add(current);
+		}
+		return results;
 	}
 
 	private String interfaceNameToFileName(String targetInterfaceName) {
