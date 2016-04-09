@@ -537,10 +537,14 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		String[] sortedImports = importsUpdated.toArray(new String[importsUpdated.size()]);
 		Arrays.sort(sortedImports);
 		for (String cur : sortedImports) {
-			if (hasNoConflict(targetInterfaceName, cur)) {
+			if (hasNoConflict(targetInterfaceName, cur) && doesNotCreatePMDWarning(cur)) {
 				buf.append("import ").append(cur).append("; ").append(lineBreak(0));
 			}
 		}
+	}
+
+	private boolean doesNotCreatePMDWarning(String cur) {
+		return !cur.startsWith("java.lang.");
 	}
 
 	private boolean hasNoConflict(String targetInterfaceName, String cur) {

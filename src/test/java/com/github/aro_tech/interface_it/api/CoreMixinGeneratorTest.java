@@ -289,7 +289,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 				defaultNameSource);
 		assertThat(classText)
 				.startsWith("package com.github.aro_tech.interface_it.results;" + System.lineSeparator()
-						+ System.lineSeparator())
+						+ System.lineSeparator()).doesNotContain("import java.lang")
 				.doesNotContain("import org.mockito.Mockito").doesNotContain("import java.lang.Class<").contains("/**")
 				.contains("* Delegate call to ")
 				.contains(

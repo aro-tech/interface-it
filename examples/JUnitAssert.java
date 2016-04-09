@@ -1,7 +1,5 @@
 package com.github.aro_tech.interface_it.util.mixin;
 
-import java.lang.Object; 
-import java.lang.String; 
 import org.hamcrest.Matcher; 
 import org.junit.Assert; 
 import org.junit.internal.ArrayComparisonFailure; 

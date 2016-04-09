@@ -1,17 +1,5 @@
 package com.github.aro_tech.interface_it.test;
 
-import java.lang.Boolean; 
-import java.lang.Byte; 
-import java.lang.Character; 
-import java.lang.Class; 
-import java.lang.Double; 
-import java.lang.Float; 
-import java.lang.Integer; 
-import java.lang.Long; 
-import java.lang.Object; 
-import java.lang.Short; 
-import java.lang.String; 
-import java.lang.Throwable; 
 import java.util.Collection; 
 import java.util.List; 
 import java.util.Map; 
