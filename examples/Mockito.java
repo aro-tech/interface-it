@@ -41,22 +41,22 @@ public interface Mockito {
     // CONSTANTS: 
 
     /** {@link org.mockito.Mockito#CALLS_REAL_METHODS} */
-    public static final Answer<Object> CALLS_REAL_METHODS = org.mockito.Mockito.CALLS_REAL_METHODS;
+    static final Answer<Object> CALLS_REAL_METHODS = org.mockito.Mockito.CALLS_REAL_METHODS;
 
     /** {@link org.mockito.Mockito#RETURNS_DEEP_STUBS} */
-    public static final Answer<Object> RETURNS_DEEP_STUBS = org.mockito.Mockito.RETURNS_DEEP_STUBS;
+    static final Answer<Object> RETURNS_DEEP_STUBS = org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
     /** {@link org.mockito.Mockito#RETURNS_DEFAULTS} */
-    public static final Answer<Object> RETURNS_DEFAULTS = org.mockito.Mockito.RETURNS_DEFAULTS;
+    static final Answer<Object> RETURNS_DEFAULTS = org.mockito.Mockito.RETURNS_DEFAULTS;
 
     /** {@link org.mockito.Mockito#RETURNS_MOCKS} */
-    public static final Answer<Object> RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;
+    static final Answer<Object> RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;
 
     /** {@link org.mockito.Mockito#RETURNS_SELF} */
-    public static final Answer<Object> RETURNS_SELF = org.mockito.Mockito.RETURNS_SELF;
+    static final Answer<Object> RETURNS_SELF = org.mockito.Mockito.RETURNS_SELF;
 
     /** {@link org.mockito.Mockito#RETURNS_SMART_NULLS} */
-    public static final Answer<Object> RETURNS_SMART_NULLS = org.mockito.Mockito.RETURNS_SMART_NULLS;
+    static final Answer<Object> RETURNS_SMART_NULLS = org.mockito.Mockito.RETURNS_SMART_NULLS;
 
 
     // DELEGATE METHODS: 

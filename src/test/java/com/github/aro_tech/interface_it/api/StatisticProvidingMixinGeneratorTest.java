@@ -108,7 +108,7 @@ public class StatisticProvidingMixinGeneratorTest implements AllAssertions, Mock
 		StringBuilder buf = new StringBuilder();
 		underTest.generateConstant(Math.class.getDeclaredField("PI"), Math.class, new HashSet<String>(), buf, "MyMath",
 				"    ");
-		assertThat(buf.toString()).contains("public static final double PI");
+		assertThat(buf.toString()).contains("static final double PI");
 	}
 
 	@Test

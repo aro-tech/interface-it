@@ -435,7 +435,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 
 	private void appendConstantDeclaration(Field field, Class<?> fieldClass, StringBuilder buf,
 			String targetInterfaceName, String indentationUnit, String type) {
-		buf.append(indentationUnit).append("public static final ").append(type).append(' ').append(field.getName())
+		buf.append(indentationUnit).append("static final ").append(type).append(' ').append(field.getName())
 				.append(" = ")
 				.append(ClassNameUtils.getDelegateClassNameWithoutPackageIfNoConflict(fieldClass, targetInterfaceName))
 				.append('.').append(field.getName()).append(";").append(lineBreak(0));

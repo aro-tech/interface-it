@@ -12,10 +12,10 @@ public interface Math {
     // CONSTANTS: 
 
     /** {@link java.lang.Math#E} */
-    public static final double E = java.lang.Math.E;
+    static final double E = java.lang.Math.E;
 
     /** {@link java.lang.Math#PI} */
-    public static final double PI = java.lang.Math.PI;
+    static final double PI = java.lang.Math.PI;
 
 
     // DELEGATE METHODS: 

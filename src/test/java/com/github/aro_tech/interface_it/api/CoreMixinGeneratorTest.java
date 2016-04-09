@@ -66,10 +66,12 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 		Set<String> imports = new HashSet<>();
 		String result = underTest.generateConstantsForClassUpdatingImports(org.mockito.Mockito.class, imports,
 				"MyMockito");
-		assertThat(result).contains("{@link org.mockito.Mockito#RETURNS_DEFAULTS}",
-				"public static final Answer<Object> RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;",
-				"{@link org.mockito.Mockito#RETURNS_SMART_NULLS}",
-				"public static final Answer<Object> RETURNS_SMART_NULLS = Mockito.RETURNS_SMART_NULLS;");
+		assertThat(result)
+				.contains("{@link org.mockito.Mockito#RETURNS_DEFAULTS}",
+						"static final Answer<Object> RETURNS_DEFAULTS = Mockito.RETURNS_DEFAULTS;",
+						"{@link org.mockito.Mockito#RETURNS_SMART_NULLS}",
+						"static final Answer<Object> RETURNS_SMART_NULLS = Mockito.RETURNS_SMART_NULLS;")
+				.doesNotContain("public static final");
 
 		assertThat(imports).contains("org.mockito.stubbing.Answer", "org.mockito.Mockito");
 
@@ -482,7 +484,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 		StringBuilder buf = new StringBuilder();
 		underTest.generateConstant(field, org.mockito.Mockito.class, imports, buf, "Mockito", "");
 		assertThat(buf.toString())
-				.contains("public static final Answer<Object> RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;");
+				.contains("static final Answer<Object> RETURNS_MOCKS = org.mockito.Mockito.RETURNS_MOCKS;");
 
 	}
 
@@ -551,7 +553,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 		assertThat(underTest.makeMethodSignature(concatMethod.get(), this.imports, defaultNameSource, "IntStream"))
 				.startsWith("    default java.util.stream.IntStream concat(");
 	}
-	
+
 	@Test
 	public void should_qualify_argument_type_when_mixin_name_equals_delegate_name_and_return_type_is_delegate_type() {
 		Optional<Method> concatMethod = underTest.listStaticMethodsForClass(java.util.stream.IntStream.class).stream()
@@ -562,7 +564,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 		assertThat(underTest.makeMethodSignature(concatMethod.get(), this.imports, defaultNameSource, "IntStream"))
 				.contains("concat(java.util.stream.IntStream arg0, java.util.stream.IntStream arg1)");
 	}
-	
+
 	// default IntStream.Builder builder() {
 	@Test
 	public void should_qualify_return_type_when_mixin_name_equals_delegate_name_and_return_type_is_nested_type_of_delegate_type() {
@@ -574,6 +576,5 @@ public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
 		assertThat(underTest.makeMethodSignature(builderMethod.get(), this.imports, defaultNameSource, "IntStream"))
 				.startsWith("    default java.util.stream.IntStream.Builder builder()");
 	}
-
 
 }
