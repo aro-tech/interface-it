@@ -262,8 +262,12 @@ public class CommandLineMain {
 	private static void printSuccessFeedback(File result, PrintStream out, StatisticsProvider statsProvider) {
 		out.println("Wrote file: " + result.getAbsolutePath());
 		if (null != statsProvider) {
-			summarizeStatistics(out, statsProvider.getStatisticsFor(result.getName()));
+			summarizeStatistics(out, getStatistics(result, statsProvider));
 		}
+	}
+
+	private static GenerationStatistics getStatistics(File result, StatisticsProvider statsProvider) {
+		return statsProvider.getStatisticsFor(result.getName()).get();
 	}
 
 	private static void summarizeStatistics(PrintStream out, GenerationStatistics stats) {

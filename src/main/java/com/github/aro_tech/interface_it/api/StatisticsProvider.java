@@ -1,5 +1,7 @@
 package com.github.aro_tech.interface_it.api;
 
+import java.util.Optional;
+
 import com.github.aro_tech.interface_it.statistics.GenerationStatistics;
 
 /**
@@ -35,9 +37,9 @@ public interface StatisticsProvider {
 	 * Get statistics for a particular tag
 	 * 
 	 * @param tag
-	 * @return The statistics for the given tag, global statistics if the tag is
+	 * @return The statistics for the given tag, null if the tag is
 	 *         not found
 	 */
-	GenerationStatistics getStatisticsFor(String tag);
+	Optional<GenerationStatistics> getStatisticsFor(String tag);
 
 }

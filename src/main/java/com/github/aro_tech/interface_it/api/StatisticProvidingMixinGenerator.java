@@ -5,6 +5,9 @@ package com.github.aro_tech.interface_it.api;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import com.github.aro_tech.interface_it.format.CodeFormatter;
@@ -19,7 +22,9 @@ import com.github.aro_tech.interface_it.util.FileSystem;
  *
  */
 public class StatisticProvidingMixinGenerator extends CoreMixinGenerator implements MixinCodeGenerator, StatisticsProvider {
-	private GenerationStatistics generationStatistics = new GenerationStatistics();	
+	private GenerationStatistics globalStatistics = new GenerationStatistics();
+	private String currentTag = null;	
+	private Map<String, GenerationStatistics> tagMap = new HashMap<>();
 	
 	/**
 	 * 
@@ -63,7 +68,7 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	 */
 	@Override
 	public GenerationStatistics getStatistics() {
-		return this.generationStatistics;
+		return this.globalStatistics;
 	}
 
 	/* (non-Javadoc)
@@ -72,13 +77,38 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	@Override
 	public String makeDelegateMethod(String targetInterfaceName, Method method, Set<String> importsOut,
 			ArgumentNameSource argumentNameSource) {
-		this.generationStatistics.incrementMethodCount();
+		incrementMethodCount();
 		if(isDeprecated(method)) {
-			this.generationStatistics.incrementDeprecationCount();
+			incrementDeprecationCount();
 		}
 		return super.makeDelegateMethod(targetInterfaceName, method, importsOut, argumentNameSource);
 	}
+
+	private void incrementDeprecationCount() {
+		this.globalStatistics.incrementDeprecationCount();
+		if(getCurrentStats().isPresent()) {
+			getCurrentStats().get().incrementDeprecationCount();
+		}
+	}
+
+	private void incrementMethodCount() {
+		this.globalStatistics.incrementMethodCount();
+		if(getCurrentStats().isPresent()) {
+			getCurrentStats().get().incrementMethodCount();
+		}
+	}
 	
+
+	private void incrementConstantCount() {
+		this.globalStatistics.incrementConstantCount();
+		if(getCurrentStats().isPresent()) {
+			getCurrentStats().get().incrementConstantCount();
+		}
+	}
+
+	private Optional<GenerationStatistics> getCurrentStats() {
+		return Optional.ofNullable(tagMap.get("" + this.currentTag));
+	}
 	
 
 	/* (non-Javadoc)
@@ -93,7 +123,7 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 
 	private void incrementSkippedCountIfBlocked(boolean notBlocked) {
 		if(!notBlocked) {
-			this.generationStatistics.incrementSkippedCount();
+			this.globalStatistics.incrementSkippedCount();
 		}
 	}
 
@@ -103,16 +133,17 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	@Override
 	protected void generateConstant(Field field, Class<?> fieldClass, Set<String> imports, StringBuilder buf,
 			String targetInterfaceName, String indentationUnit) {
-		this.generationStatistics.incrementConstantCount();
+		incrementConstantCount();
 		super.generateConstant(field, fieldClass, imports, buf, targetInterfaceName, indentationUnit);
 	}
+
 
 	/* (non-Javadoc)
 	 * @see com.github.aro_tech.interface_it.StatisticsProvider#resetStatistics()
 	 */
 	@Override
 	public void resetStatistics() {
-		this.generationStatistics = new GenerationStatistics();
+		this.globalStatistics = new GenerationStatistics();
 		
 	}
 
@@ -121,10 +152,11 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	 * @see com.github.aro_tech.interface_it.api.StatisticsProvider#getStatisticsFor(java.lang.String)
 	 */
 	@Override
-	public GenerationStatistics getStatisticsFor(String string) {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<GenerationStatistics> getStatisticsFor(String tag) {
+		return Optional.ofNullable(tagMap.get(tag));
 	}
+
+
 
 
 	/* (non-Javadoc)
@@ -132,8 +164,8 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	 */
 	@Override
 	public void setCurrentTag(String tag) {
-		// TODO Auto-generated method stub
-		
+		this.currentTag = tag;
+		tagMap.put(tag, new GenerationStatistics());	
 	}
 
 }

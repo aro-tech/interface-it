@@ -90,6 +90,40 @@ public class StatisticProvidingMixinGeneratorTest implements AllAssertions, Exte
 		assertThat(result).contains("default <T> T verify(T arg0, VerificationMode arg1) {")
 				.contains("return Mockito.verify(arg0, arg1);");
 	}
+	
+	@Test
+	public void can_track_one_tag() {
+		underTest.setCurrentTag("A");
+		callAndVerifyMakeDelegateMethod();
+		verify(underTest.getStatisticsFor("A").get(),0,1,0);
+		verify(underTest.getStatistics(),0,1,0);
+	}
+
+	@Test
+	public void can_handle_unknown_tag() {
+		underTest.setCurrentTag("A");
+		callAndVerifyMakeDelegateMethod();
+		verify(underTest.getStatistics(),0,1,0);
+		assertFalse(underTest.getStatisticsFor("B").isPresent());
+	}
+	
+	@Test
+	public void can_track_two_tags() throws NoSuchFieldException {
+		underTest.setCurrentTag("A");
+		callAndVerifyMakeDelegateMethod();
+		callAndVerifyMakeDelegateMethod();
+		underTest.setCurrentTag("B");
+		callAndVerifyGenerateConstant();
+		verify(underTest.getStatisticsFor("A").get(),0,2,0);
+		verify(underTest.getStatisticsFor("B").get(),1,0,0);
+		verify(underTest.getStatistics(),1,2,0);
+	}
+	
+	private void verify(GenerationStatistics stats, int consts, int methods, int deps) {
+		assertThat(stats.getConstantCount()).isEqualTo(consts);
+		assertThat(stats.getMethodCount()).isEqualTo(methods);
+		assertThat(stats.getDeprecationCount()).isEqualTo(deps);
+	}
 
 	@Test
 	public void generating_constant_should_increment_statistics() throws NoSuchFieldException, SecurityException {
