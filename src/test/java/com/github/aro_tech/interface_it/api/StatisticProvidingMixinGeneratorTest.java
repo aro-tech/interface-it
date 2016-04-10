@@ -108,6 +108,14 @@ public class StatisticProvidingMixinGeneratorTest implements AllAssertions, Exte
 	}
 	
 	@Test
+	public void reset_deletes_tags() {
+		underTest.setCurrentTag("A");
+		assertTrue(underTest.getStatisticsFor("A").isPresent());
+		underTest.resetStatistics();
+		assertFalse(underTest.getStatisticsFor("A").isPresent());
+	}
+	
+	@Test
 	public void can_track_two_tags() throws NoSuchFieldException {
 		underTest.setCurrentTag("A");
 		callAndVerifyMakeDelegateMethod();

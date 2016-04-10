@@ -144,7 +144,7 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	@Override
 	public void resetStatistics() {
 		this.globalStatistics = new GenerationStatistics();
-		
+		this.tagMap = new HashMap<>();
 	}
 
 
