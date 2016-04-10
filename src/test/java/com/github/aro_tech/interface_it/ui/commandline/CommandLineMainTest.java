@@ -7,12 +7,15 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.verification.VerificationModeFactory;
 
 import com.github.aro_tech.extended_mockito.ExtendedMockito;
 import com.github.aro_tech.interface_it.api.MixinCodeGenerator;
+import com.github.aro_tech.interface_it.api.MultiFileOutputOptions;
 import com.github.aro_tech.interface_it.api.StatisticProvidingMixinGenerator;
 import com.github.aro_tech.interface_it.api.StatisticsProvider;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
@@ -44,10 +47,10 @@ public class CommandLineMainTest implements AssertJ, ExtendedMockito {
 	@Test
 	public void execute_prints_result_file_path_and_stats() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
-		File result = new File(".");
+		File result = new File("./Math.java");
 		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])),
 				eq(args[7]), any())).thenReturn(result);
-		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith2MethodsAnd1Constant());
+		when(statsProvider.getStatisticsFor(anyString())).thenReturn(setUpStatsWith2MethodsAnd1Constant());
 
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
 
@@ -56,25 +59,52 @@ public class CommandLineMainTest implements AssertJ, ExtendedMockito {
 		verifyNoMoreInteractions(out);
 	}
 
-//	@Test
-//	public void execute_can_generate_child_and_parent() {
-//		String[] args = { "-d", ".", "-n", "MockitoMixin", "-c", "org.mockito.Mockito", "-p", "com.example", "-P",
-//				"MatchersMixin" };
-//		File result = new File(".");
-//		when(generator.generateMixinJavaFiles(options, argumentNameSource, delegateClasses);
-//				eq(args[7]), any())).thenReturn(result);
-//		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
-//
-//	}
+	@Test
+	public void execute_can_generate_child_and_parent() throws IOException {
+		String[] args = givenSetupForParentChildGeneration();
+		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
+		verify(generator).generateMixinJavaFiles(
+				toStringContainsAllOf("OptionsForSplittingChildAndParent [" + "targetPackage=com.example, "
+						+ "saveDirectory=., childMixinName=MockitoMixin, "
+						+ "parentMixinName=MatchersMixin, childClass=class org.mockito.Mockito, "
+						+ "getMethodFilter()=com.github.aro_tech.interface_it.api.options.OptionsForSplittingChildAndParent$$Lambda"),
+				any(), eq(org.mockito.Mockito.class), eq(org.mockito.Matchers.class));
+		verify(out, VerificationModeFactory.times(2)).println(startsWith("Wrote file: "));
+		verify(out).println(containsAllOf("2 constants", "1 method"));
+		verify(out).println(containsAllOf("1 constant", "7 methods"));
+	}
+
+	/**
+	 * @return
+	 * @throws IOException
+	 */
+	private String[] givenSetupForParentChildGeneration() throws IOException {
+		final String childMixin = "MockitoMixin";
+		final String parentMixin = "MatchersMixin";
+		String[] args = { "-d", ".", "-n", childMixin, "-c", "org.mockito.Mockito", "-p", "com.example", "-P",
+				parentMixin };
+		List<File> result = new ArrayList<File>() {
+			{
+				add(new File("./" + childMixin + ".java"));
+				add(new File("./" + parentMixin + ".java"));
+			}
+		};
+		when(generator.generateMixinJavaFiles(objectMatches(opts -> true), any(), eq(org.mockito.Mockito.class),
+				eq(org.mockito.Matchers.class))).thenReturn(result);
+		when(statsProvider.getStatisticsFor(childMixin + ".java")).thenReturn(setUpStatsWith1MethodAnd2Constants());
+		when(statsProvider.getStatisticsFor(parentMixin + ".java"))
+				.thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(2));
+		return args;
+	}
 
 	@Test
 	public void execute_prints_result_file_path_and_stats_handling_plurals_and_singular()
 			throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
-		File result = new File(".");
+		File result = new File("./Math.java");
 		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])),
 				eq(args[7]), any())).thenReturn(result);
-		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith1MethodAnd2Constants());
+		when(statsProvider.getStatisticsFor("Math.java")).thenReturn(setUpStatsWith1MethodAnd2Constants());
 
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
 
@@ -94,10 +124,10 @@ public class CommandLineMainTest implements AssertJ, ExtendedMockito {
 	@Test
 	public void execute_prints_result_file_path_and_skipped_count_1() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
-		File result = new File(".");
+		File result = new File("./MyFile.txt");
 		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])),
 				eq(args[7]), any())).thenReturn(result);
-		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(1));
+		when(statsProvider.getStatisticsFor("MyFile.txt")).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(1));
 
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
 
@@ -112,7 +142,7 @@ public class CommandLineMainTest implements AssertJ, ExtendedMockito {
 		File result = new File(".");
 		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])),
 				eq(args[7]), any())).thenReturn(result);
-		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(3));
+		when(statsProvider.getStatisticsFor(anyString())).thenReturn(setUpStatsWith22MethodsAnd1ConstantAndSkipped(3));
 
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
 
@@ -127,7 +157,7 @@ public class CommandLineMainTest implements AssertJ, ExtendedMockito {
 		File result = new File(".");
 		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])),
 				eq(args[7]), any())).thenReturn(result);
-		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(1));
+		when(statsProvider.getStatisticsFor(anyString())).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(1));
 
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
 
@@ -139,10 +169,10 @@ public class CommandLineMainTest implements AssertJ, ExtendedMockito {
 	@Test
 	public void execute_prints_result_file_path_and_deprecated_count_5() throws ClassNotFoundException, IOException {
 		String[] args = { "-d", ".", "-n", "Math", "-c", "java.lang.Math", "-p", "com.example" };
-		File result = new File(".");
+		File result = new File("./Math.java");
 		when(generator.generateMixinJavaFile(eq(new File(args[1])), eq(args[3]), eq(Class.forName(args[5])),
 				eq(args[7]), any())).thenReturn(result);
-		when(statsProvider.getStatistics()).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(5));
+		when(statsProvider.getStatisticsFor(eq(result.getName()))).thenReturn(setUpStatsWith7MethodsAnd1ConstantAndDeprecated(5));
 
 		CommandLineMain.execute(args, out, generator, new ArgumentParser(args), reader, statsProvider);
 

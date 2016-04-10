@@ -28,6 +28,20 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	public StatisticProvidingMixinGenerator() {
 		super();
 	}
+	
+	
+
+
+	/* (non-Javadoc)
+	 * @see com.github.aro_tech.interface_it.api.CoreMixinGenerator#generateDelegateClassCode(java.lang.Class, com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource, com.github.aro_tech.interface_it.api.MultiFileOutputOptions)
+	 */
+	@Override
+	public String generateDelegateClassCode(Class<?> delegateClass, ArgumentNameSource argumentNameSource,
+			MultiFileOutputOptions options) {
+		this.setCurrentTag(options.getTargetInterfaceNameForDelegate(delegateClass) + ".java");
+		return super.generateDelegateClassCode(delegateClass, argumentNameSource, options);
+	}
+
 
 
 	/**
@@ -101,7 +115,25 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 		this.generationStatistics = new GenerationStatistics();
 		
 	}
-	
-	
+
+
+	/* (non-Javadoc)
+	 * @see com.github.aro_tech.interface_it.api.StatisticsProvider#getStatisticsFor(java.lang.String)
+	 */
+	@Override
+	public GenerationStatistics getStatisticsFor(String string) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see com.github.aro_tech.interface_it.api.StatisticsProvider#setCurrentTag(java.lang.String)
+	 */
+	@Override
+	public void setCurrentTag(String tag) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

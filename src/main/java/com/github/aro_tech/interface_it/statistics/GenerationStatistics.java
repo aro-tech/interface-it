@@ -83,8 +83,8 @@ public class GenerationStatistics {
 	 */
 	public String summarizeStatistics() {
 		StringBuilder buf = new StringBuilder();
-		buf.append("Generated " + getConstantCount() + " constant" + makePluralText(getConstantCount()) + " and "
-				+ getMethodCount() + " method" + makePluralText(getMethodCount()) + ".");
+		buf.append("Generated ").append(getConstantCount()).append(" constant").append(makePluralText(getConstantCount())).append(" and "
+				+ getMethodCount()).append(" method").append(makePluralText(getMethodCount())).append(".");
 		summarizeDeprecationPolicyResults(buf);
 		return buf.toString();
 	}
@@ -106,7 +106,7 @@ public class GenerationStatistics {
 		if (getDeprecationCount() > 0) {
 			buf.append(System.lineSeparator());
 			if (getDeprecationCount() > 1) {
-				buf.append(getDeprecationCount() + " generated methods are deprecated.");
+				buf.append(getDeprecationCount()).append(" generated methods are deprecated.");
 			} else {
 				buf.append("1 generated method is deprecated.");
 			}
@@ -119,7 +119,7 @@ public class GenerationStatistics {
 			buf.append("Skipped 1 static method because of deprecation policy.");
 		} else if (getSkippedCount() > 1) {
 			buf.append(System.lineSeparator());
-			buf.append("Skipped " + getSkippedCount() + " static methods because of deprecation policy.");
+			buf.append("Skipped ").append(getSkippedCount()).append(" static methods because of deprecation policy.");
 		}
 	}
 

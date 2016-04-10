@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import com.github.aro_tech.interface_it.api.MixinCodeGenerator;
 import com.github.aro_tech.interface_it.api.StatisticProvidingMixinGenerator;
 import com.github.aro_tech.interface_it.api.StatisticsProvider;
+import com.github.aro_tech.interface_it.api.options.OptionsForSplittingChildAndParent;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSource;
@@ -48,8 +49,7 @@ public class CommandLineMain {
 	 */
 	public static void main(String[] args) {
 		ArgumentParser argParser = new ArgumentParser(args);
-		StatisticProvidingMixinGenerator methodGenerator = buildGenerator(argParser,
-				FileUtils.getDefaultFileSystem());
+		StatisticProvidingMixinGenerator methodGenerator = buildGenerator(argParser, FileUtils.getDefaultFileSystem());
 		execute(args, System.out, methodGenerator, argParser, FileUtils.getDefaultSourceFileReader(), methodGenerator);
 	}
 
@@ -87,13 +87,33 @@ public class CommandLineMain {
 	private static void executeMixinGeneration(String[] args, PrintStream out, MixinCodeGenerator generator,
 			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider) {
 		try {
-			generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader, statsProvider,
-					argParser.getDelegateClass());
+			if (argParser.hasParentMixinName()) {
+				String parentMixinName = argParser.getParentMixinName(null);
+				OptionsForSplittingChildAndParent opts = new OptionsForSplittingChildAndParent(
+						argParser.getPackageName(), argParser.getWriteDirectoryPath(),
+						argParser.getTargetInterfaceName(), parentMixinName, argParser.getDelegateClass());
+				List<File> results = generator.generateMixinJavaFiles(opts,
+						makeArgumentNameSource(argParser, argParser.getDelegateClass(), sourceReader, out),
+						argParser.getDelegateClass(), argParser.getDelegateClass().getSuperclass());
+				for(File result: results) {
+					printSuccessFeedback(result, out, statsProvider);
+				}
+			} else {
+				generateClassFileAndPrintFeedback(out, generator, argParser, sourceReader, statsProvider,
+						argParser.getDelegateClass());
+			}
 		} catch (ClassNotFoundException cnfe) {
 			String argsStr = String.join("\n>", Arrays.asList(args));
 			out.println("Incorrect or unspecified class name in arguments: \n>" + argsStr);
 			out.println("Class not found: " + cnfe.getMessage());
 			warnIfUsingJarAndClasspathFlags(out, argParser);
+		} catch (UnableToReadSource err) {
+			printErrorFeedback(out, err.getCause(),
+					"Error reading specified source file: " + argParser.getSourceFlagText());
+		} catch (UnableToCreateOutputDirectory err) {
+			printErrorFeedback(out, err, "Error creating output directory: " + err.getTargetDirectoryPath());
+		} catch (Exception e) {
+			printErrorFeedback(out, e, "Error writing output.");
 		}
 	}
 
@@ -111,7 +131,8 @@ public class CommandLineMain {
 		out.println(
 				"IMPORTANT: If you run this application using the \"-jar\" flag, the classpath in the commandline is ignored by Java.  "
 						+ "\nTry adding this jar to the classpath, eliminate the -jar flag, and add the main class: "
-						+ "java -cp <the path of this jar>;" + cp + " com.github.aro_tech.interface_it.ui.commandline.CommandLineMain "
+						+ "java -cp <the path of this jar>;" + cp
+						+ " com.github.aro_tech.interface_it.ui.commandline.CommandLineMain "
 						+ reconstructCommandlineFlagsWithoutClasspath(flagMap));
 	}
 
@@ -143,20 +164,11 @@ public class CommandLineMain {
 
 	private static void generateClassFileAndPrintFeedback(PrintStream out, MixinCodeGenerator generator,
 			ArgumentParser argParser, SourceFileReader sourceReader, StatisticsProvider statsProvider,
-			Class<?> delegateClass) {
-		try {
-			File result = generator.generateMixinJavaFile(argParser.getWriteDirectoryPath(),
-					argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
-					makeArgumentSource(argParser, sourceReader, delegateClass, out));
-			printSuccessFeedback(result, out, statsProvider);
-		} catch (UnableToReadSource err) {
-			printErrorFeedback(out, err.getCause(),
-					"Error reading specified source file: " + argParser.getSourceFlagText());
-		} catch (UnableToCreateOutputDirectory err) {
-			printErrorFeedback(out, err, "Error creating output directory: " + err.getTargetDirectoryPath());
-		} catch (Exception e) {
-			printErrorFeedback(out, e, "Error writing output.");
-		}
+			Class<?> delegateClass) throws IOException, UnableToReadSource {
+		File result = generator.generateMixinJavaFile(argParser.getWriteDirectoryPath(),
+				argParser.getTargetInterfaceName(), delegateClass, argParser.getPackageName(),
+				makeArgumentSource(argParser, sourceReader, delegateClass, out));
+		printSuccessFeedback(result, out, statsProvider);
 	}
 
 	private static ArgumentNameSource makeArgumentSource(ArgumentParser argParser, SourceFileReader sourceReader,
@@ -250,7 +262,7 @@ public class CommandLineMain {
 	private static void printSuccessFeedback(File result, PrintStream out, StatisticsProvider statsProvider) {
 		out.println("Wrote file: " + result.getAbsolutePath());
 		if (null != statsProvider) {
-			summarizeStatistics(out, statsProvider.getStatistics());
+			summarizeStatistics(out, statsProvider.getStatisticsFor(result.getName()));
 		}
 	}
 
