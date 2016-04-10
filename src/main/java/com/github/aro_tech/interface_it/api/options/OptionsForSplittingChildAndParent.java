@@ -108,4 +108,15 @@ public class OptionsForSplittingChildAndParent implements MultiFileOutputOptions
 		return Collections.emptySet();
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "OptionsForSplittingChildAndParent [targetPackage=" + targetPackage + ", saveDirectory=" + saveDirectory
+				+ ", childMixinName=" + childMixinName + ", parentMixinName=" + parentMixinName + ", childClass="
+				+ childClass + ", getMethodFilter()=" + getMethodFilter() + "]";
+	}
+
+	
 }

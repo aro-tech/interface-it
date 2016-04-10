@@ -9,9 +9,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSource;
-import com.github.aro_tech.interface_it.meta.arguments.SourceLineReadingArgumentNameLoader;
-import com.github.aro_tech.interface_it.util.mixin.Mockito;
+import com.github.aro_tech.extended_mockito.ExtendedMockito;
 
 /**
  * Unit tests to verify parsing source code to get argument names
@@ -19,7 +17,7 @@ import com.github.aro_tech.interface_it.util.mixin.Mockito;
  * @author aro_tech
  *
  */
-public class SourceLineReadingArgumentNameLoaderTest implements Mockito {
+public class SourceLineReadingArgumentNameLoaderTest implements ExtendedMockito {
 	private LookupArgumentNameSource target = mock(LookupArgumentNameSource.class);
 	private SourceLineReadingArgumentNameLoader underTest = new SourceLineReadingArgumentNameLoader();
 	private List<String> sourceLines = new ArrayList<>();

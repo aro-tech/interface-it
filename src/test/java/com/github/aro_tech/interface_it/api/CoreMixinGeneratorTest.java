@@ -16,13 +16,12 @@ import java.util.function.Predicate;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 
+import com.github.aro_tech.extended_mockito.ExtendedMockito;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
-import com.github.aro_tech.interface_it.util.mixin.Mockito;
 
 /**
  * Unit tests for generating delegate methods
@@ -30,7 +29,7 @@ import com.github.aro_tech.interface_it.util.mixin.Mockito;
  * @author aro_tech
  *
  */
-public class CoreMixinGeneratorTest implements AllAssertions, Mockito {
+public class CoreMixinGeneratorTest implements AllAssertions, ExtendedMockito {
 	private static final String TARGET_PACKAGE = "com.github.aro_tech.interface_it.results";
 	private CoreMixinGenerator underTest = new CoreMixinGenerator();
 	private Set<String> imports;

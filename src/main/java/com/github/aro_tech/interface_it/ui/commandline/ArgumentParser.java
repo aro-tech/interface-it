@@ -4,6 +4,7 @@
 package com.github.aro_tech.interface_it.ui.commandline;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,9 @@ public class ArgumentParser {
 		IGNORE_DEPRECATED_METHODS("i",
 				"Ignore all deprecated methods. Default behavior is to wrap each deprecated method and deprecate the wrapping method.",
 				false),
+		PARENT_MIXIN_NAME("P",
+				"Simple name of the mixin to generate for the superclass of the delegate class. If present, 2 mixins will be generated - one for the delegate class and one for its parent, and the mixin for the delegate will extend the mixin for the delegate's parent class.",
+				true),
 		MISPLACED_CLASSPATH_FLAG_SHORT("cp", null, true),
 		MISPLACED_CLASSPATH_FLAG_LONG("classpath", null, true);
 
@@ -270,6 +274,22 @@ public class ArgumentParser {
 	public boolean hasMisplacedClassPathFlag() {
 		return allFlags.contains(Flag.MISPLACED_CLASSPATH_FLAG_SHORT)
 				|| allFlags.contains(Flag.MISPLACED_CLASSPATH_FLAG_LONG);
+	}
+
+	/**
+	 * 
+	 * @return true if the -P flag was set
+	 */
+	public boolean hasParentMixinName() {
+		return allFlags.contains(Flag.PARENT_MIXIN_NAME);
+	}
+
+	/**
+	 * 
+	 * @return the value set for the -P flag, or null
+	 */
+	public String getParentMixinName(String defaultValue) {
+		return this.findValueAfterFlag(Flag.PARENT_MIXIN_NAME, defaultValue);
 	}
 
 }

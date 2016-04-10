@@ -10,13 +10,12 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.api.StatisticProvidingMixinGenerator;
+import com.github.aro_tech.extended_mockito.ExtendedMockito;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.statistics.GenerationStatistics;
 import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
-import com.github.aro_tech.interface_it.util.mixin.Mockito;
 
 /**
  * Unit tests for StatisticProvidingMixinGenerator
@@ -24,7 +23,7 @@ import com.github.aro_tech.interface_it.util.mixin.Mockito;
  * @author aro_tech
  *
  */
-public class StatisticProvidingMixinGeneratorTest implements AllAssertions, Mockito {
+public class StatisticProvidingMixinGeneratorTest implements AllAssertions, ExtendedMockito {
 	private static final int NUMBER_OF_STATIC_METHODS_IN_MATH_CLASS = 73;
 
 	private StatisticProvidingMixinGenerator underTest;

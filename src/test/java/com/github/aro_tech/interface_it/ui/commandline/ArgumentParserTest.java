@@ -11,8 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
-import com.github.aro_tech.interface_it.ui.commandline.ArgumentParser;
-import com.github.aro_tech.interface_it.ui.commandline.CommandLineMain;
+import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
 import com.github.aro_tech.interface_it.util.mixin.AssertJ;
 
 /**
@@ -21,7 +20,7 @@ import com.github.aro_tech.interface_it.util.mixin.AssertJ;
  * @author aro_tech
  *
  */
-public class ArgumentParserTest implements AssertJ {
+public class ArgumentParserTest implements AllAssertions {
 
 	/**
 	 * @throws java.lang.Exception
@@ -29,11 +28,7 @@ public class ArgumentParserTest implements AssertJ {
 	@Before
 	public void setUp() throws Exception {
 	}
-
-	// String[] args = { "-d", examplesDir.getAbsolutePath(), "-n", "Math",
-	// "-c", "java.lang.Math", "-p",
-	// packageName };
-
+	
 	/**
 	 * Test method for
 	 * {@link com.github.aro_tech.interface_it.ui.commandline.ArgumentParser#getPackageName()}.
@@ -208,6 +203,21 @@ public class ArgumentParserTest implements AssertJ {
 	public void can_override_default_deprecation_policy() {
 		ArgumentParser argParser = makeArgumentParser("-i");
 		assertThat(argParser.getDeprecationPolicy()).isEqualTo(DeprecationPolicy.IGNORE_DEPRECATED_METHODS);
+	}
+
+	@Test
+	public void can_get_parent_mixin_name() {
+		final String parentMixinName = "MatchersMixin";
+		ArgumentParser argParser = makeArgumentParser("", "-P", parentMixinName);
+		assertThat(argParser.hasParentMixinName()).isTrue();
+		assertThat(argParser.getParentMixinName("")).isEqualTo(parentMixinName);
+	}
+	
+	@Test
+	public void can_detect_absence_of_parent_mixin_name() {
+		ArgumentParser argParser = makeArgumentParser("");
+		assertThat(argParser.hasParentMixinName()).isFalse();
+		assertThat(argParser.getParentMixinName(null)).isNull();
 	}
 
 }
