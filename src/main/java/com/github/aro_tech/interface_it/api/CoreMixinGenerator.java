@@ -517,14 +517,31 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 */
 	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
 			Class<?> delegateClass, ArgumentNameSource argumentNameSource) {
+		return this.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass, argumentNameSource,
+				new SimpleSingleFileOutputOptions(targetInterfaceName, targetPackageName, null));
+	}
+
+	/**
+	 * Generate the code of a java interface file delegating to the target
+	 * class's static fields and methods
+	 * 
+	 * @param targetPackageName
+	 * @param targetInterfaceName
+	 * @param delegateClass
+	 * @param argumentNameSource
+	 * @param parentInterfaces
+	 * @return Generated code
+	 */
+	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
+			Class<?> delegateClass, ArgumentNameSource argumentNameSource, MultiFileOutputOptions options) {
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
 		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName);
 		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, argumentNameSource,
-				new SimpleSingleFileOutputOptions(targetInterfaceName, targetPackageName, null));
+				options);
 		appendPackage(targetPackageName, result);
 		appendSortedImports(result, imports, targetInterfaceName);
-		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods, Collections.emptySet());
+		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods, options.getSuperTypes(delegateClass));
 		return result.toString();
 	}
 
@@ -549,7 +566,8 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 				options);
 		appendPackage(options.getTargetPackageNameForDelegate(delegateClass), result);
 		appendSortedImports(result, imports, targetInterfaceName);
-		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods, options.getSuperTypes(delegateClass));
+		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods,
+				options.getSuperTypes(delegateClass));
 		return result.toString();
 	}
 
@@ -571,7 +589,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	}
 
 	private void appendAnySupertypeDeclarations(StringBuilder buf, Set<String> superTypes) {
-		if(null != superTypes && superTypes.size() > 0) {
+		if (null != superTypes && superTypes.size() > 0) {
 			buf.append(" extends ").append(makeCommaDelimitedSuperTypeList(superTypes));
 		}
 	}
@@ -619,7 +637,8 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	protected String generateMethodsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
 			ArgumentNameSource argumentNameSource, MultiFileOutputOptions options) {
 		return generateMethodsForClassUpdatingImports(delegateClass, importsUpdated,
-				options.getTargetInterfaceNameForDelegate(delegateClass), argumentNameSource, options.getMethodFilter());
+				options.getTargetInterfaceNameForDelegate(delegateClass), argumentNameSource,
+				options.getMethodFilter());
 	}
 
 	/**
@@ -705,7 +724,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 			String targetInterfaceName = options.getTargetInterfaceNameForDelegate(delegate);
 			File current = writeClassFile(options.getMixinSaveDirectoryForDelegate(delegate),
 					this.generateDelegateClassCode(options.getTargetPackageNameForDelegate(delegate),
-							targetInterfaceName, delegate, argumentNameSource),
+							targetInterfaceName, delegate, argumentNameSource, options),
 					interfaceNameToFileName(targetInterfaceName));
 			results.add(current);
 		}

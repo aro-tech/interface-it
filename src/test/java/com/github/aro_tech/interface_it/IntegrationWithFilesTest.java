@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
 import org.junit.AfterClass;
@@ -130,13 +131,17 @@ public class IntegrationWithFilesTest implements AssertJ {
 			verifyCountOccurences(resultFile, 0, "arg0)");
 			verifyCountOccurences(resultFile, 52, "        return Assertions.assertThat(actual);");
 
-			generateClassFromCommandLineMainAndVerify(packageName, "java.lang.Math", "Math", examplesSourceZip);
+			generateClassFromCommandLineMainAndVerify(packageName, "java.lang.Math", "Math", examplesSourceZip, Optional.ofNullable(null));
 
 			generateClassFromCommandLineMainAndVerify(packageName, "java.net.URLEncoder", "URLEncoding",
-					getExampleSourceFile());
+					getExampleSourceFile(), Optional.ofNullable(null));
 
 			generateClassFromCommandLineMainAndVerify(packageName, "org.junit.Assert", "JUnitAssert",
-					getExampleSourceFile());
+					getExampleSourceFile(), Optional.ofNullable(null));
+			
+			generateClassFromCommandLineMainAndVerify(packageName, "org.mockito.Mockito", "MockitoMixinWithSupertype",
+					examplesSourceZip, Optional.ofNullable("MatchersMixin"));
+
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -160,10 +165,14 @@ public class IntegrationWithFilesTest implements AssertJ {
 	}
 
 	private void generateClassFromCommandLineMainAndVerify(final String packageName, String targetClass,
-			String generatedClassName, File sourcePath) {
+			String generatedClassName, File sourcePath, Optional<String> parentMixinName) {
 		File resultFile;
 		String[] args = { "-d", examplesDir.getAbsolutePath(), "-n", generatedClassName, "-c", targetClass, "-p",
-				packageName, "-s", sourcePath.getAbsolutePath() };
+				packageName, "-s", sourcePath.getAbsolutePath(), "", "" };
+		if(parentMixinName.isPresent()) {
+			args[args.length - 2] = "-P";
+			args[args.length - 1] = parentMixinName.get();
+		}
 		CommandLineMain.main(args);
 		resultFile = new File(examplesDir.getAbsolutePath() + "/" + generatedClassName + ".java");
 		Assertions.assertThat(resultFile).exists().canRead();
