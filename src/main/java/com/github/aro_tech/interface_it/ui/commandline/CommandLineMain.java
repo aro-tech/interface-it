@@ -267,7 +267,8 @@ public class CommandLineMain {
 	}
 
 	private static GenerationStatistics getStatistics(File result, StatisticsProvider statsProvider) {
-		return statsProvider.getStatisticsFor(result.getName()).get();
+		final Optional<GenerationStatistics> statsForCurrentFile = statsProvider.getStatisticsFor(result.getName());
+		return statsForCurrentFile.orElseGet(() -> statsProvider.getStatistics());
 	}
 
 	private static void summarizeStatistics(PrintStream out, GenerationStatistics stats) {

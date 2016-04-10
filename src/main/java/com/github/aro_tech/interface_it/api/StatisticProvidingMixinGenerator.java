@@ -48,7 +48,6 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	}
 
 
-
 	/**
 	 * 
 	 * Constructor
