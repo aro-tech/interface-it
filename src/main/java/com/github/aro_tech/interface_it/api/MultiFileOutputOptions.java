@@ -47,10 +47,11 @@ public interface MultiFileOutputOptions {
 	/**
 	 * Predicate to do additional filtering of static methods to be processed
 	 * Does not affect filtering out of non-static methods or deprecated methods
+	 * @param delegate TODO
 	 * 
 	 * @return Predicate to be applied
 	 */
-	default Predicate<? super Method> getMethodFilter() {
+	default Predicate<? super Method> getMethodFilterForDelegate(Class<?> delegate) {
 		return m -> true; // by default, no additional filtering
 	}
 

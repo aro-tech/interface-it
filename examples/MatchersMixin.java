@@ -1,5 +1,10 @@
 package com.github.aro_tech.interface_it.util.mixin;
 
+import java.util.Collection; 
+import java.util.List; 
+import java.util.Map; 
+import java.util.Set; 
+import org.mockito.ArgumentMatcher; 
 import org.mockito.Matchers; 
 
 /** 
@@ -14,5 +19,525 @@ public interface MatchersMixin {
 
 
     // DELEGATE METHODS: 
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.any()
+     * {@link org.mockito.Matchers#any()}
+     */
+    default <T> T any() {
+        return Matchers.any();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.any(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#any(java.lang.Class)}
+     */
+    default <T> T any(Class<T> clazz) {
+        return Matchers.any(clazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static boolean org.mockito.Matchers.anyBoolean()
+     * {@link org.mockito.Matchers#anyBoolean()}
+     */
+    default boolean anyBoolean() {
+        return Matchers.anyBoolean();
+    }
+
+
+
+    /**
+     * Delegate call to public static byte org.mockito.Matchers.anyByte()
+     * {@link org.mockito.Matchers#anyByte()}
+     */
+    default byte anyByte() {
+        return Matchers.anyByte();
+    }
+
+
+
+    /**
+     * Delegate call to public static char org.mockito.Matchers.anyChar()
+     * {@link org.mockito.Matchers#anyChar()}
+     */
+    default char anyChar() {
+        return Matchers.anyChar();
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.Collection org.mockito.Matchers.anyCollection()
+     * {@link org.mockito.Matchers#anyCollection()}
+     */
+    default Collection anyCollection() {
+        return Matchers.anyCollection();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> java.util.Collection<T> org.mockito.Matchers.anyCollectionOf(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#anyCollectionOf(java.lang.Class)}
+     */
+    default <T> Collection<T> anyCollectionOf(Class<T> clazz) {
+        return Matchers.anyCollectionOf(clazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static double org.mockito.Matchers.anyDouble()
+     * {@link org.mockito.Matchers#anyDouble()}
+     */
+    default double anyDouble() {
+        return Matchers.anyDouble();
+    }
+
+
+
+    /**
+     * Delegate call to public static float org.mockito.Matchers.anyFloat()
+     * {@link org.mockito.Matchers#anyFloat()}
+     */
+    default float anyFloat() {
+        return Matchers.anyFloat();
+    }
+
+
+
+    /**
+     * Delegate call to public static int org.mockito.Matchers.anyInt()
+     * {@link org.mockito.Matchers#anyInt()}
+     */
+    default int anyInt() {
+        return Matchers.anyInt();
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.List org.mockito.Matchers.anyList()
+     * {@link org.mockito.Matchers#anyList()}
+     */
+    default List anyList() {
+        return Matchers.anyList();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> java.util.List<T> org.mockito.Matchers.anyListOf(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#anyListOf(java.lang.Class)}
+     */
+    default <T> List<T> anyListOf(Class<T> clazz) {
+        return Matchers.anyListOf(clazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static long org.mockito.Matchers.anyLong()
+     * {@link org.mockito.Matchers#anyLong()}
+     */
+    default long anyLong() {
+        return Matchers.anyLong();
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.Map org.mockito.Matchers.anyMap()
+     * {@link org.mockito.Matchers#anyMap()}
+     */
+    default Map anyMap() {
+        return Matchers.anyMap();
+    }
+
+
+
+    /**
+     * Delegate call to public static <K,V> java.util.Map<K, V> org.mockito.Matchers.anyMapOf(java.lang.Class<K>,java.lang.Class<V>)
+     * {@link org.mockito.Matchers#anyMapOf(java.lang.Class,java.lang.Class)}
+     */
+    default <K,V> Map<K, V> anyMapOf(Class<K> keyClazz, Class<V> valueClazz) {
+        return Matchers.anyMapOf(keyClazz, valueClazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.anyObject()
+     * {@link org.mockito.Matchers#anyObject()}
+     */
+    default <T> T anyObject() {
+        return Matchers.anyObject();
+    }
+
+
+
+    /**
+     * Delegate call to public static java.util.Set org.mockito.Matchers.anySet()
+     * {@link org.mockito.Matchers#anySet()}
+     */
+    default Set anySet() {
+        return Matchers.anySet();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> java.util.Set<T> org.mockito.Matchers.anySetOf(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#anySetOf(java.lang.Class)}
+     */
+    default <T> Set<T> anySetOf(Class<T> clazz) {
+        return Matchers.anySetOf(clazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static short org.mockito.Matchers.anyShort()
+     * {@link org.mockito.Matchers#anyShort()}
+     */
+    default short anyShort() {
+        return Matchers.anyShort();
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.mockito.Matchers.anyString()
+     * {@link org.mockito.Matchers#anyString()}
+     */
+    default String anyString() {
+        return Matchers.anyString();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.anyVararg()
+     * {@link org.mockito.Matchers#anyVararg()}
+     */
+    default <T> T anyVararg() {
+        return Matchers.anyVararg();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.argThat(org.mockito.ArgumentMatcher<T>)
+     * {@link org.mockito.Matchers#argThat(org.mockito.ArgumentMatcher)}
+     */
+    default <T> T argThat(ArgumentMatcher<T> matcher) {
+        return Matchers.argThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static boolean org.mockito.Matchers.booleanThat(org.mockito.ArgumentMatcher<java.lang.Boolean>)
+     * {@link org.mockito.Matchers#booleanThat(org.mockito.ArgumentMatcher)}
+     */
+    default boolean booleanThat(ArgumentMatcher<Boolean> matcher) {
+        return Matchers.booleanThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static byte org.mockito.Matchers.byteThat(org.mockito.ArgumentMatcher<java.lang.Byte>)
+     * {@link org.mockito.Matchers#byteThat(org.mockito.ArgumentMatcher)}
+     */
+    default byte byteThat(ArgumentMatcher<Byte> matcher) {
+        return Matchers.byteThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static char org.mockito.Matchers.charThat(org.mockito.ArgumentMatcher<java.lang.Character>)
+     * {@link org.mockito.Matchers#charThat(org.mockito.ArgumentMatcher)}
+     */
+    default char charThat(ArgumentMatcher<Character> matcher) {
+        return Matchers.charThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.mockito.Matchers.contains(java.lang.String)
+     * {@link org.mockito.Matchers#contains(java.lang.String)}
+     */
+    default String contains(String substring) {
+        return Matchers.contains(substring);
+    }
+
+
+
+    /**
+     * Delegate call to public static double org.mockito.Matchers.doubleThat(org.mockito.ArgumentMatcher<java.lang.Double>)
+     * {@link org.mockito.Matchers#doubleThat(org.mockito.ArgumentMatcher)}
+     */
+    default double doubleThat(ArgumentMatcher<Double> matcher) {
+        return Matchers.doubleThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.mockito.Matchers.endsWith(java.lang.String)
+     * {@link org.mockito.Matchers#endsWith(java.lang.String)}
+     */
+    default String endsWith(String suffix) {
+        return Matchers.endsWith(suffix);
+    }
+
+
+
+    /**
+     * Delegate call to public static boolean org.mockito.Matchers.eq(boolean)
+     * {@link org.mockito.Matchers#eq(boolean)}
+     */
+    default boolean eq(boolean value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static byte org.mockito.Matchers.eq(byte)
+     * {@link org.mockito.Matchers#eq(byte)}
+     */
+    default byte eq(byte value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static char org.mockito.Matchers.eq(char)
+     * {@link org.mockito.Matchers#eq(char)}
+     */
+    default char eq(char value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static double org.mockito.Matchers.eq(double)
+     * {@link org.mockito.Matchers#eq(double)}
+     */
+    default double eq(double value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static float org.mockito.Matchers.eq(float)
+     * {@link org.mockito.Matchers#eq(float)}
+     */
+    default float eq(float value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static int org.mockito.Matchers.eq(int)
+     * {@link org.mockito.Matchers#eq(int)}
+     */
+    default int eq(int value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static long org.mockito.Matchers.eq(long)
+     * {@link org.mockito.Matchers#eq(long)}
+     */
+    default long eq(long value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static short org.mockito.Matchers.eq(short)
+     * {@link org.mockito.Matchers#eq(short)}
+     */
+    default short eq(short value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.eq(T)
+     * {@link org.mockito.Matchers#eq(java.lang.Object)}
+     */
+    default <T> T eq(T value) {
+        return Matchers.eq(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static float org.mockito.Matchers.floatThat(org.mockito.ArgumentMatcher<java.lang.Float>)
+     * {@link org.mockito.Matchers#floatThat(org.mockito.ArgumentMatcher)}
+     */
+    default float floatThat(ArgumentMatcher<Float> matcher) {
+        return Matchers.floatThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static int org.mockito.Matchers.intThat(org.mockito.ArgumentMatcher<java.lang.Integer>)
+     * {@link org.mockito.Matchers#intThat(org.mockito.ArgumentMatcher)}
+     */
+    default int intThat(ArgumentMatcher<Integer> matcher) {
+        return Matchers.intThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.isA(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#isA(java.lang.Class)}
+     */
+    default <T> T isA(Class<T> clazz) {
+        return Matchers.isA(clazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.Object org.mockito.Matchers.isNotNull()
+     * {@link org.mockito.Matchers#isNotNull()}
+     */
+    default Object isNotNull() {
+        return Matchers.isNotNull();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.isNotNull(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#isNotNull(java.lang.Class)}
+     */
+    default <T> T isNotNull(Class<T> clazz) {
+        return Matchers.isNotNull(clazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.Object org.mockito.Matchers.isNull()
+     * {@link org.mockito.Matchers#isNull()}
+     */
+    default Object isNull() {
+        return Matchers.isNull();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.isNull(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#isNull(java.lang.Class)}
+     */
+    default <T> T isNull(Class<T> clazz) {
+        return Matchers.isNull(clazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static long org.mockito.Matchers.longThat(org.mockito.ArgumentMatcher<java.lang.Long>)
+     * {@link org.mockito.Matchers#longThat(org.mockito.ArgumentMatcher)}
+     */
+    default long longThat(ArgumentMatcher<Long> matcher) {
+        return Matchers.longThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.mockito.Matchers.matches(java.lang.String)
+     * {@link org.mockito.Matchers#matches(java.lang.String)}
+     */
+    default String matches(String regex) {
+        return Matchers.matches(regex);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.Object org.mockito.Matchers.notNull()
+     * {@link org.mockito.Matchers#notNull()}
+     */
+    default Object notNull() {
+        return Matchers.notNull();
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.notNull(java.lang.Class<T>)
+     * {@link org.mockito.Matchers#notNull(java.lang.Class)}
+     */
+    default <T> T notNull(Class<T> clazz) {
+        return Matchers.notNull(clazz);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.refEq(T,java.lang.String...)
+     * {@link org.mockito.Matchers#refEq(java.lang.Object,java.lang.String[])}
+     */
+    default <T> T refEq(T value, String... excludeFields) {
+        return Matchers.refEq(value, excludeFields);
+    }
+
+
+
+    /**
+     * Delegate call to public static <T> T org.mockito.Matchers.same(T)
+     * {@link org.mockito.Matchers#same(java.lang.Object)}
+     */
+    default <T> T same(T value) {
+        return Matchers.same(value);
+    }
+
+
+
+    /**
+     * Delegate call to public static short org.mockito.Matchers.shortThat(org.mockito.ArgumentMatcher<java.lang.Short>)
+     * {@link org.mockito.Matchers#shortThat(org.mockito.ArgumentMatcher)}
+     */
+    default short shortThat(ArgumentMatcher<Short> matcher) {
+        return Matchers.shortThat(matcher);
+    }
+
+
+
+    /**
+     * Delegate call to public static java.lang.String org.mockito.Matchers.startsWith(java.lang.String)
+     * {@link org.mockito.Matchers#startsWith(java.lang.String)}
+     */
+    default String startsWith(String prefix) {
+        return Matchers.startsWith(prefix);
+    }
+
+
 
 }

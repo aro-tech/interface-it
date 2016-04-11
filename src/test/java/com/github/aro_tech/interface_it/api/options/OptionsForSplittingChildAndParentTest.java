@@ -69,7 +69,8 @@ public class OptionsForSplittingChildAndParentTest implements AllAssertions {
 
 	@Test
 	public void can_filter_parent_methods() throws NoSuchMethodException, SecurityException {
-		assertThat(underTest.getMethodFilter().test(org.mockito.Mockito.class.getDeclaredMethod("never"))).isTrue();
-		assertThat(underTest.getMethodFilter().test(org.mockito.Mockito.class.getMethod("anyChar"))).isFalse();
+		Class<?> delegate = org.mockito.Mockito.class;
+		assertThat(underTest.getMethodFilterForDelegate(delegate).test(org.mockito.Mockito.class.getDeclaredMethod("never"))).isTrue();
+		assertThat(underTest.getMethodFilterForDelegate(delegate).test(org.mockito.Mockito.class.getMethod("anyChar"))).isFalse();
 	}
 }

@@ -322,7 +322,7 @@ public class CoreMixinGeneratorTest implements AllAssertions, ExtendedMockito {
 			 * getMethodFilter()
 			 */
 			@Override
-			public Predicate<? super Method> getMethodFilter() {
+			public Predicate<? super Method> getMethodFilterForDelegate(Class<?> delegate) {
 				return m -> false; // ignore all methods
 			}
 		};

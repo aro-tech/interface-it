@@ -123,4 +123,15 @@ public class GenerationStatistics {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "GenerationStatistics [constantCount=" + constantCount + ", methodCount=" + methodCount
+				+ ", deprecationCount=" + deprecationCount + ", skippedCount=" + skippedCount + "]";
+	}
+	
+	
+
 }

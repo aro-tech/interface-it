@@ -638,7 +638,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 			ArgumentNameSource argumentNameSource, MultiFileOutputOptions options) {
 		return generateMethodsForClassUpdatingImports(delegateClass, importsUpdated,
 				options.getTargetInterfaceNameForDelegate(delegateClass), argumentNameSource,
-				options.getMethodFilter());
+				options.getMethodFilterForDelegate(delegateClass));
 	}
 
 	/**

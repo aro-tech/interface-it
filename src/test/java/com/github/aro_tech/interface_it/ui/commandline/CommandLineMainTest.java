@@ -67,7 +67,7 @@ public class CommandLineMainTest implements AssertJ, ExtendedMockito {
 				toStringContainsAllOf("OptionsForSplittingChildAndParent [" + "targetPackage=com.example, "
 						+ "saveDirectory=., childMixinName=MockitoMixin, "
 						+ "parentMixinName=MatchersMixin, childClass=class org.mockito.Mockito, "
-						+ "getMethodFilter()=com.github.aro_tech.interface_it.api.options.OptionsForSplittingChildAndParent$$Lambda"),
+						+ "getMethodFilter(class org.mockito.Mockito)=com.github.aro_tech.interface_it.api.options.OptionsForSplittingChildAndParent$$Lambda"),
 				any(), eq(org.mockito.Mockito.class), eq(org.mockito.Matchers.class));
 		verify(out, VerificationModeFactory.times(2)).println(startsWith("Wrote file: "));
 		verify(out).println(containsAllOf("2 constants", "1 method"));

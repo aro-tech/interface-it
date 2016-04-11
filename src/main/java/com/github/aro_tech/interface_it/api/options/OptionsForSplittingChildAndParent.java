@@ -84,8 +84,11 @@ public class OptionsForSplittingChildAndParent implements MultiFileOutputOptions
 	 * getMethodFilter()
 	 */
 	@Override
-	public Predicate<? super Method> getMethodFilter() {
-		return m -> m.getDeclaringClass().equals(childClass);
+	public Predicate<? super Method> getMethodFilterForDelegate(Class<?> delegate) {
+		if(this.childClass.equals(delegate)) {
+			return m -> m.getDeclaringClass().equals(delegate);			
+		}
+		return m -> true;
 	}
 
 	/*
@@ -115,7 +118,7 @@ public class OptionsForSplittingChildAndParent implements MultiFileOutputOptions
 	public String toString() {
 		return "OptionsForSplittingChildAndParent [targetPackage=" + targetPackage + ", saveDirectory=" + saveDirectory
 				+ ", childMixinName=" + childMixinName + ", parentMixinName=" + parentMixinName + ", childClass="
-				+ childClass + ", getMethodFilter()=" + getMethodFilter() + "]";
+				+ childClass + ", getMethodFilter(" + this.childClass + ")=" + getMethodFilterForDelegate(this.childClass) + "]";
 	}
 
 	

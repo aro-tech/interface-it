@@ -43,9 +43,42 @@ public class StatisticProvidingMixinGenerator extends CoreMixinGenerator impleme
 	@Override
 	public String generateDelegateClassCode(Class<?> delegateClass, ArgumentNameSource argumentNameSource,
 			MultiFileOutputOptions options) {
-		this.setCurrentTag(options.getTargetInterfaceNameForDelegate(delegateClass) + ".java");
+		this.setCurrentTag(interfaceNameToTag(options.getTargetInterfaceNameForDelegate(delegateClass)));
 		return super.generateDelegateClassCode(delegateClass, argumentNameSource, options);
 	}
+	
+	
+
+
+	/* (non-Javadoc)
+	 * @see com.github.aro_tech.interface_it.api.CoreMixinGenerator#generateDelegateClassCode(java.lang.String, java.lang.String, java.lang.Class, com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource)
+	 */
+	@Override
+	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
+			Class<?> delegateClass, ArgumentNameSource argumentNameSource) {
+		this.setCurrentTag(interfaceNameToTag(targetInterfaceName));
+		return super.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass, argumentNameSource);
+	}
+
+	private String interfaceNameToTag(String targetInterfaceName) {
+		return targetInterfaceName + ".java";
+	}
+
+
+
+
+	/* (non-Javadoc)
+	 * @see com.github.aro_tech.interface_it.api.CoreMixinGenerator#generateDelegateClassCode(java.lang.String, java.lang.String, java.lang.Class, com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource, com.github.aro_tech.interface_it.api.MultiFileOutputOptions)
+	 */
+	@Override
+	public String generateDelegateClassCode(String targetPackageName, String targetInterfaceName,
+			Class<?> delegateClass, ArgumentNameSource argumentNameSource, MultiFileOutputOptions options) {
+		this.setCurrentTag(interfaceNameToTag(options.getTargetInterfaceNameForDelegate(delegateClass)));
+		return super.generateDelegateClassCode(targetPackageName, targetInterfaceName, delegateClass, argumentNameSource,
+				options);
+	}
+
+
 
 
 	/**

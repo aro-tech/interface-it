@@ -131,17 +131,17 @@ public class IntegrationWithFilesTest implements AssertJ {
 			verifyCountOccurences(resultFile, 0, "arg0)");
 			verifyCountOccurences(resultFile, 52, "        return Assertions.assertThat(actual);");
 
-			generateClassFromCommandLineMainAndVerify(packageName, "java.lang.Math", "Math", examplesSourceZip, Optional.ofNullable(null));
+			generateClassFromCommandLineMainAndVerify(packageName, "java.lang.Math", "Math", examplesSourceZip,
+					Optional.ofNullable(null));
 
 			generateClassFromCommandLineMainAndVerify(packageName, "java.net.URLEncoder", "URLEncoding",
 					getExampleSourceFile(), Optional.ofNullable(null));
 
 			generateClassFromCommandLineMainAndVerify(packageName, "org.junit.Assert", "JUnitAssert",
 					getExampleSourceFile(), Optional.ofNullable(null));
-			
+
 			generateClassFromCommandLineMainAndVerify(packageName, "org.mockito.Mockito", "MockitoMixinWithSupertype",
 					examplesSourceZip, Optional.ofNullable("MatchersMixin"));
-
 
 		} catch (IOException e) {
 			e.printStackTrace();
