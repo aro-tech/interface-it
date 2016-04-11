@@ -4,8 +4,6 @@
 package com.github.aro_tech.interface_it.api.options;
 
 import java.io.File;
-import java.lang.reflect.Method;
-import java.util.function.Predicate;
 
 import com.github.aro_tech.interface_it.api.MultiFileOutputOptions;
 

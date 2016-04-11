@@ -4,7 +4,6 @@
 package com.github.aro_tech.interface_it.ui.commandline;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
