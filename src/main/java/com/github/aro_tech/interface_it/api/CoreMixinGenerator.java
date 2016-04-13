@@ -198,17 +198,20 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		if (shouldDeprecate(method)) {
 			buf.append(indentationUnit).append("@Deprecated").append(lineBreak(0));
 		}
-		buf.append(indentationUnit).append("default ")
-				.append(makeGenericMarkerAndUpdateImports(method, importNamesOut));
-		String extractedReturnTypeName = adjustTypeNameAndUpdateImportsIfAppropriate(importNamesOut,
-				targetInterfaceName, adjustTypeNameForUntypedParameterization(
-						method.getGenericReturnType().getTypeName(), method.getReturnType().getTypeParameters()));
-		buf.append(extractedReturnTypeName);
-		buf.append(' ').append(method.getName()).append('(');
+		buf.append(indentationUnit).append("default ").append(makeGenericMarkerAndUpdateImports(method, importNamesOut))
+				.append(getAdjustedReturnTypeName(method, importNamesOut, targetInterfaceName)).append(' ')
+				.append(method.getName()).append('(');
 		appendMethodArgumentsInSignature(method, importNamesOut, buf, argumentNameSource, targetInterfaceName);
 		buf.append(')');
 		addThrowsClauseToSignatureUpdatingImports(method, importNamesOut, buf);
 		return buf.toString();
+	}
+
+	private String getAdjustedReturnTypeName(Method method, Set<String> importNamesOut, String targetInterfaceName) {
+		String extractedReturnTypeName = adjustTypeNameAndUpdateImportsIfAppropriate(importNamesOut,
+				targetInterfaceName, adjustTypeNameForUntypedParameterization(
+						method.getGenericReturnType().getTypeName(), method.getReturnType().getTypeParameters()));
+		return extractedReturnTypeName;
 	}
 
 	private String adjustTypeNameAndUpdateImportsIfAppropriate(Set<String> importNamesOut, String targetInterfaceName,
@@ -335,7 +338,6 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 			String fullTypeName, String targetInterfaceName) {
 		String shortTypeName = adjustTypeNameAndUpdateImportsIfAppropriate(importNamesOut, targetInterfaceName,
 				fullTypeName);
-		// extractShortNameAndUpdateImports(importNamesOut, fullTypeName);
 		if (isVarargsParameter(method, types, i)) {
 			shortTypeName = ClassNameUtils.convertToVarArgs(shortTypeName);
 		}
