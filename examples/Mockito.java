@@ -113,7 +113,7 @@ public interface Mockito {
      * Delegate call to public static java.util.Collection org.mockito.Matchers.anyCollection()
      * {@link org.mockito.Matchers#anyCollection()}
      */
-    default Collection anyCollection() {
+    default Collection<Object> anyCollection() {
         return Matchers.anyCollection();
     }
 
@@ -163,7 +163,7 @@ public interface Mockito {
      * Delegate call to public static java.util.List org.mockito.Matchers.anyList()
      * {@link org.mockito.Matchers#anyList()}
      */
-    default List anyList() {
+    default List<Object> anyList() {
         return Matchers.anyList();
     }
 
@@ -193,7 +193,7 @@ public interface Mockito {
      * Delegate call to public static java.util.Map org.mockito.Matchers.anyMap()
      * {@link org.mockito.Matchers#anyMap()}
      */
-    default Map anyMap() {
+    default Map<Object, Object> anyMap() {
         return Matchers.anyMap();
     }
 
@@ -223,7 +223,7 @@ public interface Mockito {
      * Delegate call to public static java.util.Set org.mockito.Matchers.anySet()
      * {@link org.mockito.Matchers#anySet()}
      */
-    default Set anySet() {
+    default Set<Object> anySet() {
         return Matchers.anySet();
     }
 

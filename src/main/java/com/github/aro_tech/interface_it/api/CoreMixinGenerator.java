@@ -201,7 +201,8 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		buf.append(indentationUnit).append("default ")
 				.append(makeGenericMarkerAndUpdateImports(method, importNamesOut));
 		String extractedReturnTypeName = adjustTypeNameAndUpdateImportsIfAppropriate(importNamesOut,
-				targetInterfaceName, method.getGenericReturnType().getTypeName());
+				targetInterfaceName, adjustTypeNameForUntypedParameterization(
+						method.getGenericReturnType().getTypeName(), method.getReturnType().getTypeParameters()));
 		buf.append(extractedReturnTypeName);
 		buf.append(' ').append(method.getName()).append('(');
 		appendMethodArgumentsInSignature(method, importNamesOut, buf, argumentNameSource, targetInterfaceName);
@@ -440,7 +441,7 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 */
 	protected void generateConstant(Field field, Class<?> fieldClass, Set<String> imports, StringBuilder buf,
 			String targetInterfaceName, String indentationUnit) {
-		String type = extractShortNameAndUpdateImports(imports, getTypeNameFromFieldForConstant(field));
+		String type = extractShortNameAndUpdateImports(imports, getAdjustedTypeNameFromField(field));
 		buf.append(lineBreak(0));
 		appendCommentForConstant(field, fieldClass, buf, indentationUnit);
 		appendConstantDeclaration(field, fieldClass, buf, targetInterfaceName, indentationUnit, type);
@@ -468,12 +469,17 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 				.append(field.getName()).append("} */").append(lineBreak(0));
 	}
 
-	private String getTypeNameFromFieldForConstant(Field field) {
+	private String getAdjustedTypeNameFromField(Field field) {
 		String typeName = field.getType().getTypeName();
 		TypeVariable<?>[] typeParameters = field.getType().getTypeParameters();
-		if (null != typeParameters && typeParameters.length > 0) {
+		typeName = adjustTypeNameForUntypedParameterization(typeName, typeParameters);
+		return typeName;
+	}
+
+	private String adjustTypeNameForUntypedParameterization(String typeName, TypeVariable<?>[] typeParameters) {
+		if (null != typeParameters && typeParameters.length > 0 && typeName.indexOf('<') < 0) {
 			typeName += Arrays.asList(typeParameters).stream().map(t -> "Object")
-					.collect(Collectors.joining(",", "<", ">"));
+					.collect(Collectors.joining(", ", "<", ">"));
 		}
 		return typeName;
 	}
@@ -540,7 +546,8 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 				options);
 		appendPackage(targetPackageName, result);
 		appendSortedImports(result, imports, targetInterfaceName);
-		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods, options.getSuperTypes(delegateClass));
+		appendInterfaceBody(targetInterfaceName, delegateClass, result, constants, methods,
+				options.getSuperTypes(delegateClass));
 		return result.toString();
 	}
 

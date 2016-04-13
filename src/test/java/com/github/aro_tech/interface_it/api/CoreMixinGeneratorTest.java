@@ -681,5 +681,17 @@ public class CoreMixinGeneratorTest implements AllAssertions, ExtendedMockito {
 		assertThat(underTest.makeMethodSignature(builderMethod.get(), this.imports, defaultNameSource, "IntStream"))
 				.startsWith("    default java.util.stream.IntStream.Builder builder()");
 	}
+	
+	@Test
+	public void can_generate_parameterized_return_type() {
+		// default Set<Object> anySet() {
+		Optional<Method> method = underTest.listStaticMethodsForClass(org.mockito.Matchers.class).stream()
+				.filter((Method m) -> "anySet".equals(m.getName()) && m.getParameters().length == 0).findFirst();
+
+		assertTrue(method.isPresent());
+
+		assertThat(underTest.makeMethodSignature(method.get(), this.imports, defaultNameSource, "IntStream"))
+				.contains("default Set<Object> anySet()");		
+	}
 
 }
