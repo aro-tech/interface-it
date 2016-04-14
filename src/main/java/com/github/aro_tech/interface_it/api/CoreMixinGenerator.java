@@ -209,9 +209,27 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 
 	private String getAdjustedReturnTypeName(Method method, Set<String> importNamesOut, String targetInterfaceName) {
 		String extractedReturnTypeName = adjustTypeNameAndUpdateImportsIfAppropriate(importNamesOut,
-				targetInterfaceName, adjustTypeNameForUntypedParameterization(
-						method.getGenericReturnType().getTypeName(), method.getReturnType().getTypeParameters()));
+				targetInterfaceName, adjustTypeNameForUntypedParameterization(getReturnTypeNameFromMethod(method),
+						method.getReturnType().getTypeParameters()));
 		return extractedReturnTypeName;
+	}
+
+	private String getReturnTypeNameFromMethod(Method method) {
+		final String typeName = method.getGenericReturnType().getTypeName();
+		String declaringClassName = method.getDeclaringClass().getCanonicalName();
+		return adjustTypeNameToCorrectDoublingOfOuterClass(typeName, declaringClassName);
+	}
+
+	// This corrects what appears to be a rarely-occurring but reproducible bug
+	// in the Java reflection API
+	// For BDDMockito.MyOngoingStubbing, the canonical name of BDDMockito
+	// appears twice in the generic type
+	private String adjustTypeNameToCorrectDoublingOfOuterClass(final String typeName, String declaringClassName) {
+		final String doubleDeclaringClass = declaringClassName + '.' + declaringClassName;
+		if (typeName.indexOf(doubleDeclaringClass) >= 0) {
+			return typeName.replace(doubleDeclaringClass, declaringClassName);
+		}
+		return typeName;
 	}
 
 	private String adjustTypeNameAndUpdateImportsIfAppropriate(Set<String> importNamesOut, String targetInterfaceName,

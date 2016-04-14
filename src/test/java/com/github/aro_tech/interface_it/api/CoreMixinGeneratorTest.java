@@ -16,6 +16,7 @@ import java.util.function.Predicate;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.BDDMockito;
 
 import com.github.aro_tech.extended_mockito.ExtendedMockito;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
@@ -692,6 +693,19 @@ public class CoreMixinGeneratorTest implements AllAssertions, ExtendedMockito {
 
 		assertThat(underTest.makeMethodSignature(method.get(), this.imports, defaultNameSource, "IntStream"))
 				.contains("default Set<Object> anySet()");		
+	}
+	
+	@Test
+	public void can_generate_given_method_signature_with_import_without_weird_import_bug() {
+		Optional<Method> given = underTest.listStaticMethodsForClass(org.mockito.BDDMockito.class).stream()
+				.filter((Method m) -> "given".equals(m.getName()) && m.getParameters().length == 1).findFirst();
+
+		assertTrue(given.isPresent());
+
+		assertThat(underTest.makeMethodSignature(given.get(), this.imports, defaultNameSource, ""))
+				.startsWith("    default <T> BDDMockito.BDDMyOngoingStubbing<T> given(T ");
+
+		assertThat(this.imports).contains("org.mockito.BDDMockito").doesNotContain("org.mockito.BDDMockito.org.mockito.BDDMockito");
 	}
 
 }
