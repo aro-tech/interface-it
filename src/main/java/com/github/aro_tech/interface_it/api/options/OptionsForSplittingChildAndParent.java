@@ -4,6 +4,7 @@
 package com.github.aro_tech.interface_it.api.options;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
@@ -85,8 +86,8 @@ public class OptionsForSplittingChildAndParent implements MultiFileOutputOptions
 	 */
 	@Override
 	public Predicate<? super Method> getMethodFilterForDelegate(Class<?> delegate) {
-		if(this.childClass.equals(delegate)) {
-			return m -> m.getDeclaringClass().equals(delegate);			
+		if (this.childClass.equals(delegate)) {
+			return m -> m.getDeclaringClass().equals(delegate);
 		}
 		return m -> true;
 	}
@@ -103,6 +104,7 @@ public class OptionsForSplittingChildAndParent implements MultiFileOutputOptions
 		if (delegateClass.equals(this.childClass)) {
 			return new HashSet<String>() {
 				private static final long serialVersionUID = 1L;
+
 				{
 					add(parentMixinName);
 				}
@@ -111,15 +113,31 @@ public class OptionsForSplittingChildAndParent implements MultiFileOutputOptions
 		return Collections.emptySet();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "OptionsForSplittingChildAndParent [targetPackage=" + targetPackage + ", saveDirectory=" + saveDirectory
 				+ ", childMixinName=" + childMixinName + ", parentMixinName=" + parentMixinName + ", childClass="
-				+ childClass + ", getMethodFilter(" + this.childClass + ")=" + getMethodFilterForDelegate(this.childClass) + "]";
+				+ childClass + ", getMethodFilter(" + this.childClass + ")="
+				+ getMethodFilterForDelegate(this.childClass) + "]";
 	}
 
-	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.github.aro_tech.interface_it.api.MultiFileOutputOptions#
+	 * getConstantsFilterForDelegate(java.lang.Class)
+	 */
+	@Override
+	public Predicate<? super Field> getConstantsFilterForDelegate(Class<?> delegateClass) {
+		if (this.childClass.equals(delegateClass)) {
+			return fld -> fld.getDeclaringClass().equals(delegateClass);
+		}
+		return m -> true;
+	}
+
 }

@@ -73,4 +73,13 @@ public class OptionsForSplittingChildAndParentTest implements AllAssertions {
 		assertThat(underTest.getMethodFilterForDelegate(delegate).test(org.mockito.Mockito.class.getDeclaredMethod("never"))).isTrue();
 		assertThat(underTest.getMethodFilterForDelegate(delegate).test(org.mockito.Mockito.class.getMethod("anyChar"))).isFalse();
 	}
+	
+	@Test
+	public void can_filter_parent_constants() throws NoSuchMethodException, SecurityException, NoSuchFieldException {
+		underTest = new OptionsForSplittingChildAndParent(EXPECTED_PACKAGE,
+				SAVE_DIRECTORY, "BDDMockitoMixin", "MockitoMixin", org.mockito.BDDMockito.class);
+		assertThat(underTest.getConstantsFilterForDelegate(org.mockito.BDDMockito.class).test(org.mockito.BDDMockito.class.getField("RETURNS_DEEP_STUBS"))).isFalse();
+		assertThat(underTest.getConstantsFilterForDelegate(org.mockito.Mockito.class).test(org.mockito.Mockito.class.getDeclaredField("RETURNS_DEEP_STUBS"))).isTrue();
+	}
+
 }

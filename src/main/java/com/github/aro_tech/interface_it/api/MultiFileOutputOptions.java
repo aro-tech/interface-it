@@ -1,6 +1,7 @@
 package com.github.aro_tech.interface_it.api;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Set;
@@ -47,7 +48,7 @@ public interface MultiFileOutputOptions {
 	/**
 	 * Predicate to do additional filtering of static methods to be processed
 	 * Does not affect filtering out of non-static methods or deprecated methods
-	 * @param delegate TODO
+	 * @param delegate
 	 * 
 	 * @return Predicate to be applied
 	 */
@@ -62,6 +63,17 @@ public interface MultiFileOutputOptions {
 	 */
 	default Set<String> getSuperTypes(Class<?> delegateClass) {
 		return Collections.emptySet();
+	}
+
+	/**
+	 * Predicate to do additional filtering of constants to be processed
+	 * Does not affect filtering out of non-static members
+	 * @param delegate
+	 * 
+	 * @return Predicate to be applied
+	 */
+	default Predicate<? super Field> getConstantsFilterForDelegate(Class<?> delegateClass) {
+		return m -> true; // by default, no additional filtering
 	}
 
 }

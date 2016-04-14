@@ -443,10 +443,23 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 * @return List of all constants declared in clazz
 	 */
 	protected List<Field> listConstantsForClass(Class<?> clazz) {
-		return Arrays.stream(clazz.getFields()).filter(f -> {
+		return listConstantsForClass(clazz, fld -> true);
+	}
+
+	/**
+	 * Retrieve the constants for a class
+	 * 
+	 * @param clazz
+	 * @param extraFilter
+	 * @return List of all constants declared in clazz
+	 */
+	protected List<Field> listConstantsForClass(Class<?> clazz, Predicate<? super Field> extraFilter) {
+		final Predicate<? super Field> isPublicStatic = f -> {
 			int modifiers = f.getModifiers();
 			return Modifier.isStatic(modifiers) && Modifier.isPublic(modifiers);
-		}).sorted(Comparator.comparing(Field::getName)).collect(Collectors.toList());
+		};
+		return Arrays.stream(clazz.getFields()).filter(isPublicStatic.and((fld) -> extraFilter.test((Field) fld)))
+				.sorted(Comparator.comparing(Field::getName)).collect(Collectors.toList());
 	}
 
 	/**
@@ -514,15 +527,36 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 	 *            added to the set
 	 * @param indentationSpaces
 	 * @param targetInterfaceName
+	 * @param extraFilter
 	 * @return The Java code declaring and initializing all constants for the
 	 *         wrapper interface
 	 */
 	protected String generateConstantsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
 			String targetInterfaceName) {
+		return generateConstantsForClassUpdatingImports(delegateClass, importsUpdated, targetInterfaceName,
+				fld -> true);
+	}
+
+	/**
+	 * Generate Java code declaring and assigning constants which refer to each
+	 * constant in the delegate class
+	 * 
+	 * @param delegateClass
+	 * @param importsUpdated
+	 *            As a side effect, the imports needed for these constants are
+	 *            added to the set
+	 * @param indentationSpaces
+	 * @param targetInterfaceName
+	 * @param extraFilter
+	 * @return The Java code declaring and initializing all constants for the
+	 *         wrapper interface
+	 */
+	protected String generateConstantsForClassUpdatingImports(Class<?> delegateClass, Set<String> importsUpdated,
+			String targetInterfaceName, Predicate<? super Field> extraFilter) {
 		String indentationUnit = formatter.getIndentationUnit();
 
 		StringBuilder buf = new StringBuilder();
-		this.listConstantsForClass(delegateClass).stream().forEach(field -> {
+		this.listConstantsForClass(delegateClass, extraFilter).stream().forEach(field -> {
 			generateConstant(field, delegateClass, importsUpdated, buf, targetInterfaceName, indentationUnit);
 		});
 
@@ -561,7 +595,8 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 			Class<?> delegateClass, ArgumentNameSource argumentNameSource, MultiFileOutputOptions options) {
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
-		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName);
+		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName,
+				options.getConstantsFilterForDelegate(delegateClass));
 		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, argumentNameSource,
 				options);
 		appendPackage(targetPackageName, result);
@@ -587,7 +622,8 @@ public class CoreMixinGenerator implements MixinCodeGenerator {
 		final String targetInterfaceName = options.getTargetInterfaceNameForDelegate(delegateClass);
 		Set<String> imports = new HashSet<String>();
 		StringBuilder result = new StringBuilder();
-		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName);
+		String constants = this.generateConstantsForClassUpdatingImports(delegateClass, imports, targetInterfaceName,
+				options.getConstantsFilterForDelegate(delegateClass));
 		String methods = this.generateMethodsForClassUpdatingImports(delegateClass, imports, argumentNameSource,
 				options);
 		appendPackage(options.getTargetPackageNameForDelegate(delegateClass), result);
