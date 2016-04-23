@@ -269,7 +269,7 @@ public class SourceLineReadingArgumentNameLoader {
 			if (word.length() > 1) {
 				ctx.setCurrentType(word.substring(1));
 			}
-		} else if (isBoundaryBetween2Args(word)) {
+		} else if (isBoundaryBetween2Args(word, ctx)) {
 			splitAndProcessArgBoundaryWord(word, ctx);
 		} else {
 			processTypeOrNameWord(word, ctx);
@@ -284,8 +284,8 @@ public class SourceLineReadingArgumentNameLoader {
 		}
 	}
 
-	private boolean isBoundaryBetween2Args(String word) {
-		return word.indexOf(',') > 0;
+	private boolean isBoundaryBetween2Args(String word, LoopContext ctx) {
+		return word.indexOf(',') > 0 && !ctx.isInTemplateType();
 	}
 
 	private void processTypeOrNameWord(String word, LoopContext ctx) {

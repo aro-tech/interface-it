@@ -88,3 +88,30 @@ public static String encode(String stringToEncode,
             Matcher<? super T> matcher) {
     public static void assertThrows(Class<? extends Throwable> expectedThrowable, ThrowingRunnable runnable) {
     public static <T extends Throwable> T expectThrows(Class<T> expectedThrowable, ThrowingRunnable runnable) {
+
+    // For AssertJ Guava:
+    public static ByteSourceAssert assertThat(ByteSource actual) {
+
+    public static <K,V> MultimapAssert<K, V> assertThat(Multimap<K, V> actual) {
+
+    public static <T> OptionalAssert<T> assertThat(Optional<T> actual) {
+
+    public static <T extends Comparable<T>> RangeAssert<T> assertThat(Range<T> actual) {
+
+    public static <K extends Comparable<K>, V> RangeMapAssert<K, V> assertThat(RangeMap<K, V> actual) {
+
+    public static <R,C,V> TableAssert<R, C, V> assertThat(Table<R, C, V> actual) {
+
+    public static <K,V> org.assertj.core.data.MapEntry<K, V> entry(K key,
+                                                                  V value) {
+                                                                  
+    // For AssertJ DB
+    public static TableAssert assertThat(Table table) {
+    
+    public static RequestAssert assertThat(Request request) {
+    
+    public static ChangesAssert assertThat(Changes changes) {
+    
+    public static byte[] bytesContentOf(File file) {  
+    
+    public static byte[] bytesContentFromClassPathOf(String resource) {                                                            

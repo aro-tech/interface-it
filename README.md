@@ -5,7 +5,7 @@ Java-8 mix-in interface code generator
 ##Latest release
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.aro-tech/interface-it/badge.svg)](http://search.maven.org/#artifactdetails|com.github.aro-tech|interface-it|1.1.1|jar)
 
-[Release notes on github] (https://github.com/aro-tech/interface-it/releases/tag/v1.1.1) 
+[Release notes on github] (https://github.com/aro-tech/interface-it/releases/tag/v1.1.2) 
 
 [![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.github.aro-tech/interface-it/badge.svg)](http://www.javadoc.io/doc/com.github.aro-tech/interface-it/1.1.1)
 

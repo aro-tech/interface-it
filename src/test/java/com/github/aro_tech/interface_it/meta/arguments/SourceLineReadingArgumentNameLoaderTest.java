@@ -52,6 +52,18 @@ public class SourceLineReadingArgumentNameLoaderTest implements ExtendedMockito 
 		underTest.parseAndLoad(sourceLines, target);
 		verify(target).add("assertThat", 0, "byte[]", "actual", 1);
 	}
+	
+	/**
+	 * Test method for
+	 * {@link com.github.aro_tech.interface_it.meta.arguments.SourceLineReadingArgumentNameLoader#parseAndLoad(java.util.List, com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSource)}
+	 * .
+	 */
+	@Test
+	public void should_load_for_triple_param_arg() {
+		sourceLines.add("    public static <R,C,V> TableAssert<R, C, V> assertThat(Table<R, C, V> actual) {");
+		underTest.parseAndLoad(sourceLines, target);
+		verify(target).add("assertThat", 0, "Table<R, C, V>", "actual", 1);
+	}
 
 	/**
 	 * Test method for

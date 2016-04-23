@@ -146,6 +146,13 @@ public class IntegrationWithFilesTest implements AssertJ {
 			generateClassFromCommandLineMainAndVerify(packageName, "org.mockito.Mockito", "MockitoMixinWithSupertype",
 					examplesSourceZip, Optional.ofNullable("MatchersMixin"));
 
+			generateClassFromCommandLineMainAndVerify(packageName, "org.assertj.db.api.Assertions", "AssertJDBMixin",
+					getExampleSourceFile(), Optional.ofNullable(null));
+
+			generateClassFromCommandLineMainAndVerify(packageName, "org.assertj.guava.api.Assertions", "AssertJGuavaMixin",
+					getExampleSourceFile(), Optional.ofNullable(null));
+
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw e;
