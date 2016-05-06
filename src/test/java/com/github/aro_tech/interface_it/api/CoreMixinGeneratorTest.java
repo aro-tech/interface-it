@@ -16,13 +16,12 @@ import java.util.function.Predicate;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.BDDMockito;
 
 import com.github.aro_tech.extended_mockito.ExtendedMockito;
 import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
-import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
+import com.github.aro_tech.tdd_mixins.AllAssertions;
 
 /**
  * Unit tests for generating delegate methods

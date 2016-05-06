@@ -9,8 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.util.ClassNameUtils;
-import com.github.aro_tech.interface_it.util.mixin.AssertJ;
+import com.github.aro_tech.tdd_mixins.AssertJ;
 
 /**
  * Focused tests for class name manipulation

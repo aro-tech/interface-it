@@ -33,7 +33,7 @@ import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.ui.commandline.CommandLineMain;
 import com.github.aro_tech.interface_it.util.FileUtils;
 import com.github.aro_tech.interface_it.util.SourceFileReader;
-import com.github.aro_tech.interface_it.util.mixin.AssertJ;
+import com.github.aro_tech.tdd_mixins.AssertJ;
 
 /**
  * Integration tests using files
@@ -150,6 +150,9 @@ public class IntegrationWithFilesTest implements AssertJ {
 					getExampleSourceFile(), Optional.ofNullable(null));
 
 			generateClassFromCommandLineMainAndVerify(packageName, "org.assertj.guava.api.Assertions", "AssertJGuavaMixin",
+					getExampleSourceFile(), Optional.ofNullable(null));
+
+			generateClassFromCommandLineMainAndVerify(packageName, "org.jsoup.Jsoup", "JSoupMixin",
 					getExampleSourceFile(), Optional.ofNullable(null));
 
 			

@@ -22,7 +22,7 @@ import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.statistics.GenerationStatistics;
 import com.github.aro_tech.interface_it.ui.meta.error.UnableToCreateOutputDirectory;
 import com.github.aro_tech.interface_it.util.SourceFileReader;
-import com.github.aro_tech.interface_it.util.mixin.AssertJ;
+import com.github.aro_tech.tdd_mixins.AssertJ;
 
 /**
  * Unit tests for CommandLineMain

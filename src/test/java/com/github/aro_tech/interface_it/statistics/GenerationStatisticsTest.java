@@ -2,7 +2,7 @@ package com.github.aro_tech.interface_it.statistics;
 
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
+import com.github.aro_tech.tdd_mixins.AllAssertions;
 
 public class GenerationStatisticsTest implements AllAssertions {
 	GenerationStatistics underTest = new GenerationStatistics();

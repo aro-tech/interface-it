@@ -8,8 +8,7 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.api.CoreMixinGenerator;
-import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
+import com.github.aro_tech.tdd_mixins.AllAssertions;
 
 /**
  * Options to use for wrapping parent and child classes so that the child

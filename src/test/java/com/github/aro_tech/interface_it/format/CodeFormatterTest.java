@@ -6,8 +6,7 @@ package com.github.aro_tech.interface_it.format;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.format.CodeFormatter;
-import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
+import com.github.aro_tech.tdd_mixins.AllAssertions;
 
 /**
  * Unit tests for CodeFormatter

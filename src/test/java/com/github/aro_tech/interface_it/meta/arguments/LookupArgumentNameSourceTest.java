@@ -6,13 +6,11 @@ package com.github.aro_tech.interface_it.meta.arguments;
 import java.lang.reflect.Method;
 
 import org.assertj.core.api.Assertions;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSource;
-import com.github.aro_tech.interface_it.util.mixin.AssertJ;
-
-import org.junit.Assert;
+import com.github.aro_tech.tdd_mixins.AssertJ;
 
 /**
  * @author aro_tech

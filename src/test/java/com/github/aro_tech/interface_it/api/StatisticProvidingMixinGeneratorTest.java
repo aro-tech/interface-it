@@ -15,7 +15,7 @@ import com.github.aro_tech.interface_it.format.CodeFormatter;
 import com.github.aro_tech.interface_it.meta.arguments.ArgumentNameSource;
 import com.github.aro_tech.interface_it.policy.DeprecationPolicy;
 import com.github.aro_tech.interface_it.statistics.GenerationStatistics;
-import com.github.aro_tech.interface_it.util.mixin.AllAssertions;
+import com.github.aro_tech.tdd_mixins.AllAssertions;
 
 /**
  * Unit tests for StatisticProvidingMixinGenerator
