@@ -155,6 +155,9 @@ public class IntegrationWithFilesTest implements AssertJ {
 			generateClassFromCommandLineMainAndVerify(packageName, "org.jsoup.Jsoup", "JSoupMixin",
 					getExampleSourceFile(), Optional.ofNullable(null));
 
+			generateClassFromCommandLineMainAndVerify(packageName, "com.jayway.awaitility.Awaitility", "AwaitilityMixin",
+					getExampleSourceFile(), Optional.ofNullable(null));
+
 			
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -400,4 +400,9 @@ THE SOFTWARE.
   
 ------------------------------------------------------------------------
 
-Note that this software includes derivative works of the assertj library under the terms of the Apache 2.0 license.
+Note that this software includes derivative works of the assertj and awaitility libraries under the terms of the Apache 2.0 license.
+
+It also includes derivative works of the Mockito and Jsoup libraries under the terms of the MIT license: 
+https://github.com/mockito/mockito/wiki/License
+https://jsoup.org/license
+
