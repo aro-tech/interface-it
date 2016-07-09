@@ -79,6 +79,9 @@ public class ClassNameUtils {
 	 * @return Name without package
 	 */
 	public static String extractSimpleName(String fullName) {
+		if(null == fullName) {
+			return "";
+		}
 		if (fullName.endsWith("...")) {
 			return doNameExtraction(fullName.substring(0, fullName.length() - 3)) + "...";
 		}

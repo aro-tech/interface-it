@@ -90,7 +90,7 @@ public class IntegrationWithFilesTest implements AssertJ {
 
 		Assertions.assertThat(resultLines).hasSameSizeAs(expectedLines).containsAll(expectedLines);
 	}
-
+	
 	@Test
 	public void can_read_zip_file_lines() throws IOException {
 		URL testZipURL = this.getClass().getResource("/test.zip");
@@ -157,7 +157,6 @@ public class IntegrationWithFilesTest implements AssertJ {
 
 			generateClassFromCommandLineMainAndVerify(packageName, "com.jayway.awaitility.Awaitility", "AwaitilityMixin",
 					getExampleSourceFile(), Optional.ofNullable(null));
-
 			
 		} catch (IOException e) {
 			e.printStackTrace();

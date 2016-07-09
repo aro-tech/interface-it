@@ -126,7 +126,20 @@ public class SourceLineReadingArgumentNameLoaderTest implements ExtendedMockito 
 		verify(target).add("booleanThing", 2, "int", "int2", 3);
 
 	}
-
+	
+	/**
+	 * Test method for
+	 * {@link com.github.aro_tech.interface_it.meta.arguments.SourceLineReadingArgumentNameLoader#parseAndLoad(java.util.List, com.github.aro_tech.interface_it.meta.arguments.LookupArgumentNameSource)}
+	 * .
+	 */
+	@Test
+	public void can_handle_2_param_type() {
+		List<String> mySourceLines = new ArrayList<>();
+		mySourceLines.add("public static void registerFormatterForType(Class<?> type, Function<Object, String> formatter) {");
+		underTest.parseAndLoad(mySourceLines, target);
+		verify(target).add("registerFormatterForType", 0, "Class<?>", "type", 2);
+		verify(target).add("registerFormatterForType", 1, "Function<Object, String>", "formatter", 2);
+	}
 
 	/**
 	 * Test method for

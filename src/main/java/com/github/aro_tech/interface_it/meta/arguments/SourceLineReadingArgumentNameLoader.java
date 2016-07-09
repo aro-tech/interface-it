@@ -285,7 +285,7 @@ public class SourceLineReadingArgumentNameLoader {
 	}
 
 	private boolean isBoundaryBetween2Args(String word, LoopContext ctx) {
-		return word.indexOf(',') > 0 && !ctx.isInTemplateType();
+		return word.indexOf(',') > 0 && !ctx.isInTemplateType() && null != ctx.getCurrentType();
 	}
 
 	private void processTypeOrNameWord(String word, LoopContext ctx) {
