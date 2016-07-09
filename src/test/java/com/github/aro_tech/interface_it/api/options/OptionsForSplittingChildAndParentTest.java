@@ -5,6 +5,7 @@ package com.github.aro_tech.interface_it.api.options;
 
 import java.io.File;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,50 +36,50 @@ public class OptionsForSplittingChildAndParentTest implements AllAssertions {
 
 	@Test
 	public void can_get_package() {
-		assertThat(underTest.getTargetPackageNameForDelegate(org.mockito.Mockito.class)).isEqualTo(EXPECTED_PACKAGE);
-		assertThat(underTest.getTargetPackageNameForDelegate(org.mockito.Matchers.class)).isEqualTo(EXPECTED_PACKAGE);
+		Assertions.assertThat(underTest.getTargetPackageNameForDelegate(org.mockito.Mockito.class)).isEqualTo(EXPECTED_PACKAGE);
+		Assertions.assertThat(underTest.getTargetPackageNameForDelegate(org.mockito.Matchers.class)).isEqualTo(EXPECTED_PACKAGE);
 	}
 
 	@Test
 	public void can_name_child_mixin() {
-		assertThat(underTest.getTargetInterfaceNameForDelegate(org.mockito.Mockito.class)).isEqualTo(CHILD_MIXIN_NAME);
+		Assertions.assertThat(underTest.getTargetInterfaceNameForDelegate(org.mockito.Mockito.class)).isEqualTo(CHILD_MIXIN_NAME);
 	}
 
 	@Test
 	public void can_name_parent_mixin() {
-		assertThat(underTest.getTargetInterfaceNameForDelegate(org.mockito.Matchers.class))
+		Assertions.assertThat(underTest.getTargetInterfaceNameForDelegate(org.mockito.Matchers.class))
 				.isEqualTo(PARENT_MIXIN_NAME);
 	}
 
 	@Test
 	public void can_get_save_directory() {
-		assertThat(underTest.getMixinSaveDirectoryForDelegate(org.mockito.Matchers.class)).isEqualTo(SAVE_DIRECTORY);
+		Assertions.assertThat(underTest.getMixinSaveDirectoryForDelegate(org.mockito.Matchers.class)).isEqualTo(SAVE_DIRECTORY);
 	}
 
 	@Test
 	public void child_has_parent_as_supertype() {
-		assertThat(underTest.getSuperTypes(org.mockito.Mockito.class)).isNotNull().isNotEmpty()
+		Assertions.assertThat(underTest.getSuperTypes(org.mockito.Mockito.class)).isNotNull().isNotEmpty()
 				.contains(PARENT_MIXIN_NAME);
 	}
 
 	@Test
 	public void parent_has_no_supertypes() {
-		assertThat(underTest.getSuperTypes(org.mockito.Matchers.class)).isNotNull().isEmpty();
+		Assertions.assertThat(underTest.getSuperTypes(org.mockito.Matchers.class)).isNotNull().isEmpty();
 	}
 
 	@Test
 	public void can_filter_parent_methods() throws NoSuchMethodException, SecurityException {
 		Class<?> delegate = org.mockito.Mockito.class;
-		assertThat(underTest.getMethodFilterForDelegate(delegate).test(org.mockito.Mockito.class.getDeclaredMethod("never"))).isTrue();
-		assertThat(underTest.getMethodFilterForDelegate(delegate).test(org.mockito.Mockito.class.getMethod("anyChar"))).isFalse();
+		Assertions.assertThat(underTest.getMethodFilterForDelegate(delegate).test(org.mockito.Mockito.class.getDeclaredMethod("never"))).isTrue();
+		Assertions.assertThat(underTest.getMethodFilterForDelegate(delegate).test(org.mockito.Mockito.class.getMethod("anyChar"))).isFalse();
 	}
 	
 	@Test
 	public void can_filter_parent_constants() throws NoSuchMethodException, SecurityException, NoSuchFieldException {
 		underTest = new OptionsForSplittingChildAndParent(EXPECTED_PACKAGE,
 				SAVE_DIRECTORY, "BDDMockitoMixin", "MockitoMixin", org.mockito.BDDMockito.class);
-		assertThat(underTest.getConstantsFilterForDelegate(org.mockito.BDDMockito.class).test(org.mockito.BDDMockito.class.getField("RETURNS_DEEP_STUBS"))).isFalse();
-		assertThat(underTest.getConstantsFilterForDelegate(org.mockito.Mockito.class).test(org.mockito.Mockito.class.getDeclaredField("RETURNS_DEEP_STUBS"))).isTrue();
+		Assertions.assertThat(underTest.getConstantsFilterForDelegate(org.mockito.BDDMockito.class).test(org.mockito.BDDMockito.class.getField("RETURNS_DEEP_STUBS"))).isFalse();
+		Assertions.assertThat(underTest.getConstantsFilterForDelegate(org.mockito.Mockito.class).test(org.mockito.Mockito.class.getDeclaredField("RETURNS_DEEP_STUBS"))).isTrue();
 	}
 
 }
